@@ -1,0 +1,9 @@
+# Learning Typescript
+*.js
+
+# Classic JS
+node_modules
+
+# DB stuff
+*.db
+*.sqlite3
