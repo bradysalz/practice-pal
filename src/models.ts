@@ -2,14 +2,6 @@ import { Sequelize, DataTypes } from 'sequelize';
 
 export const database = new Sequelize('sqlite::memory');
 
-
-export const Section = database.define('Section', {
-    section: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-});
-
 export const User = database.define('User', {
     username: {
         type: DataTypes.STRING,
@@ -23,14 +15,37 @@ export const User = database.define('User', {
     salt: DataTypes.TEXT,
 });
 
+
+export const Book = database.define('Book', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+});
+
+export const Section = database.define('Section', {
+    section: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+});
+
 export const Exercise = database.define('Exercise', {
+    book_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     section_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     exercise: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     filepath: {
         type: DataTypes.STRING,
@@ -40,10 +55,6 @@ export const Exercise = database.define('Exercise', {
 
 export const Practice = database.define('Practice', {
     user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    section_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },

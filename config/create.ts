@@ -14,5 +14,5 @@ export async function maybeCreateTables(seq: Sequelize) {
  * @param seq database instance
  */
 export async function deleteAndCreateTables(seq: Sequelize) {
-    await seq.sync({ alter: true });
+    await seq.sync({ force: true });
 };
