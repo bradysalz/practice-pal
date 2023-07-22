@@ -1,0 +1,20 @@
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <th>User</th>
+            <th>Exercise</th>
+            <th>Time</th>
+            <th>Tempo</th>
+        </thead>
+        <tbody>
+            {{#each practices}}
+                <tr>
+                    <td>{{this.user_id}}</td>
+                    <td>{{this.exercise_id}}</td>
+                    <td>{{this.done_at}}</td>
+                    <td>{{this.tempo}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
