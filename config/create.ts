@@ -1,3 +1,5 @@
+import fs from "fs";
+import csvParser from "csv-parser";
 import { Sequelize } from "sequelize";
 import { Book, User, Section, Exercise, Practice } from "../src/models";
 
@@ -18,128 +20,129 @@ export async function deleteAndCreateTables(seq: Sequelize) {
 }
 
 /**
- * Fill the database with some dummy data
+ * Read data from CSV's into an array
  */
-export async function fillBasicData() {
-    const exampleUserData = [
-        {
-            username: "brady",
-            createdAt: new Date(),
-        },
-        {
-            username: "tom",
-            createdAt: new Date(),
-        },
-        {
-            username: "ally",
-            createdAt: new Date(),
-        },
-    ];
-    let userEntry: User[] = [];
-    for (let user of exampleUserData) {
-        const newUser = await User.create(user);
-        userEntry.push(newUser);
-    }
+export function readDataFromCSV(filePath: string): Promise<any[]> {
+    return new Promise<any[]>((resolve, reject) => {
+        const results: any[] = [];
 
-    const exampleBookData = [
-        { name: "Portraits of Rhythm" },
-        { name: "Stick Control" },
-        { name: "Intermediate Snare Studies" },
-    ];
-    let bookEntry = [];
-    for (let book of exampleBookData) {
-        const newBook = await Book.create(book);
-        bookEntry.push(newBook);
-    }
+        const stream = fs.createReadStream(filePath).pipe(csvParser());
 
-    const exampleSectionData = [
-        {
-            book_id: bookEntry[0].id,
-            section: "Quarter Notes",
-        },
-        {
-            book_id: bookEntry[0].id,
-            section: "Eighth Notes",
-        },
-        {
-            book_id: bookEntry[0].id,
-            section: "Triplet Notes",
-        },
-    ];
-    let sectionEntry = [];
-    for (let section of exampleSectionData) {
-        const newSection = await Section.create(section);
-        sectionEntry.push(newSection);
-    }
+        stream.on("data", (data) => {
+            results.push(data);
+        });
 
-    const exampleExerciseData = [
-        {
-            book_id: sectionEntry[0].book_id,
-            name: "The First One",
-        },
-        {
-            book_id: sectionEntry[0].book_id,
-            name: "The Second One",
-        },
-        {
-            book_id: sectionEntry[0].book_id,
-            name: "The Third One",
-        },
-        {
-            book_id: bookEntry[1].id,
-            section_id: sectionEntry[1].id,
-            exercise: 4,
-        },
-        {
-            book_id: bookEntry[1].id,
-            section_id: sectionEntry[1].id,
-            exercise: 5,
-        },
-        {
-            book_id: bookEntry[1].id,
-            section_id: sectionEntry[1].id,
-            exercise: 6,
-        },
-    ];
-    let exerciseEntry: Exercise[] = [];
-    for (let exercise of exampleExerciseData) {
-        const newExercise = await Exercise.create(exercise);
-        exerciseEntry.push(newExercise);
-    }
+        stream.on("end", () => {
+            resolve(results);
+        });
 
-    const examplePracticeData = [
-        {
-            user_id: userEntry[0].id,
-            exercise_id: exerciseEntry[0].id,
-            done_at: new Date(),
-            tempo: 78,
-        },
-        {
-            user_id: userEntry[0].id,
-            exercise_id: exerciseEntry[1].id,
-            done_at: new Date(),
-            tempo: 83,
-        },
-        {
-            user_id: userEntry[0].id,
-            exercise_id: exerciseEntry[2].id,
-            done_at: new Date(),
-            tempo: 94,
-        },
-        {
-            user_id: userEntry[1].id,
-            exercise_id: exerciseEntry[3].id,
-            done_at: new Date(),
-            tempo: 132,
-        },
-        {
-            user_id: userEntry[1].id,
-            exercise_id: exerciseEntry[4].id,
-            done_at: new Date(),
-            tempo: 196,
-        },
-    ];
-    for (let practice of examplePracticeData) {
-        await Practice.create(practice);
+        stream.on("error", (error) => {
+            reject(error);
+        });
+    });
+}
+
+/**
+ * Insert the csv-loaded data into the database
+ * @param data array of book/section/exercies copying the example CSV
+ */
+async function fillBookSheetData(data: any[]) {
+    for (const row of data) {
+        const bookName = row["Book"];
+        const sectionName = row["Section"];
+        const startExercise = parseInt(row["Start_Exercise"]);
+        const endExercise = parseInt(row["End_Exercise"]);
+
+        // Find or create the book
+        const [book] = await Book.findOrCreate({
+            where: { name: bookName },
+        });
+
+        // Find or create the section within the book
+        const [section] = await Section.findOrCreate({
+            where: { section: sectionName, book_id: book.id },
+        });
+
+        // Create exercises within the section based on the range
+        for (
+            let exerciseNumber = startExercise;
+            exerciseNumber <= endExercise;
+            exerciseNumber++
+        ) {
+            await Exercise.create({
+                book_id: book.id,
+                section_id: section.id,
+                exercise: exerciseNumber,
+            });
+        }
     }
+}
+
+async function fillPracticeData(data: any[], userId: number) {
+    for (const row of data) {
+        const practiceDate = new Date(row["Date"]);
+        const bookName = row["Book"];
+        const sectionName = row["Section"];
+        const exerciseRange = row["Exercise"];
+        const tempo = parseInt(row["Tempo"]);
+        const notes = row["Notes"];
+
+        // Find or create the book
+        const [book] = await Book.findOrCreate({
+            where: { name: bookName },
+        });
+
+        // Find or create the section within the book
+        const [section] = await Section.findOrCreate({
+            where: { section: sectionName, book_id: book.id },
+        });
+
+        // Split the exercise range and create practices for each exercise
+        if (exerciseRange) {
+            const [startExercise, endExercise] = exerciseRange
+                .split("-")
+                .map(Number);
+
+            for (
+                let exerciseNumber = startExercise;
+                exerciseNumber <= endExercise;
+                exerciseNumber++
+            ) {
+                // Find or create the exercise within the book and section
+                const [exercise] = await Exercise.findOrCreate({
+                    where: {
+                        book_id: book.id,
+                        section_id: section.id,
+                        exercise: exerciseNumber,
+                    },
+                });
+
+                // Create the practice record and associate it with the user,
+                // exercise, and other data
+                await Practice.create({
+                    user_id: userId,
+                    exercise_id: exercise.id,
+                    done_at: practiceDate,
+                    tempo: tempo,
+                    note: notes,
+                });
+            }
+        }
+    }
+}
+
+export async function insertCsvData(
+    bookFilePath: string,
+    practiceFilePath: string
+) {
+    const bookData = await readDataFromCSV(bookFilePath);
+    await fillBookSheetData(bookData);
+
+    // Everything is me for now, lazy
+    const brady = await User.create({
+        username: "brady",
+        createdAt: new Date(),
+    });
+    const practiceData = await readDataFromCSV(practiceFilePath);
+    await fillPracticeData(practiceData, brady.id);
 }

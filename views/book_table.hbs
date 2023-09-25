@@ -1,0 +1,16 @@
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <th>id</th>
+            <th>Name</th>
+        </thead>
+        <tbody>
+            {{#each book}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.name}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

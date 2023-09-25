@@ -150,6 +150,7 @@ export class Practice extends Model<
     declare exercise_id: ForeignKey<Exercise["id"]>;
     declare done_at: Date;
     declare tempo: number;
+    declare note: string;
 }
 
 Practice.init(
@@ -174,6 +175,10 @@ Practice.init(
         tempo: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        note: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         },
     },
     { sequelize, modelName: "Practice" }

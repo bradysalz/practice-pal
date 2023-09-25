@@ -5,6 +5,7 @@
             <th>Exercise</th>
             <th>Time</th>
             <th>Tempo</th>
+            <th>Notes</th>
         </thead>
         <tbody>
             {{#each practices}}
@@ -13,6 +14,7 @@
                     <td>{{this.exercise_id}}</td>
                     <td>{{this.done_at}}</td>
                     <td>{{this.tempo}}</td>
+                    <td>{{this.note}}</td>
                 </tr>
             {{/each}}
         </tbody>
