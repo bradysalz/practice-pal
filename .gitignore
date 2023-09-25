@@ -7,3 +7,11 @@ node_modules
 # DB stuff
 *.db
 *.sqlite3
+
+# Data is just for me
+data/
+out/
+
+# Devops
+.vscode/
+
