@@ -1,0 +1,15 @@
+extends layouts/index.pug
+
+block body
+
+    .table-container
+    table.table
+        thead
+        each f in fields
+            th= f
+
+        tbody
+        each row in rows
+            tr
+            each f in fields
+                td= row[f]

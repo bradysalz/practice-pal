@@ -1,0 +1,13 @@
+extends layouts/index.pug
+
+block body
+    .table-container
+    table.table
+        thead
+        th id
+        th Name
+        tbody
+        each b in book
+            tr
+                td= b.id
+                td= b.name
