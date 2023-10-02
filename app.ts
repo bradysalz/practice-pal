@@ -6,7 +6,7 @@ import { sequelize } from "./src/models";
 
 async function startServer() {
     await maybeCreateTables(sequelize).then(() =>
-        insertCsvData("data/book.csv", "data/practices.csv")
+        insertCsvData("data/book.csv", "data/practices.csv", "data/songs.csv")
     );
 
     const app = express();

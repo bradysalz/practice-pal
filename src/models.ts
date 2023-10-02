@@ -44,6 +44,61 @@ User.init(
     }
 );
 
+export class Artist extends Model<
+    InferAttributes<Artist>,
+    InferCreationAttributes<Artist>
+> {
+    declare id: CreationOptional<number>;
+    declare name: string;
+}
+Artist.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+    },
+    {
+        sequelize,
+        modelName: "Artist",
+    }
+);
+
+export class Song extends Model<
+    InferAttributes<Song>,
+    InferCreationAttributes<Song>
+> {
+    declare id: CreationOptional<number>;
+    declare artist_id: ForeignKey<Artist["id"]> | null;
+    declare name: string;
+}
+Song.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        artist_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+    },
+    {
+        sequelize,
+        modelName: "Song",
+    }
+);
+
 export class Book extends Model<
     InferAttributes<Book>,
     InferCreationAttributes<Book>
@@ -148,6 +203,7 @@ export class Practice extends Model<
     declare id: CreationOptional<number>;
     declare user_id: ForeignKey<User["id"]>;
     declare exercise_id: ForeignKey<Exercise["id"]>;
+    declare song_id: ForeignKey<Song["id"]>;
     declare done_at: Date;
     declare tempo: number;
     declare note: string;
@@ -166,7 +222,11 @@ Practice.init(
         },
         exercise_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
+        },
+        song_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
         },
         done_at: {
             type: DataTypes.DATE,
@@ -174,7 +234,7 @@ Practice.init(
         },
         tempo: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         note: {
             type: DataTypes.TEXT,

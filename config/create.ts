@@ -1,7 +1,15 @@
 import fs from "fs";
 import csvParser from "csv-parser";
 import { Sequelize } from "sequelize";
-import { Book, User, Section, Exercise, Practice } from "../src/models";
+import {
+    Book,
+    User,
+    Section,
+    Exercise,
+    Practice,
+    Artist,
+    Song,
+} from "../src/models";
 
 /**
  * Alters/migrates existing tables if they exist, else creates
@@ -77,7 +85,38 @@ async function fillBookSheetData(data: any[]) {
         }
     }
 }
+async function fillSongData(data: any[], userId: number) {
+    for (const row of data) {
+        const practiceDate = new Date(row["Date"]);
+        const songName = row["Song"];
+        const artistName = row["Artist"];
+        const notes = row["Notes"];
+        let tempo = parseInt(row["Tempo"]);
+        if (Number.isNaN(tempo)) {
+            tempo = 0;
+        }
 
+        // Find or create the artist
+        const [artist] = await Artist.findOrCreate({
+            where: { name: artistName },
+        });
+
+        const [song] = await Song.findOrCreate({
+            where: {
+                name: songName,
+                artist_id: artist.id,
+            },
+        });
+
+        await Practice.create({
+            user_id: userId,
+            song_id: song.id,
+            done_at: practiceDate,
+            tempo: tempo,
+            note: notes,
+        });
+    }
+}
 async function fillPracticeData(data: any[], userId: number) {
     for (const row of data) {
         const practiceDate = new Date(row["Date"]);
@@ -133,16 +172,20 @@ async function fillPracticeData(data: any[], userId: number) {
 
 export async function insertCsvData(
     bookFilePath: string,
-    practiceFilePath: string
+    practiceFilePath: string,
+    songFilePath: string
 ) {
-    const bookData = await readDataFromCSV(bookFilePath);
-    await fillBookSheetData(bookData);
-
     // Everything is me for now, lazy
     const brady = await User.create({
         username: "brady",
         createdAt: new Date(),
     });
+    const bookData = await readDataFromCSV(bookFilePath);
+    await fillBookSheetData(bookData);
+
     const practiceData = await readDataFromCSV(practiceFilePath);
     await fillPracticeData(practiceData, brady.id);
+
+    const songData = await readDataFromCSV(songFilePath);
+    await fillSongData(songData, brady.id);
 }
