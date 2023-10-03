@@ -2,6 +2,7 @@ import express from "express";
 import { insertCsvData, maybeCreateTables } from "./config/create";
 import { router } from "./src/routes";
 import { sequelize } from "./src/models";
+import path = require("path");
 
 async function startServer() {
     // Load some dummy data in
@@ -12,6 +13,7 @@ async function startServer() {
     const app = express();
     app.set("view engine", "pug");
     app.set("views", "./views");
+    app.use(express.static("public"));
 
     app.use("/", router);
     app.listen(3000, () => {
