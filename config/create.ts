@@ -28,13 +28,15 @@ export async function deleteAndCreateTables(seq: Sequelize) {
 }
 
 /**
- * Read data from CSV's into an array
+ * Read data from TSV's into an array
  */
-export function readDataFromCSV(filePath: string): Promise<any[]> {
+export function readDataFromTSV(filePath: string): Promise<any[]> {
     return new Promise<any[]>((resolve, reject) => {
         const results: any[] = [];
 
-        const stream = fs.createReadStream(filePath).pipe(csvParser());
+        const stream = fs
+            .createReadStream(filePath)
+            .pipe(csvParser({ separator: "\t" }));
 
         stream.on("data", (data) => {
             results.push(data);
@@ -170,7 +172,7 @@ async function fillPracticeData(data: any[], userId: number) {
     }
 }
 
-export async function insertCsvData(
+export async function insertTsvData(
     bookFilePath: string,
     practiceFilePath: string,
     songFilePath: string
@@ -180,12 +182,12 @@ export async function insertCsvData(
         username: "brady",
         createdAt: new Date(),
     });
-    const bookData = await readDataFromCSV(bookFilePath);
+    const bookData = await readDataFromTSV(bookFilePath);
     await fillBookSheetData(bookData);
 
-    const practiceData = await readDataFromCSV(practiceFilePath);
+    const practiceData = await readDataFromTSV(practiceFilePath);
     await fillPracticeData(practiceData, brady.id);
 
-    const songData = await readDataFromCSV(songFilePath);
+    const songData = await readDataFromTSV(songFilePath);
     await fillSongData(songData, brady.id);
 }

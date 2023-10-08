@@ -1,5 +1,5 @@
 import express from "express";
-import { insertCsvData, maybeCreateTables } from "./config/create";
+import { insertTsvData, maybeCreateTables } from "./config/create";
 import { router } from "./src/routes";
 import { sequelize } from "./src/models";
 import path = require("path");
@@ -7,7 +7,7 @@ import path = require("path");
 async function startServer() {
     // Load some dummy data in
     await maybeCreateTables(sequelize).then(() =>
-        insertCsvData("data/book.csv", "data/practices.csv", "data/songs.csv")
+        insertTsvData("data/book.tsv", "data/practices.tsv", "data/songs.tsv")
     );
 
     const app = express();
