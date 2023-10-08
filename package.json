@@ -31,8 +31,10 @@
     "@types/sqlite3": "^3.1.8",
     "better-sqlite3": "^8.4.0",
     "bulma": "^0.9.4",
+    "connect-livereload": "^0.6.1",
     "csv-parser": "^3.0.0",
     "express": "^4.18.2",
+    "livereload": "^0.9.3",
     "pug": "^3.0.2",
     "sass": "^1.68.0",
     "sequelize": "^6.32.1",
@@ -40,6 +42,8 @@
     "typescript": "^5.1.3"
   },
   "devDependencies": {
+    "@types/connect-livereload": "^0.6.1",
+    "@types/livereload": "^0.9.3",
     "node-sass": "^9.0.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1"

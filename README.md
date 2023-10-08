@@ -5,6 +5,7 @@ teach me stick control
 ## WIP
 
 To generate CSS: `npm run css-build`
+To run stuff: `npx tsc && node dist/app.js`
 
 https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/development_environment
 
