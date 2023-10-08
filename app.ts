@@ -1,5 +1,5 @@
 import express from "express";
-import { insertTsvData, maybeCreateTables } from "./config/create";
+import { insertTsvData, maybeCreateTables } from "./src/create";
 import { router } from "./src/routes";
 import { sequelize } from "./src/models";
 import path = require("path");

@@ -9,7 +9,7 @@ import {
     Practice,
     Artist,
     Song,
-} from "../src/models";
+} from "./models";
 
 /**
  * Alters/migrates existing tables if they exist, else creates
