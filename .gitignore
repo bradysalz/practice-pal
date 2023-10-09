@@ -10,6 +10,7 @@ node_modules
 # DB stuff
 *.db
 *.sqlite3
+*.sqlite
 
 # Data is just for me
 data/

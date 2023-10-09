@@ -1,0 +1,23 @@
+mixin item(name, url)
+  li
+  a(href=url)= name
+
+aside.menu
+p.menu-label
+  | Practice Books
+ul.menu-list 
+  +item('Book', '/table/books')
+  +item('Section', '/table/sections')
+  +item('Exercise', '/table/exercises')
+  +item('Practice', '/table/practices')
+p.menu-label 
+  | Learning Music
+ul.menu-list
+  +item('Artist', '/table/artists')
+  +item('Song', '/table/songs')
+  +item('Practice', '/table/practices')
+p.menu-label 
+  | Misc
+ul.menu-list
+  +item('User', '/table/users')
+
