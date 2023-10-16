@@ -52,3 +52,19 @@ router.get("/table/:id", async (req: Request, res: Response) => {
     const fields = Object.keys(model.getAttributes());
     res.render("./table", { fields: fields, rows: data });
 });
+
+router.get("/sections", async (req: Request, res: Response) => {
+    const data = await Section.findAll({
+        raw: true,
+        include: [
+            {
+                model: Book,
+                attributes: ["name"],
+            },
+        ],
+    });
+    // let fields = Object.keys(Section.getAttributes());
+    let fields = ["id", "section", "Book.name"];
+    console.log(data);
+    res.render("./table", { fields: fields, rows: data });
+});

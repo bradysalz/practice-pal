@@ -7,6 +7,7 @@ import {
     InferAttributes,
     InferCreationAttributes,
 } from "sequelize";
+import { updateLanguageServiceSourceFile } from "typescript";
 
 export const sequelize = new Sequelize({
     dialect: "sqlite",
@@ -22,6 +23,9 @@ export class User extends Model<
     declare createdAt: Date;
     declare hash: string | null;
     declare salt: string | null;
+    static associate() {
+        User.hasMany(Practice, { foreignKey: "user_id" });
+    }
 }
 User.init(
     {
@@ -53,6 +57,9 @@ export class Artist extends Model<
 > {
     declare id: CreationOptional<number>;
     declare name: string;
+    static associate() {
+        Artist.hasMany(Song, { foreignKey: "artist_id" });
+    }
 }
 Artist.init(
     {
@@ -79,6 +86,10 @@ export class Song extends Model<
     declare id: CreationOptional<number>;
     declare artist_id: ForeignKey<Artist["id"]> | null;
     declare name: string;
+    static associate() {
+        Song.belongsTo(Artist, { foreignKey: "artist_id" });
+        Song.hasMany(Practice, { foreignKey: "song_id" });
+    }
 }
 Song.init(
     {
@@ -108,6 +119,10 @@ export class Book extends Model<
 > {
     declare id: CreationOptional<number>;
     declare name: string;
+    static associate() {
+        Book.hasMany(Section, { foreignKey: "book_id" });
+        Book.hasMany(Exercise, { foreignKey: "book_id" });
+    }
 }
 Book.init(
     {
@@ -134,6 +149,10 @@ export class Section extends Model<
     declare id: CreationOptional<number>;
     declare book_id: ForeignKey<Book["id"]> | null;
     declare section: string;
+    static associate() {
+        Section.belongsTo(Book, { foreignKey: "book_id" });
+        Section.hasMany(Exercise, { foreignKey: "section_id" });
+    }
 }
 Section.init(
     {
@@ -167,6 +186,11 @@ export class Exercise extends Model<
     declare name: string | null;
     declare exercise: number | null;
     declare filepath: string | null;
+    static associate() {
+        Exercise.belongsTo(Book, { foreignKey: "book_id" });
+        Exercise.belongsTo(Section, { foreignKey: "section_id" });
+        Exercise.hasMany(Practice, { foreignKey: "exercise_id" });
+    }
 }
 Exercise.init(
     {
@@ -210,6 +234,10 @@ export class Practice extends Model<
     declare done_at: Date;
     declare tempo: number;
     declare note: string;
+    static associate() {
+        Practice.belongsTo(User, { foreignKey: "user_id" });
+        Practice.belongsTo(Exercise, { foreignKey: "exercise_id" });
+    }
 }
 
 Practice.init(
@@ -246,3 +274,17 @@ Practice.init(
     },
     { sequelize, modelName: "Practice" }
 );
+
+/**
+ * Initialize all model associations and sync the database
+ */
+export function initializeAllModels() {
+    User.associate();
+    Artist.associate();
+    Song.associate();
+    Book.associate();
+    Section.associate();
+    Exercise.associate();
+    Practice.associate();
+    sequelize.sync();
+}

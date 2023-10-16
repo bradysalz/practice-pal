@@ -1,6 +1,7 @@
 import fs from "fs";
+import sqlite from "sqlite3";
 import csvParser from "csv-parser";
-import { Sequelize } from "sequelize";
+import { sequelize } from "./models";
 import {
     Book,
     User,
@@ -15,16 +16,16 @@ import {
  * Alters/migrates existing tables if they exist, else creates
  * @param seq Sequelize database instance
  */
-export async function maybeCreateTables(seq: Sequelize) {
-    await seq.sync({ alter: true });
+export async function maybeCreateTables() {
+    await sequelize.sync({ alter: true });
 }
 
 /**
  * Delete all existing tables, and then create them fresh
  * @param seq database instance
  */
-export async function deleteAndCreateTables(seq: Sequelize) {
-    await seq.sync({ force: true });
+export async function deleteAndCreateTables() {
+    await sequelize.sync({ force: true });
 }
 
 /**
@@ -191,3 +192,17 @@ export async function insertTsvData(
     const songData = await readDataFromTSV(songFilePath);
     await fillSongData(songData, brady.id);
 }
+
+// Load some dummy data in
+export async function createDatabase() {
+    const db = new sqlite.Database("database.sqlite");
+    await deleteAndCreateTables();
+    await insertTsvData(
+        "data/book.tsv",
+        "data/practices.tsv",
+        "data/songs.tsv"
+    );
+    sequelize.sync();
+}
+
+createDatabase();
