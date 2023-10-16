@@ -10,6 +10,10 @@ import {
 } from "./models";
 import { artistRouter } from "./routes/artists";
 import { songRouter } from "./routes/songs";
+import { bookRouter } from "./routes/books";
+import { sectionRouter } from "./routes/sections";
+import { exerciseRouter } from "./routes/exercises";
+// TODO add/create practice router
 
 export let mainRouter = Router();
 
@@ -22,6 +26,9 @@ export interface DisplayRow {
 
 mainRouter.use("/artists", artistRouter);
 mainRouter.use("/songs", songRouter);
+mainRouter.use("/books", bookRouter);
+mainRouter.use("/sections", sectionRouter);
+mainRouter.use("/exercises", exerciseRouter);
 
 mainRouter.get("/", (req: Request, res: Response) => {
     res.render("./layouts/index.pug");

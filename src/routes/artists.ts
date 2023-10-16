@@ -65,6 +65,7 @@ artistRouter.get("/:artistId", async (req: Request, res: Response) => {
         },
     ]);
 
+    // TODO refactor to Artist query instead
     res.render("./table", {
         //@ts-ignore on table joins
         sectionTitle: "Songs by " + rows[0]["Artist.name"],

@@ -76,6 +76,7 @@ songRouter.get("/:songId", async (req: Request, res: Response) => {
 
     res.render("./table", {
         sectionTitle:
+            // TODO refactor to Song/Artist query instead of potiential null
             //@ts-ignore on table joins
             rows[0]["Song.name"] + " by " + rows[0]["Song.Artist.name"],
         titles: titles,

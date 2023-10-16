@@ -7,7 +7,6 @@ import {
     InferAttributes,
     InferCreationAttributes,
 } from "sequelize";
-import { updateLanguageServiceSourceFile } from "typescript";
 
 export const sequelize = new Sequelize({
     dialect: "sqlite",
@@ -121,7 +120,6 @@ export class Book extends Model<
     declare name: string;
     static associate() {
         Book.hasMany(Section, { foreignKey: "book_id" });
-        Book.hasMany(Exercise, { foreignKey: "book_id" });
     }
 }
 Book.init(
@@ -181,13 +179,11 @@ export class Exercise extends Model<
     InferCreationAttributes<Exercise>
 > {
     declare id: CreationOptional<number>;
-    declare book_id: ForeignKey<Book["id"]> | null;
     declare section_id: ForeignKey<Section["id"]> | null;
     declare name: string | null;
     declare exercise: number | null;
     declare filepath: string | null;
     static associate() {
-        Exercise.belongsTo(Book, { foreignKey: "book_id" });
         Exercise.belongsTo(Section, { foreignKey: "section_id" });
         Exercise.hasMany(Practice, { foreignKey: "exercise_id" });
     }
@@ -198,10 +194,6 @@ Exercise.init(
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
-        },
-        book_id: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
         },
         section_id: {
             type: DataTypes.INTEGER,

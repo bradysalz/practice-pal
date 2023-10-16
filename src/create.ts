@@ -61,8 +61,8 @@ async function fillBookSheetData(data: any[]) {
     for (const row of data) {
         const bookName = row["Book"];
         const sectionName = row["Section"];
-        const startExercise = parseInt(row["Start_Exercise"]);
-        const endExercise = parseInt(row["End_Exercise"]);
+        const startExercise = parseInt(row["Start Exercise"]);
+        const endExercise = parseInt(row["End Exercise"]);
 
         // Find or create the book
         const [book] = await Book.findOrCreate({
@@ -81,7 +81,6 @@ async function fillBookSheetData(data: any[]) {
             exerciseNumber++
         ) {
             await Exercise.create({
-                book_id: book.id,
                 section_id: section.id,
                 exercise: exerciseNumber,
             });
@@ -140,35 +139,37 @@ async function fillPracticeData(data: any[], userId: number) {
         });
 
         // Split the exercise range and create practices for each exercise
-        if (exerciseRange) {
-            const [startExercise, endExercise] = exerciseRange
-                .split("-")
-                .map(Number);
+        let startExercise;
+        let endExercise;
+        if (exerciseRange.includes("-")) {
+            [startExercise, endExercise] = exerciseRange.split("-").map(Number);
+        } else {
+            startExercise = parseInt(exerciseRange);
+            endExercise = parseInt(exerciseRange);
+        }
 
-            for (
-                let exerciseNumber = startExercise;
-                exerciseNumber <= endExercise;
-                exerciseNumber++
-            ) {
-                // Find or create the exercise within the book and section
-                const [exercise] = await Exercise.findOrCreate({
-                    where: {
-                        book_id: book.id,
-                        section_id: section.id,
-                        exercise: exerciseNumber,
-                    },
-                });
+        for (
+            let exerciseNumber = startExercise;
+            exerciseNumber <= endExercise;
+            exerciseNumber++
+        ) {
+            // Find or create the exercise witin the section
+            const [exercise] = await Exercise.findOrCreate({
+                where: {
+                    section_id: section.id,
+                    exercise: exerciseNumber,
+                },
+            });
 
-                // Create the practice record and associate it with the user,
-                // exercise, and other data
-                await Practice.create({
-                    user_id: userId,
-                    exercise_id: exercise.id,
-                    done_at: practiceDate,
-                    tempo: tempo,
-                    note: notes,
-                });
-            }
+            // Create the practice record and associate it with the user,
+            // exercise, and other data
+            await Practice.create({
+                user_id: userId,
+                exercise_id: exercise.id,
+                done_at: practiceDate,
+                tempo: tempo,
+                note: notes,
+            });
         }
     }
 }

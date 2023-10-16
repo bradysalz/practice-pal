@@ -44,6 +44,7 @@
   "devDependencies": {
     "@types/connect-livereload": "^0.6.1",
     "@types/livereload": "^0.9.3",
+    "eslint": "^8.51.0",
     "node-sass": "^9.0.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1"
