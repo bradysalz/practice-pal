@@ -68,3 +68,7 @@ router.get("/sections", async (req: Request, res: Response) => {
     console.log(data);
     res.render("./table", { fields: fields, rows: data });
 });
+
+router.get("/plot", async (req: Request, res: Response) => {
+    res.render("./chart");
+});
