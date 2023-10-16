@@ -237,6 +237,7 @@ export class Practice extends Model<
     static associate() {
         Practice.belongsTo(User, { foreignKey: "user_id" });
         Practice.belongsTo(Exercise, { foreignKey: "exercise_id" });
+        Practice.belongsTo(Song, { foreignKey: "song_id" });
     }
 }
 

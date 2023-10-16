@@ -8,10 +8,22 @@ import {
     Song,
     User,
 } from "./models";
+import { artistRouter } from "./routes/artists";
+import { songRouter } from "./routes/songs";
 
-export let router = Router();
+export let mainRouter = Router();
 
-router.get("/", (req: Request, res: Response) => {
+export interface DisplayRow {
+    /** Displayed value in each row */
+    value: string;
+    /** Redirect link, if needed */
+    link?: string;
+}
+
+mainRouter.use("/artists", artistRouter);
+mainRouter.use("/songs", songRouter);
+
+mainRouter.get("/", (req: Request, res: Response) => {
     res.render("./layouts/index.pug");
 });
 
@@ -19,7 +31,7 @@ router.get("/", (req: Request, res: Response) => {
  * Useful mostly for debugging tables. It's nice to have this quick debug view
  * to see what you're calling and working with.
  */
-router.get("/table/:id", async (req: Request, res: Response) => {
+mainRouter.get("/table/:id", async (req: Request, res: Response) => {
     let model: any;
     switch (req.params.id) {
         case "users":
@@ -50,10 +62,10 @@ router.get("/table/:id", async (req: Request, res: Response) => {
     // compatible Model types for some reason
     const data = await (model as any).findAll({ raw: true });
     const fields = Object.keys(model.getAttributes());
-    res.render("./table", { fields: fields, rows: data });
+    res.render("./generic_table", { fields: fields, rows: data });
 });
 
-router.get("/sections", async (req: Request, res: Response) => {
+mainRouter.get("/sections", async (req: Request, res: Response) => {
     const data = await Section.findAll({
         raw: true,
         include: [
@@ -66,9 +78,9 @@ router.get("/sections", async (req: Request, res: Response) => {
     // let fields = Object.keys(Section.getAttributes());
     let fields = ["id", "section", "Book.name"];
     console.log(data);
-    res.render("./table", { fields: fields, rows: data });
+    res.render("./generic_table", { fields: fields, rows: data });
 });
 
-router.get("/plot", async (req: Request, res: Response) => {
+mainRouter.get("/plot", async (req: Request, res: Response) => {
     res.render("./chart");
 });

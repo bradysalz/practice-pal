@@ -1,6 +1,6 @@
 import express from "express";
 import { initializeAllModels } from "./src/models";
-import { router } from "./src/routes";
+import { mainRouter } from "./src/routes";
 import path = require("path");
 import livereload from "livereload";
 import connectLiveReload from "connect-livereload";
@@ -11,7 +11,7 @@ async function startServer() {
     app.set("views", "./views");
     app.use(express.static("public"));
 
-    app.use("/", router);
+    app.use("/", mainRouter);
     app.use(connectLiveReload());
 
     const liveReloadServer = livereload.createServer();

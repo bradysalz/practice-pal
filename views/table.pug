@@ -1,14 +1,20 @@
 extends layouts/index.pug
 
 block body
+  .title= sectionTitle
+
   .table-container
   table.table.is-striped
     thead
-      each f in fields
+      each f in titles
         th= f
 
     tbody
-      each row in rows
+      each row in data
         tr
-          each f in fields
-            td= row[f]
+          each cell in row
+            td
+              if cell.link
+                a(href=cell.link) #{cell.value}
+              else
+                | #{cell.value}
