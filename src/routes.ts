@@ -13,7 +13,7 @@ import { songRouter } from "./routes/songs";
 import { bookRouter } from "./routes/books";
 import { sectionRouter } from "./routes/sections";
 import { exerciseRouter } from "./routes/exercises";
-// TODO add/create practice router
+import { practiceRouter } from "./routes/practices";
 
 export let mainRouter = Router();
 
@@ -29,6 +29,7 @@ mainRouter.use("/songs", songRouter);
 mainRouter.use("/books", bookRouter);
 mainRouter.use("/sections", sectionRouter);
 mainRouter.use("/exercises", exerciseRouter);
+mainRouter.use("/practices", practiceRouter);
 
 mainRouter.get("/", (req: Request, res: Response) => {
     res.render("./layouts/index.pug");

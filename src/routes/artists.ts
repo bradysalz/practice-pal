@@ -44,6 +44,7 @@ artistRouter.get("/", async (req: Request, res: Response) => {
  * Show a list of all songs by an artist
  */
 artistRouter.get("/:artistId", async (req: Request, res: Response) => {
+    // TODO this should be a Practice query, do a count-by on those
     const rows = await Song.findAll({
         raw: true,
         where: {
@@ -66,6 +67,7 @@ artistRouter.get("/:artistId", async (req: Request, res: Response) => {
     ]);
 
     // TODO refactor to Artist query instead
+    // TODO make the artist a link
     res.render("./table", {
         //@ts-ignore on table joins
         sectionTitle: "Songs by " + rows[0]["Artist.name"],

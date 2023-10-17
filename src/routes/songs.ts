@@ -66,8 +66,8 @@ songRouter.get("/:songId", async (req: Request, res: Response) => {
     let data: DisplayRow[][] = rows.map((row) => [
         {
             //@ts-ignore it gives me a string, not a Date, i dunno
-            value: row["done_at"].split(" ")[0],
-            link: "/practice-dates/" + row["id"].toString(),
+            value: row["done_at"].toString(),
+            link: "/practices/dates/" + row["done_at"].toString(),
         },
         {
             value: row["note"],

@@ -253,7 +253,7 @@ Practice.init(
             allowNull: true,
         },
         done_at: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false,
         },
         tempo: {
