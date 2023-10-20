@@ -83,9 +83,7 @@ mainRouter.get("/sections", async (req: Request, res: Response) => {
             },
         ],
     });
-    // let fields = Object.keys(Section.getAttributes());
     let fields = ["id", "section", "Book.name"];
-    console.log(data);
     res.render("./generic_table", { fields: fields, rows: data });
 });
 

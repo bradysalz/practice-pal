@@ -123,7 +123,6 @@ practiceRouter.get("/dates/:date", async (req: Request, res: Response) => {
             done_at: req.params["date"],
         },
     });
-    console.log(rows);
     let titles = ["Date", "Piece", "Tempo", "Notes"];
     let data: DisplayRow[][] = rows.map((row) => displayRowFromPractice(row));
     res.render("./table", {

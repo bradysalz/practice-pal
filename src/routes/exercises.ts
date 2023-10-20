@@ -90,7 +90,7 @@ exerciseRouter.get("/:exerciseId", async (req: Request, res: Response) => {
         {
             //@ts-ignore it gives me a string, not a Date, i dunno
             value: row["done_at"].toString(),
-            link: "/practice/dates/" + row["done_at"].toString(),
+            link: "/practices/dates/" + row["done_at"].toString(),
         },
         {
             value: row["tempo"]?.toString() || "",
