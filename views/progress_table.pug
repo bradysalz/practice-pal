@@ -1,0 +1,26 @@
+extends layouts/index.pug
+
+block body
+  .title
+    | !{sectionTitle}
+
+  .table-container
+  table.table.is-striped
+    thead
+      each f in titles
+        th= f
+      th.is-4
+        | Progress
+
+    tbody
+      each row in data
+        tr
+          each cell in row
+            td
+              if cell.link
+                a(href=cell.link) #{cell.value}
+              else
+                | #{cell.value}
+          td
+            progress.progress.is-medium.is-primary(value='15' max='100')
+              | 15%
