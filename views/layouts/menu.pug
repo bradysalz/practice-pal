@@ -3,20 +3,20 @@ mixin item(name, url)
   a(href=url)= name
 
 aside.menu
-p.menu-label
-  | Practice Books
-ul.menu-list
-  +item('Books', '/books')
-  +item('Sections', '/sections')
-  +item('Exercises', '/exercises')
-  +item('Practices', '/practices')
-p.menu-label
-  | Learning Music
-ul.menu-list
-  +item('Artists', '/artists')
-  +item('Songs', '/songs')
-  +item('Practices', '/practices')
-p.menu-label
-  | Misc
-ul.menu-list
-  +item('Users', '/users')
+  h5.menu-label
+    | Practice Books
+  ul.menu-list
+    +item('Books', '/books')
+    +item('Sections', '/sections')
+    +item('Exercises', '/exercises')
+    +item('Practices', '/practices')
+  p.menu-label
+    | Learning Music
+  ul.menu-list
+    +item('Artists', '/artists')
+    +item('Songs', '/songs')
+    +item('Practices', '/practices')
+  p.menu-label
+    | Misc
+  ul.menu-list
+    +item('Users', '/users')

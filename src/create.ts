@@ -60,7 +60,10 @@ export function readDataFromTSV(filePath: string): Promise<any[]> {
 async function fillBookSheetData(data: any[]) {
     for (const row of data) {
         const bookName = row["Book"];
-        const sectionName = row["Section"];
+        let sectionName = row["Section"];
+        if (sectionName === "") {
+            sectionName = `Sections (${bookName})`;
+        }
         const startExercise = parseInt(row["Start Exercise"]);
         const endExercise = parseInt(row["End Exercise"]);
 
@@ -123,7 +126,10 @@ async function fillPracticeData(data: any[], userId: number) {
     for (const row of data) {
         const practiceDate = new Date(row["Date"]);
         const bookName = row["Book"];
-        const sectionName = row["Section"];
+        let sectionName = row["Section"];
+        if (sectionName === "") {
+            sectionName = `Sections (${bookName})`;
+        }
         const exerciseRange = row["Exercise"];
         const tempo = parseInt(row["Tempo"]);
         const notes = row["Notes"];

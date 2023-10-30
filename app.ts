@@ -4,6 +4,7 @@ import { mainRouter } from "./src/routes";
 import path = require("path");
 import livereload from "livereload";
 import connectLiveReload from "connect-livereload";
+import sass from "sass";
 
 async function startServer() {
     const app = express();
@@ -17,6 +18,7 @@ async function startServer() {
     const liveReloadServer = livereload.createServer();
     liveReloadServer.watch(path.join(__dirname, "public"));
 
+    const result = sass.compile("sass/custom.scss");
     initializeAllModels();
 
     app.listen(3000, () => {

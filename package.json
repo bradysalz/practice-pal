@@ -8,7 +8,7 @@
     "css-build": "node-sass sass/custom.scss public/css/custom.css",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch",
-    "dev": "nodemon app.ts"
+    "dev": "nodemon app.ts -e js,scss,pug"
   },
   "repository": {
     "type": "git",

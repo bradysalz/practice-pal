@@ -10,14 +10,13 @@ head
 
 
 body
-  section.section
+  .section
     include navbar.pug
 
-  .tile.is-ancestor
-    .tile.is-3.is-parent
-      .tile.is-child.box
-        p.title Menu
+  .section
+    .columns
+      .column.is-one-fifth
         include menu.pug
-    .tile.is-parent
-      .tile.is-child.box
+
+      .column.box
         block body
