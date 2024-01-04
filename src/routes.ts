@@ -31,8 +31,33 @@ mainRouter.use("/sections", sectionRouter);
 mainRouter.use("/exercises", exerciseRouter);
 mainRouter.use("/practices", practiceRouter);
 
-mainRouter.get("/", (req: Request, res: Response) => {
-    res.render("./layouts/index.pug");
+mainRouter.get("/", async (req: Request, res: Response) => {
+    const numExercises = await Practice.findAndCountAll({
+        include: [
+            {
+                model: Exercise,
+                required: true
+            },
+        ]
+    });
+    const numSongs = await Practice.findAndCountAll({
+        include: [
+            {
+                model: Song,
+                required: true
+            },
+        ]
+    });
+    const numDays = await Practice.findAndCountAll({
+        distinct: true,
+        group: ["Practice.done_at"]
+    });
+
+    res.render("./home.pug", {
+        numExercises: numExercises.count,
+        numSongs: numSongs.count,
+        numDays: numDays.count.length,
+    });
 });
 
 /** Catches /table/<id>

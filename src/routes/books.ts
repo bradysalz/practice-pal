@@ -5,55 +5,37 @@ import { DisplayRow } from "../routes";
 
 export const bookRouter = Router();
 
-// Count Exercises Grouped by Sections in a Book
-const countExercisesBySectionInBook = async (bookId: string) => {
-    return await Exercise.findAndCountAll({
+/**
+ * Maybe this is too fancy, doesn't work yet
+ * @returns 
+ */
+const getBooksWithCounts = async () => {
+    const books = await Book.findAll({
         attributes: [
-            [
-                Sequelize.fn("COUNT", Sequelize.col("Exercises.id")),
-                "exerciseCount",
-            ],
+            'id',
+            'name',
+            [Sequelize.fn('COUNT', Sequelize.col('Sections.id')), 'TotalSections'],
+            [Sequelize.fn('COUNT', Sequelize.col('Sections.Exercises.id')), 'TotalExercises'],
+            [Sequelize.fn('COUNT', Sequelize.col('Sections.Exercises.Practices.id')), 'ExercisesWithPractices'],
         ],
-        include: [
-            {
-                model: Section,
-                where: { book_id: bookId },
-                attributes: ["section"],
-                include: [
-                    {
-                        model: Book,
-                        attributes: ["name"],
-                    },
-                ],
-            },
-        ],
-        group: ["Section.id"], // Group by Section ID
-    });
-};
-
-// Total Number of Exercises in a Book with at Least One Practice
-const getTotalExercisesWithPracticesInBook = async (bookId: string) => {
-    const exercisesWithPractices = await Exercise.count({
-        distinct: true,
-        where: {},
-        include: [
-            {
-                model: Section,
-                where: { book_id: bookId },
-                include: [
-                    {
-                        model: Book,
-                    },
-                    {
-                        model: Practice,
-                    },
-                ],
-            },
-        ],
+        include: [{
+            model: Section,
+            attributes: ['id'],
+            include: [{
+                model: Exercise,
+                attributes: ['id'],
+                include: [{
+                    model: Practice,
+                    attributes: ['id'],
+                }],
+            }],
+        }],
+        group: ['Book.id'],
     });
 
-    return exercisesWithPractices;
+    return books;
 };
+
 
 /**
  * Show a list of all books and their sections
@@ -74,7 +56,10 @@ bookRouter.get("/", async (req: Request, res: Response) => {
         group: ["Book.id"],
     });
 
-    let titles = ["Artist", "Number of Sections"];
+    const bbbbooks = await getBooksWithCounts();
+    console.log(bbbbooks);
+
+    let titles = ["Book", "Sections"];
     let data: DisplayRow[][] = rows.map((row) => [
         {
             // @ts-ignore on table joins
@@ -87,7 +72,7 @@ bookRouter.get("/", async (req: Request, res: Response) => {
         },
     ]);
 
-    res.render("./table", {
+    res.render("./progress_table", {
         sectionTitle: "Books",
         titles: titles,
         data: data,
