@@ -1,4 +1,8 @@
-import { Button, Input } from '@rneui/themed'
+import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/text';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+
 import { Session } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
@@ -77,22 +81,27 @@ export default function Account({ session }: { session: Session }) {
     return (
         <View style={styles.container}>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Input label="Email" value={session?.user?.email} disabled />
+                <Label> Email </Label>
+                <Input value={session?.user?.email} editable={false} />
             </View>
             <View style={styles.verticallySpaced}>
-                <Input label="Username" value={full_name || ''} onChangeText={(text) => setFullName(text)} />
+                <Label> Username </Label>
+                <Input value={full_name || ''} onChangeText={(text) => setFullName(text)} />
             </View>
 
             <View style={[styles.verticallySpaced, styles.mt20]}>
                 <Button
-                    title={loading ? 'Loading ...' : 'Update'}
                     onPress={() => updateProfile({ full_name, avatar_url: avatarUrl })}
                     disabled={loading}
-                />
+                >
+                    <Text>{loading ? 'Loading ...' : 'Update'}</Text>
+                </Button>
             </View>
 
             <View style={styles.verticallySpaced}>
-                <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+                <Button onPress={() => supabase.auth.signOut()}>
+                    <Text> Sign out </Text>
+                </Button>
             </View>
         </View>
     )

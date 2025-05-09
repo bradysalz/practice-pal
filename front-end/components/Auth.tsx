@@ -1,8 +1,12 @@
-import { Button, Input } from '@rneui/themed'
+import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/text';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { Alert, AppState, StyleSheet, View } from 'react-native'
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -56,9 +60,8 @@ export default function Auth() {
     return (
         <View style={styles.container}>
             <View style={[styles.verticallySpaced, styles.mt20]}>
+                <Label htmlFor="email">Email</Label>
                 <Input
-                    label="Email"
-                    leftIcon={{ type: 'font-awesome', name: 'envelope' }}
                     onChangeText={(text) => setEmail(text)}
                     value={email}
                     placeholder="email@address.com"
@@ -66,9 +69,8 @@ export default function Auth() {
                 />
             </View>
             <View style={styles.verticallySpaced}>
+                <Label htmlFor="password">Email</Label>
                 <Input
-                    label="Password"
-                    leftIcon={{ type: 'font-awesome', name: 'lock' }}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     secureTextEntry={true}
@@ -77,10 +79,14 @@ export default function Auth() {
                 />
             </View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+                <Button disabled={loading} onPress={() => signInWithEmail()}>
+                    <Text>Sign in</Text>
+                </Button>
             </View>
             <View style={styles.verticallySpaced}>
-                <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+                <Button disabled={loading} onPress={() => signUpWithEmail()}>
+                    <Text>Sign up</Text>
+                </Button>
             </View>
         </View>
     )

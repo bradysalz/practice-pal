@@ -1,9 +1,10 @@
 import { Database } from '@/types/supabase'
-import { Input } from '@rneui/themed'
+import { Input } from '@/components/ui/input'
 import { Session } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
-import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
+import { Label } from './ui/label'
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
 type SectionRow = Database['public']['Tables']['sections']['Row'];
@@ -63,7 +64,8 @@ export default function PracticeList({ session }: { session: Session }) {
     return (
         <View style={styles.container}>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Input label="Email" value={session?.user?.email} disabled />
+                <Label>Email</Label>
+                <Input value={session?.user?.email} editable={false} />
             </View>
             <View style={styles.verticallySpaced}>
                 {practices.map((ex, i) => (
