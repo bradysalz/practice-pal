@@ -23,7 +23,6 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
