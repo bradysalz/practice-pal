@@ -74,14 +74,15 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
           </CardHeader>
         </Pressable>
 
-        <CardContent
-          className={`p-0 overflow-hidden transition-all duration-300 ${isExpanded ? 'h-auto' : 'h-0'}`}
+        {isExpanded && <CardContent
+          className="p-0 overflow-hidden transition-all duration-300"
         >
           <View className="p-4 pt-2">
             {session.exercises.length > 0 && (
               <View className="mb-3">
                 <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
-                  <Dumbbell size={16} className="text-red-500" /> Exercises
+                  <Dumbbell size={16} className="text-red-500" />
+                  <Text> Exercises </Text>
                 </View>
                 {session.exercises.map((exercise) => (
                   <View key={exercise.id} className="flex-row justify-between">
@@ -95,7 +96,8 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
             {session.songs.length > 0 && (
               <View>
                 <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
-                  <Music size={16} className="text-orange-500" /> Songs
+                  <Music size={16} className="text-orange-500" />
+                  <Text> Songs</Text>
                 </View>
                 {session.songs.map((song) => (
                   <View key={song.id} className="flex-row justify-between">
@@ -118,11 +120,14 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
                 router.push(`/practice-sessions/${session.id}`);
               }}
             >
-              View Full Session
+              <Text>
+                View Full Session
+              </Text>
             </Button>
           </View>
         </CardContent>
+        }
       </Card>
-    </View>
+    </View >
   );
 }
