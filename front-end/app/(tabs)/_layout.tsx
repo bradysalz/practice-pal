@@ -1,6 +1,8 @@
 import { useSession } from '@/components/SessionProvider';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Home, BookOpen, Drum, BarChart } from 'lucide-react-native';
+import { Text } from 'react-native';
 import { Redirect, Tabs } from 'expo-router';
+import { JSX } from 'react';
 
 export default function TabLayout() {
   const session = useSession();
@@ -13,50 +15,50 @@ export default function TabLayout() {
     // Redirect to login/home screen
     return <Redirect href="/login" />;
   }
-
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: '#ffd33d',
-        headerStyle: { backgroundColor: '#25292e' },
-        headerShadowVisible: false,
-        headerTintColor: '#fff',
-        tabBarStyle: { backgroundColor: '#25292e' },
-      }}
+      screenOptions={({ route }) => ({
+        tabBarActiveTintColor: '#ef4444', // Tailwind red-500
+        tabBarInactiveTintColor: '#64748b', // Tailwind slate-500
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarIcon: ({ color, size }) => {
+          const icons: Record<string, JSX.Element> = {
+            index: <Home size={size} color={color} />,
+            practice: <Drum size={size} color={color} />,
+            library: <BookOpen size={size} color={color} />,
+            stats: <BarChart size={size} color={color} />,
+          };
+          return icons[route.name] || <Text>?</Text>;
+        },
+        headerShown: false,
+        tabBarStyle: {
+          borderTopWidth: 1,
+          borderColor: '#e2e8f0', // slate-200
+          backgroundColor: 'white',
+          paddingBottom: 4,
+          paddingTop: 4,
+          height: 60,
+        },
+      })}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="index" options={{ title: 'Home' }} />
+      <Tabs.Screen name="practice" options={{ title: 'Practice' }} />
+      <Tabs.Screen name="library" options={{ title: 'Library' }} />
+      <Tabs.Screen name="stats" options={{ title: 'Stats' }} />
+
+      {/* Need to get manually hide all routes in the folder  */}
+      {/* Downside of too much automagic with the Expo router */}
       <Tabs.Screen
         name="about"
         options={{
-          title: 'About',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'information-circle' : 'information-circle-outline'}
-              color={color}
-              size={24}
-            />
-          ),
+          href: null,
         }}
       />
+      <Tabs.Screen name="account" options={{}} />
       <Tabs.Screen
-        name="account"
+        name="sessions/[id]"
         options={{
-          title: 'Account',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? 'person-circle' : 'person-circle-outline'}
-              color={color}
-              size={24}
-            />
-          ),
+          href: null,
         }}
       />
     </Tabs>

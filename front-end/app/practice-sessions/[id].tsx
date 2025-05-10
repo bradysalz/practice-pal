@@ -1,22 +1,16 @@
 import { View, Text, ScrollView } from 'react-native';
-import { useLocalSearchParams, Link } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
   Dumbbell,
   Music,
-  Clock,
-  ArrowLeft,
-  Home,
-  BookOpen,
-  Drum,
-  BarChart,
+  Clock
 } from 'lucide-react-native';
-import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 
 // Mock data for demonstration - in a real app, you'd fetch this based on the ID
-const sessionsData = {
+const practiceSessionsData = {
   '1': {
     id: '1',
     date: new Date('2024-05-09'),
@@ -86,20 +80,14 @@ const sessionsData = {
   },
 };
 
-export default function SessionDetailPage() {
+export default function PracticeSessionDetailPage() {
   const { id } = useLocalSearchParams();
-  const session = sessionsData[id as keyof typeof sessionsData];
+  const session = practiceSessionsData[id as keyof typeof practiceSessionsData];
 
   if (!session) {
     return (
-      <View className="flex-1 items-center justify-center px-4 py-6">
+      <View className="flex-1 items-center justify-center px-4">
         <Text className="text-2xl font-bold mb-4">Session not found</Text>
-        <Link href="/recent-sessions" asChild>
-          <Button>
-            <ArrowLeft size={16} className="mr-2" />
-            Back to Recent Sessions
-          </Button>
-        </Link>
       </View>
     );
   }
@@ -111,13 +99,6 @@ export default function SessionDetailPage() {
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         {/* Header */}
         <View className="mb-6">
-          <Link
-            href="/recent-sessions"
-            className="flex-row items-center text-sm text-slate-500 mb-2"
-          >
-            <ArrowLeft size={16} className="mr-1" />
-            <Text>Back to Recent Sessions</Text>
-          </Link>
           <Text className="text-2xl font-bold">{formattedDate}</Text>
           <View className="flex-row items-center mt-1">
             <Clock size={14} className="mr-1 text-slate-500" />
@@ -192,25 +173,6 @@ export default function SessionDetailPage() {
           </Card>
         )}
       </ScrollView>
-
-      {/* Bottom Nav */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200">
-        <View className="flex-row justify-around py-2">
-          {[
-            { href: '/recent-sessions', icon: Home, label: 'Home', color: 'text-red-500' },
-            { href: '/library', icon: BookOpen, label: 'Library' },
-            { href: '/create-session', icon: Drum, label: 'Practice' },
-            { href: '/stats', icon: BarChart, label: 'Stats' },
-          ].map(({ href, icon: Icon, label, color = 'text-slate-500' }) => (
-            <Link key={href} href={href} className="flex-col items-center p-2">
-              <View className="h-6 w-6 flex items-center justify-center">
-                <Icon size={20} className={color} />
-              </View>
-              <Text className={`text-xs mt-1 ${color}`}>{label}</Text>
-            </Link>
-          ))}
-        </View>
-      </View>
     </View>
   );
 }

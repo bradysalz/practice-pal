@@ -12,10 +12,10 @@ type BookRow = Database['public']['Tables']['books']['Row'];
 
 type ExerciseWithJoins = ExerciseRow & {
   sections:
-    | (SectionRow & {
-        books: BookRow | null;
-      })
-    | null;
+  | (SectionRow & {
+    books: BookRow | null;
+  })
+  | null;
 };
 
 export default function PracticeList({ session }: { session: Session }) {
@@ -34,12 +34,12 @@ export default function PracticeList({ session }: { session: Session }) {
           .from(`exercises`)
           .select(
             `
-                        *,
-                        sections (
-                          *,
-                          books (*)
-                        )
-                      `
+            *,
+            sections (
+              *,
+              books (*)
+            )
+          `
           )
           .eq('created_by', session?.user.id)
           .limit(10);

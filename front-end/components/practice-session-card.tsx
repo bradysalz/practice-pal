@@ -115,7 +115,7 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
               className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white"
               onPress={(e) => {
                 e.stopPropagation?.(); // Only on web
-                router.push(`/sessions/${session.id}`);
+                router.push(`/practice-sessions/${session.id}`);
               }}
             >
               View Full Session
