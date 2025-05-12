@@ -56,10 +56,10 @@ export default function RecentSessionsPage() {
     // <View className="flex-1 bg-slate-50/50 px-4 py-6">
     <Page>
       {/* Header */}
-      <View className="flex-row items-center gap-x-3 mb-6 pb-3 border-b border-slate-200">
+      {/* <View className="flex-row items-center gap-x-3 mb-6 pb-3 border-b border-slate-200">
         <ThemedIcon name="Drum" size={24} color="red-500" style={{ marginTop: 4 }} />
         <Text className="text-2xl font-bold flex-row items-center gap-2">Recent Sessions</Text>
-      </View>
+      </View> */}
 
       {/* Scrollable list */}
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }} className="space-y-4">

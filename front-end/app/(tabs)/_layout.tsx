@@ -1,5 +1,5 @@
 import { useSession } from '@/components/SessionProvider';
-import { Home, BookOpen, Drum, BarChart } from 'lucide-react-native';
+import { Home, BookOpen, ListMusic, BarChart } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from 'react-native';
 import { Redirect, Tabs } from 'expo-router';
@@ -27,10 +27,10 @@ export default function TabLayout() {
         tabBarLabelStyle: { fontSize: 12 },
         tabBarIcon: ({ color, size }) => {
           const icons: Record<string, JSX.Element> = {
-            index: <Home size={size} color={color} />,
-            practice: <Drum size={size} color={color} />,
-            'library/index': <BookOpen size={size} color={color} />,
-            stats: <BarChart size={size} color={color} />,
+            'sessions': <Home size={size} color={color} />,
+            'setlists': <ListMusic size={size} color={color} />,
+            'library': <BookOpen size={size} color={color} />,
+            'stats': <BarChart size={size} color={color} />,
           };
           return icons[route.name] || <Text>?</Text>;
         },
@@ -45,9 +45,9 @@ export default function TabLayout() {
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="practice" options={{ title: 'Practice' }} />
-      <Tabs.Screen name="library/index" options={{ title: 'Library' }} />
+      <Tabs.Screen name="sessions" options={{ title: 'Home' }} />
+      <Tabs.Screen name="setlists" options={{ title: 'Setlists' }} />
+      <Tabs.Screen name="library" options={{ title: 'Library' }} />
       <Tabs.Screen name="stats" options={{ title: 'Stats' }} />
 
       {/* Need to get manually hide all routes in the folder  */}

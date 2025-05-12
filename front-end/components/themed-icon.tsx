@@ -11,6 +11,8 @@ import {
     BarChart,
     Dumbbell,
     Clock,
+    ListMusic,
+    Plus,
     Music,
     ArrowLeft,
     ChevronRight,
@@ -24,7 +26,9 @@ const ICONS = {
     BarChart,
     Dumbbell,
     Clock,
+    ListMusic,
     Music,
+    Plus,
     ArrowLeft,
     ChevronRight,
 } as const;
