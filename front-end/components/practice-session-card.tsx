@@ -4,8 +4,10 @@ import { View, Text, Pressable } from 'react-native';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Dumbbell, Music, ChevronRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { ThemedIcon } from '@/components/themed-icon';
+import { Dumbbell } from 'lucide-react-native';
+import colors from "tailwindcss/colors";
 
 type Exercise = {
   id: string;
@@ -44,6 +46,7 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
     setIsExpanded(!isExpanded);
   };
 
+
   return (
     <View
       className={`rounded-xl mb-3 border-l-4 overflow-hidden transition-all duration-300 ${isExpanded ? 'border-l-red-500' : 'border-l-slate-300'}`}
@@ -54,21 +57,22 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
             <View>
               <Text className="font-bold text-md pb-1">{formattedDate}</Text>
               <View className="flex-row items-center text-sm text-muted-foreground">
-                <Clock size={14} className="mr-1" />
+                <ThemedIcon name="Clock" size={14} style={{ marginRight: 1 }} />
                 <Text>{session.totalDuration} mins</Text>
               </View>
             </View>
             <View className="flex-row items-center space-x-2">
               <Badge className="flex-row items-center gap-1 bg-red-100 text-red-700 border-red-200">
                 <Dumbbell size={12} className="text-red-500" />
+                <ThemedIcon name="Dumbbell" size={12} color="red-500" />
                 <Text>{session.exercises.length}</Text>
               </Badge>
               <Badge className="flex-row items-center gap-1 bg-slate-100 text-slate-700 border-slate-200">
-                <Music size={12} className="text-slate-500" />
+                <ThemedIcon name="Music" size={12} color="slate-500" />
                 <Text>{session.songs.length}</Text>
               </Badge>
               <View className={`transition-transform ${isExpanded ? 'rotate-90' : 'rotate-0'}`}>
-                <ChevronRight size={20} />
+                <ThemedIcon name="ChevronRight" size={20} />
               </View>
             </View>
           </CardHeader>
@@ -81,7 +85,7 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
             {session.exercises.length > 0 && (
               <View className="mb-3">
                 <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
-                  <Dumbbell size={16} className="text-red-500" />
+                  <ThemedIcon name="Dumbbell" size={16} color="red-500" />
                   <Text> Exercises </Text>
                 </View>
                 {session.exercises.map((exercise) => (
@@ -96,7 +100,7 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
             {session.songs.length > 0 && (
               <View>
                 <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
-                  <Music size={16} className="text-orange-500" />
+                  <ThemedIcon name="Music" size={16} color="orange-500" />
                   <Text> Songs</Text>
                 </View>
                 {session.songs.map((song) => (

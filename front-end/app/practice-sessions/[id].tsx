@@ -1,6 +1,8 @@
 import { View, Text, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { CardHeader, CardContent } from '@/components/ui/card';
+import { CardWithAccent } from '@/components/card-with-accent';
+import { ThemedIcon } from '@/components/themed-icon';
 import { Separator } from '@/components/ui/separator';
 import {
   Dumbbell,
@@ -108,10 +110,11 @@ export default function PracticeSessionDetailPage() {
 
         {/* Exercises */}
         {session.exercises?.length > 0 && (
-          <Card className="mb-6 border-l-4 border-l-red-500 rounded-xl bg-white">
+          <CardWithAccent accentColor='red-500'>
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
                 <Dumbbell size={20} className="mr-2 text-red-500" />
+                <ThemedIcon name="Dumbbell" size={20} color="text-red-500" style={{ marginRight: 2 }} />
                 <Text className="text-lg font-semibold">Exercises</Text>
               </View>
             </CardHeader>
@@ -130,12 +133,12 @@ export default function PracticeSessionDetailPage() {
                 </View>
               ))}
             </CardContent>
-          </Card>
+          </CardWithAccent>
         )}
 
         {/* Songs */}
         {session.songs?.length > 0 && (
-          <Card className="mb-4 border-l-4 border-l-slate-500 rounded-xl bg-white">
+          <CardWithAccent accentColor='slate-500'>
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
                 <Music size={20} className="mr-2 text-slate-500" />
@@ -158,19 +161,19 @@ export default function PracticeSessionDetailPage() {
                 </View>
               ))}
             </CardContent>
-          </Card>
+          </CardWithAccent>
         )}
 
         {/* Notes */}
         {session.notes && (
-          <Card className="mb-4 border-l-4 border-l-slate-300 rounded-xl bg-white">
+          <CardWithAccent accentColor='slate-300'>
             <CardHeader className="pb-2">
               <Text className="text-lg font-semibold">Session Notes</Text>
             </CardHeader>
             <CardContent>
               <Text className="text-sm text-slate-700">{session.notes}</Text>
             </CardContent>
-          </Card>
+          </CardWithAccent>
         )}
       </ScrollView>
     </View>

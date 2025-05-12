@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from 'react-native';
-import { Drum, Home, BookOpen, BarChart } from 'lucide-react-native';
-import { Link } from 'expo-router';
+import { ThemedIcon } from '@/components/themed-icon';
 import { PracticeSessionCard } from '@/components/practice-session-card';
+import { Page } from '@/components/page';
 
 // Mock data for demonstration
 const recentSessions = [
@@ -53,10 +53,11 @@ const recentSessions = [
 
 export default function RecentSessionsPage() {
   return (
-    <View className="flex-1 bg-slate-50/50 px-4 py-6">
+    // <View className="flex-1 bg-slate-50/50 px-4 py-6">
+    <Page>
       {/* Header */}
       <View className="flex-row items-center gap-x-3 mb-6 pb-3 border-b border-slate-200">
-        <Drum size={24} className="text-red-500 mt-1" />
+        <ThemedIcon name="Drum" size={24} color="red-500" style={{ marginTop: 4 }} />
         <Text className="text-2xl font-bold flex-row items-center gap-2">Recent Sessions</Text>
       </View>
 
@@ -66,6 +67,6 @@ export default function RecentSessionsPage() {
           <PracticeSessionCard key={session.id} session={session} />
         ))}
       </ScrollView>
-    </View>
+    </Page>
   );
 }

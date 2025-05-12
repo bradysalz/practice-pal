@@ -1,11 +1,13 @@
 import { useSession } from '@/components/SessionProvider';
 import { Home, BookOpen, Drum, BarChart } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from 'react-native';
 import { Redirect, Tabs } from 'expo-router';
 import { JSX } from 'react';
 
 export default function TabLayout() {
   const session = useSession();
+  const insets = useSafeAreaInsets();
 
   if (session === null) {
     return <Redirect href="/login" />;
@@ -15,6 +17,8 @@ export default function TabLayout() {
     // Redirect to login/home screen
     return <Redirect href="/login" />;
   }
+
+
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -35,9 +39,9 @@ export default function TabLayout() {
           borderTopWidth: 1,
           borderColor: '#e2e8f0', // slate-200
           backgroundColor: 'white',
-          paddingBottom: 4,
+          paddingBottom: Math.max(insets.bottom, 8),
           paddingTop: 4,
-          height: 60,
+          height: 60 + insets.bottom,
         },
       })}
     >
@@ -55,12 +59,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen name="account" options={{}} />
-      <Tabs.Screen
-        name="sessions/[id]"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }
