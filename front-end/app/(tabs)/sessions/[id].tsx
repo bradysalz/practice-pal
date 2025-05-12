@@ -1,11 +1,11 @@
-import { View, Text, ScrollView } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import { CardHeader, CardContent } from '@/components/ui/card';
 import { CardWithAccent } from '@/components/card-with-accent';
 import { ThemedIcon } from '@/components/themed-icon';
+import { CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Dumbbell, Music, Clock } from 'lucide-react-native';
 import { format } from 'date-fns';
+import { useLocalSearchParams } from 'expo-router';
+import { Clock, Dumbbell, Music } from 'lucide-react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 // Mock data for demonstration - in a real app, you'd fetch this based on the ID
 const practiceSessionsData = {

@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { format } from 'date-fns';
-import { View, Text, Pressable } from 'react-native';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { ThemedIcon } from '@/components/themed-icon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { format } from 'date-fns';
 import { useRouter } from 'expo-router';
-import { ThemedIcon } from '@/components/themed-icon';
 import { Dumbbell } from 'lucide-react-native';
+import { useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
 
 type Exercise = {
   id: string;

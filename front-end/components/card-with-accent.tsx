@@ -1,5 +1,5 @@
-import { View, ViewProps } from 'react-native';
 import { Card } from '@/components/ui/card';
+import { View, ViewProps } from 'react-native';
 
 interface CardWithAccentProps extends ViewProps {
   accentColor?: string; // Accepts 'red-500', 'slate-300', or hex

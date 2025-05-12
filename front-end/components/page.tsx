@@ -1,6 +1,6 @@
 // components/ui/page.tsx
+import { ScrollView, ScrollViewProps, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, View, ScrollViewProps } from 'react-native';
 
 export function Page({ children, ...props }: ScrollViewProps) {
   return (

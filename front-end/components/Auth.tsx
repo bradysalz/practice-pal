@@ -1,12 +1,12 @@
-import { Input } from '@/components/ui/input';
-import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/text';
 
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, AppState, StyleSheet, View } from 'react-native';
-import { supabase } from '@/lib/supabase';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive

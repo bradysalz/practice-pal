@@ -1,9 +1,9 @@
-import { Database } from '@/types/supabase';
 import { Input } from '@/components/ui/input';
+import { supabase } from '@/lib/supabase';
+import { Database } from '@/types/supabase';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
-import { supabase } from '@/lib/supabase';
 import { Label } from './ui/label';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];

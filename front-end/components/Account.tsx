@@ -1,7 +1,7 @@
-import { Input } from '@/components/ui/input';
-import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/text';
 
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';

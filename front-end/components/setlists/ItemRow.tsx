@@ -1,8 +1,8 @@
-import { View, Text } from 'react-native';
-import { ArrowLeft, Trash2, Music, Dumbbell, MoveHorizontal } from 'lucide-react-native';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { SetlistItem } from '@/types/setlist';
+import { ArrowLeft, Dumbbell, MoveHorizontal, Music, Trash2 } from 'lucide-react-native';
+import { Text, View } from 'react-native';
 
 interface ItemRowProps {
   item: SetlistItem;

@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native';
-import { Edit, Trash2 } from 'lucide-react-native';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Setlist } from '@/types/setlist';
+import { Edit, Trash2 } from 'lucide-react-native';
+import { Text, View } from 'react-native';
 
 interface Props {
   setlist: Setlist;

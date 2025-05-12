@@ -1,77 +1,62 @@
-import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TextInput, Alert } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Plus, Save } from 'lucide-react-native';
+import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { setlistsData, exercisesData, songsData } from '@/mock/data';
-import { ItemRow } from '@/components/setlists/ItemRow';
+import { setlistsData } from '@/mock/data';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { Plus, Save } from 'lucide-react-native';
+import { useCallback, useState } from 'react';
+import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
+
 
 export default function EditSetlistPage() {
   const { id } = useLocalSearchParams();
+  const setlistId = id as string;
 
   const router = useRouter();
 
   const [setlist, setSetlist] = useState<any>(null);
-  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('exercises');
-  const [selectedArtist, setSelectedArtist] = useState<string | ''>('');
-  const [filteredSongs, setFilteredSongs] = useState(songsData);
-  const [selectedExercise, setSelectedExercise] = useState<string>('');
-  const [selectedSong, setSelectedSong] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const artists = Array.from(new Set(songsData.map((s) => s.artist))).filter(Boolean) as string[];
 
-  useEffect(() => {
-    const data = setlistsData.find((s) => s.id === id);
+  // Function to fetch setlist data based on the ID
+  const fetchSetlistData = useCallback(() => {
+    console.log(`Fetching setlist data for ID: ${setlistId}`);
+    setIsLoading(true);
+    setError(null); // Clear previous errors
 
-    setSetlist(data || { id: id, name: '', description: '', items: [], lastPracticed: 'Never' });
-  }, [id]);
+    // Simulate fetching data from your source (e.g., Supabase)
+    // Replace this with your actual data fetching logic
+    const data = setlistsData.find((s) => s.id === setlistId);
 
-  useEffect(() => {
-    setFilteredSongs(
-      selectedArtist && selectedArtist !== 'all'
-        ? songsData.filter((s) => s.artist === selectedArtist)
-        : songsData
-    );
-    setSelectedSong('');
-  }, [selectedArtist]);
-
-  const handleAddItem = () => {
-    if (!setlist) return;
-
-    if (activeTab === 'exercises' && selectedExercise) {
-      const ex = exercisesData.find((e) => e.id === selectedExercise);
-      if (ex) {
-        setSetlist({ ...setlist, items: [...setlist.items, { ...ex, tempo: ex.goalTempo }] });
-      }
-    } else if (activeTab === 'songs' && selectedSong) {
-      const song = songsData.find((s) => s.id === selectedSong);
-      if (song) {
-        setSetlist({ ...setlist, items: [...setlist.items, { ...song, tempo: song.goalTempo }] });
-      }
+    if (data) {
+      setSetlist(data);
+      setIsLoading(false);
+    } else {
+      // Handle case where setlist is not found
+      setSetlist(null);
+      setError(`Setlist with ID ${setlistId} not found.`);
+      setIsLoading(false);
     }
+  }, [setlistId]); // Recreate this function if setlistId changes
 
-    setIsAddItemDialogOpen(false);
-    setSelectedExercise('');
-    setSelectedSong('');
-  };
+  // useFocusEffect runs the effect when the screen is focused or re-focused
+  // This is ideal for fetching data that might have changed while the screen was unfocused
+  useFocusEffect(
+    useCallback(() => {
+      fetchSetlistData();
+    }, [fetchSetlistData]) // Re-run this effect if fetchSetlistData changes (due to setlistId change)
+  );
+
+  // useEffect(() => {
+  //   setFilteredSongs(
+  //     selectedArtist && selectedArtist !== 'all'
+  //       ? songsData.filter((s) => s.artist === selectedArtist)
+  //       : songsData
+  //   );
+  //   setSelectedSong('');
+  // }, [selectedArtist]);
 
   const handleMoveItem = (index: number, direction: 'up' | 'down') => {
     if (!setlist) return;
@@ -81,6 +66,16 @@ export default function EditSetlistPage() {
 
     [items[index], items[target]] = [items[target], items[index]];
     setSetlist({ ...setlist, items });
+  };
+
+  // Function to open the Add Item modal
+  const handleOpenAddItemModal = () => {
+    // Navigate to the modal route
+    // Pass the setlistId as a parameter so the modal knows which setlist to add to
+    router.push({
+      pathname: '/(modals)/add-setlist-item',
+      params: { setlistId: setlistId },
+    });
   };
 
   const handleRemoveItem = (index: number) => {
@@ -121,7 +116,7 @@ export default function EditSetlistPage() {
 
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-lg font-semibold">Items ({setlist.items.length})</Text>
-        <Button size="sm" variant="outline" onPress={() => setIsAddItemDialogOpen(true)}>
+        <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
           <Plus size={16} />
           <Text>Add Item</Text>
         </Button>
@@ -147,65 +142,6 @@ export default function EditSetlistPage() {
           <Text>Save Setlist</Text>
         </Button>
       </View>
-
-      {/* Placeholder Dialog */}
-      <Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add Item</DialogTitle>
-          </DialogHeader>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="exercises">Exercises</TabsTrigger>
-              <TabsTrigger value="songs">Songs</TabsTrigger>
-            </TabsList>
-            <TabsContent value="exercises">
-              <Select onValueChange={setSelectedExercise} value={selectedExercise}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose Exercise" />
-                </SelectTrigger>
-                <SelectContent>
-                  {exercisesData.map((ex) => (
-                    <SelectItem key={ex.id} value={ex.id}>
-                      {ex.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </TabsContent>
-            <TabsContent value="songs">
-              <Select onValueChange={setSelectedArtist} value={selectedArtist}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter by Artist" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  {artists.map((artist) => (
-                    <SelectItem key={artist} value={artist}>
-                      {artist}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select onValueChange={setSelectedSong} value={selectedSong}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose Song" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredSongs.map((song) => (
-                    <SelectItem key={song.id} value={song.id}>
-                      {song.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </TabsContent>
-          </Tabs>
-          <DialogFooter>
-            <Button onPress={handleAddItem}>Add</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </View>
   );
 }

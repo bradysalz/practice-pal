@@ -1,9 +1,9 @@
 import { useSession } from '@/components/SessionProvider';
-import { Home, BookOpen, ListMusic, BarChart } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text } from 'react-native';
 import { Redirect, Tabs } from 'expo-router';
+import { BarChart, BookOpen, Home, ListMusic } from 'lucide-react-native';
 import { JSX } from 'react';
+import { Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
   const session = useSession();

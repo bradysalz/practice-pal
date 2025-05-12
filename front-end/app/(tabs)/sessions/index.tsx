@@ -1,7 +1,6 @@
-import { View, Text, ScrollView } from 'react-native';
-import { ThemedIcon } from '@/components/themed-icon';
-import { PracticeSessionCard } from '@/components/practice-session-card';
 import { Page } from '@/components/page';
+import { PracticeSessionCard } from '@/components/practice-session-card';
+import { ScrollView } from 'react-native';
 
 // Mock data for demonstration
 const recentSessions = [

@@ -1,8 +1,8 @@
-import { Stack } from 'expo-router';
+import { ThemedIcon } from '@/components/themed-icon';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import { Stack } from 'expo-router';
 import React from 'react'; // Import React
-import { ThemedIcon } from '@/components/themed-icon';
 import { View } from 'react-native';
 
 function newTitleStyle() {

@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { useRouter } from 'expo-router';
-import { View, Text, TextInput, ScrollView, Alert } from 'react-native';
-import { Plus, ListMusic } from 'lucide-react-native';
+import { SetlistCard } from '@/components/setlists/SetlistCard';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { SetlistCard } from '@/components/setlists/SetlistCard';
+import { useRouter } from 'expo-router';
+import { ListMusic, Plus } from 'lucide-react-native';
+import { useState } from 'react';
+import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
 
 const setlistsData = [
   {

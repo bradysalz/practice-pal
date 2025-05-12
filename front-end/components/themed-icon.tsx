@@ -1,21 +1,21 @@
 import React from 'react';
-import { Platform, ViewStyle, TextStyle, StyleProp } from 'react-native';
+import { Platform, StyleProp, TextStyle, ViewStyle } from 'react-native';
 // import { useColorScheme } from 'nativewind';
 import { getTailwindColor } from '@/lib/utils';
 
 // Import icons explicitly
 import {
-  Home,
-  Drum,
-  BookOpen,
-  BarChart,
-  Dumbbell,
-  Clock,
-  ListMusic,
-  Plus,
-  Music,
   ArrowLeft,
+  BarChart,
+  BookOpen,
   ChevronRight,
+  Clock,
+  Drum,
+  Dumbbell,
+  Home,
+  ListMusic,
+  Music,
+  Plus,
 } from 'lucide-react-native';
 
 // Map icon names to components
