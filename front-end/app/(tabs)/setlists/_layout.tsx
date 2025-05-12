@@ -40,13 +40,6 @@ export default function SetlistStack() {
                 }}
             />
             <Stack.Screen
-                name="[id]" // Corresponds to app/(tabs)/home/[id].js (Your Session Detail)
-                options={{
-                    title: 'Setlist Details', // Title for the header when viewing details
-                    // Add options like headerRight buttons here
-                }}
-            />
-            <Stack.Screen
                 name="edit/[id]"
                 options={{
                     title: 'Edit Setlist',

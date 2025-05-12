@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { SetlistCard } from "@/components/SetlistCard";
+import { SetlistCard } from "@/components/setlists/SetlistCard";
 
 const setlistsData = [
     {

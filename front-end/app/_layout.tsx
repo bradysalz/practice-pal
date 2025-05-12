@@ -51,12 +51,6 @@ export default function RootLayout() {
         <Stack>
           <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="practice-sessions/[id]"
-            options={{
-              title: 'Session Details',
-            }}
-          />
           <Stack.Screen name="+not-found" />
         </Stack>
       </SessionProvider>
