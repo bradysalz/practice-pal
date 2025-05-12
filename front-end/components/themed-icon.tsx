@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform, ViewStyle, TextStyle, StyleProp } from 'react-native';
-import { useColorScheme } from 'nativewind';
+// import { useColorScheme } from 'nativewind';
 import { getTailwindColor } from '@/lib/utils';
 
 // Import icons explicitly
@@ -41,7 +41,7 @@ interface ThemedIconProps {
 
 export const ThemedIcon = ({ name, size = 24, color = 'slate-500', className, style }: ThemedIconProps) => {
     const IconComponent = ICONS[name];
-    const scheme = useColorScheme(); // Optional if you want to react to dark mode tokens later
+    // const scheme = useColorScheme(); // Optional if you want to react to dark mode tokens later
 
     let resolvedColor = getTailwindColor(color);
 

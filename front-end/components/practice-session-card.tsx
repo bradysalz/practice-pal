@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'expo-router';
 import { ThemedIcon } from '@/components/themed-icon';
 import { Dumbbell } from 'lucide-react-native';
-import colors from "tailwindcss/colors";
 
 type Exercise = {
   id: string;
