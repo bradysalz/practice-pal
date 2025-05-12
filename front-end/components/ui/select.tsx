@@ -27,7 +27,7 @@ const SelectTrigger = React.forwardRef<SelectPrimitive.TriggerRef, SelectPrimiti
       {...props}
     >
       <>{children}</>
-      <ChevronDown size={16} aria-hidden={true} className='text-foreground opacity-50' />
+      <ChevronDown size={16} aria-hidden={true} className="text-foreground opacity-50" />
     </SelectPrimitive.Trigger>
   )
 );
@@ -45,7 +45,7 @@ const SelectScrollUpButton = ({ className, ...props }: SelectPrimitive.ScrollUpB
       className={cn('flex web:cursor-default items-center justify-center py-1', className)}
       {...props}
     >
-      <ChevronUp size={14} className='text-foreground' />
+      <ChevronUp size={14} className="text-foreground" />
     </SelectPrimitive.ScrollUpButton>
   );
 };
@@ -62,7 +62,7 @@ const SelectScrollDownButton = ({ className, ...props }: SelectPrimitive.ScrollD
       className={cn('flex web:cursor-default items-center justify-center py-1', className)}
       {...props}
     >
-      <ChevronDown size={14} className='text-foreground' />
+      <ChevronDown size={14} className="text-foreground" />
     </SelectPrimitive.ScrollDownButton>
   );
 };
@@ -76,7 +76,7 @@ const SelectContent = React.forwardRef<
   return (
     <SelectPrimitive.Portal hostName={portalHost}>
       <SelectPrimitive.Overlay style={Platform.OS !== 'web' ? StyleSheet.absoluteFill : undefined}>
-        <Animated.View className='z-50' entering={FadeIn} exiting={FadeOut}>
+        <Animated.View className="z-50" entering={FadeIn} exiting={FadeOut}>
           <SelectPrimitive.Content
             ref={ref}
             className={cn(
@@ -135,12 +135,12 @@ const SelectItem = React.forwardRef<SelectPrimitive.ItemRef, SelectPrimitive.Ite
       )}
       {...props}
     >
-      <View className='absolute left-2 native:left-3.5 flex h-3.5 native:pt-px w-3.5 items-center justify-center'>
+      <View className="absolute left-2 native:left-3.5 flex h-3.5 native:pt-px w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <Check size={16} strokeWidth={3} className='text-popover-foreground' />
+          <Check size={16} strokeWidth={3} className="text-popover-foreground" />
         </SelectPrimitive.ItemIndicator>
       </View>
-      <SelectPrimitive.ItemText className='text-sm native:text-lg text-popover-foreground native:text-base web:group-focus:text-accent-foreground' />
+      <SelectPrimitive.ItemText className="text-sm native:text-lg text-popover-foreground native:text-base web:group-focus:text-accent-foreground" />
     </SelectPrimitive.Item>
   )
 );

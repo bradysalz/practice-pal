@@ -45,7 +45,6 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
     setIsExpanded(!isExpanded);
   };
 
-
   return (
     <View
       className={`rounded-xl mb-3 border-l-4 overflow-hidden transition-all duration-300 ${isExpanded ? 'border-l-red-500' : 'border-l-slate-300'}`}
@@ -77,60 +76,57 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
           </CardHeader>
         </Pressable>
 
-        {isExpanded && <CardContent
-          className="p-0 overflow-hidden transition-all duration-300"
-        >
-          <View className="p-4 pt-2">
-            {session.exercises.length > 0 && (
-              <View className="mb-3">
-                <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
-                  <ThemedIcon name="Dumbbell" size={16} color="red-500" />
-                  <Text> Exercises </Text>
-                </View>
-                {session.exercises.map((exercise) => (
-                  <View key={exercise.id} className="flex-row justify-between">
-                    <Text>{exercise.name}</Text>
-                    <Text className="text-muted-foreground">{exercise.tempo} BPM</Text>
+        {isExpanded && (
+          <CardContent className="p-0 overflow-hidden transition-all duration-300">
+            <View className="p-4 pt-2">
+              {session.exercises.length > 0 && (
+                <View className="mb-3">
+                  <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
+                    <ThemedIcon name="Dumbbell" size={16} color="red-500" />
+                    <Text> Exercises </Text>
                   </View>
-                ))}
-              </View>
-            )}
-
-            {session.songs.length > 0 && (
-              <View>
-                <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
-                  <ThemedIcon name="Music" size={16} color="orange-500" />
-                  <Text> Songs</Text>
-                </View>
-                {session.songs.map((song) => (
-                  <View key={song.id} className="flex-row justify-between">
-                    <View>
-                      <Text>{song.name}</Text>
-                      {song.artist && (
-                        <Text className="text-muted-foreground text-xs"> - {song.artist}</Text>
-                      )}
+                  {session.exercises.map((exercise) => (
+                    <View key={exercise.id} className="flex-row justify-between">
+                      <Text>{exercise.name}</Text>
+                      <Text className="text-muted-foreground">{exercise.tempo} BPM</Text>
                     </View>
-                    <Text className="text-muted-foreground">{song.tempo} BPM</Text>
-                  </View>
-                ))}
-              </View>
-            )}
+                  ))}
+                </View>
+              )}
 
-            <Button
-              className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white"
-              onPress={(e) => {
-                e.stopPropagation?.(); // Only on web
-                router.push(`/sessions/${session.id}`);
-              }}
-            >
-              <Text>
-                View Full Session
-              </Text>
-            </Button>
-          </View>
-        </CardContent>
-        }
+              {session.songs.length > 0 && (
+                <View>
+                  <View className="text-sm font-semibold flex-row items-center gap-1 mb-2">
+                    <ThemedIcon name="Music" size={16} color="orange-500" />
+                    <Text> Songs</Text>
+                  </View>
+                  {session.songs.map((song) => (
+                    <View key={song.id} className="flex-row justify-between">
+                      <View>
+                        <Text>{song.name}</Text>
+                        {song.artist && (
+                          <Text className="text-muted-foreground text-xs"> - {song.artist}</Text>
+                        )}
+                      </View>
+                      <Text className="text-muted-foreground">{song.tempo} BPM</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              <Button
+                className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white"
+                onPress={(e) => {
+                  e.stopPropagation?.(); // Only on web
+                  router.push(`/sessions/${session.id}`);
+                }}
+              >
+                <Text>View Full Session</Text>
+              </Button>
+            </View>
+          </CardContent>
+        )}
       </Card>
-    </View >
+    </View>
   );
 }

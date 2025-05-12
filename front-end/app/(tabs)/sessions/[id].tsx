@@ -4,11 +4,7 @@ import { CardHeader, CardContent } from '@/components/ui/card';
 import { CardWithAccent } from '@/components/card-with-accent';
 import { ThemedIcon } from '@/components/themed-icon';
 import { Separator } from '@/components/ui/separator';
-import {
-  Dumbbell,
-  Music,
-  Clock
-} from 'lucide-react-native';
+import { Dumbbell, Music, Clock } from 'lucide-react-native';
 import { format } from 'date-fns';
 
 // Mock data for demonstration - in a real app, you'd fetch this based on the ID
@@ -110,11 +106,16 @@ export default function PracticeSessionDetailPage() {
 
         {/* Exercises */}
         {session.exercises?.length > 0 && (
-          <CardWithAccent accentColor='red-500'>
+          <CardWithAccent accentColor="red-500">
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
                 <Dumbbell size={20} className="mr-2 text-red-500" />
-                <ThemedIcon name="Dumbbell" size={20} color="text-red-500" style={{ marginRight: 2 }} />
+                <ThemedIcon
+                  name="Dumbbell"
+                  size={20}
+                  color="text-red-500"
+                  style={{ marginRight: 2 }}
+                />
                 <Text className="text-lg font-semibold">Exercises</Text>
               </View>
             </CardHeader>
@@ -138,7 +139,7 @@ export default function PracticeSessionDetailPage() {
 
         {/* Songs */}
         {session.songs?.length > 0 && (
-          <CardWithAccent accentColor='slate-500'>
+          <CardWithAccent accentColor="slate-500">
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
                 <Music size={20} className="mr-2 text-slate-500" />
@@ -166,7 +167,7 @@ export default function PracticeSessionDetailPage() {
 
         {/* Notes */}
         {session.notes && (
-          <CardWithAccent accentColor='slate-300'>
+          <CardWithAccent accentColor="slate-300">
             <CardHeader className="pb-2">
               <Text className="text-lg font-semibold">Session Notes</Text>
             </CardHeader>

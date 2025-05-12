@@ -12,10 +12,10 @@ type BookRow = Database['public']['Tables']['books']['Row'];
 
 type ExerciseWithJoins = ExerciseRow & {
   sections:
-  | (SectionRow & {
-    books: BookRow | null;
-  })
-  | null;
+    | (SectionRow & {
+        books: BookRow | null;
+      })
+    | null;
 };
 
 export default function PracticeList({ session }: { session: Session }) {

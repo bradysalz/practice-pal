@@ -18,7 +18,6 @@ export default function TabLayout() {
     return <Redirect href="/login" />;
   }
 
-
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -27,10 +26,10 @@ export default function TabLayout() {
         tabBarLabelStyle: { fontSize: 12 },
         tabBarIcon: ({ color, size }) => {
           const icons: Record<string, JSX.Element> = {
-            'sessions': <Home size={size} color={color} />,
-            'setlists': <ListMusic size={size} color={color} />,
-            'library': <BookOpen size={size} color={color} />,
-            'stats': <BarChart size={size} color={color} />,
+            sessions: <Home size={size} color={color} />,
+            setlists: <ListMusic size={size} color={color} />,
+            library: <BookOpen size={size} color={color} />,
+            stats: <BarChart size={size} color={color} />,
           };
           return icons[route.name] || <Text>?</Text>;
         },
@@ -58,9 +57,12 @@ export default function TabLayout() {
           href: null,
         }}
       />
-      <Tabs.Screen name="account" options={{
-        href: null,
-      }} />
+      <Tabs.Screen
+        name="account"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
