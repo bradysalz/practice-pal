@@ -1,73 +1,77 @@
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { exercisesData, songsData } from "@/mock/data";
-import { useSetlistStore } from "@/stores/setlistStore";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
-import { Text, View } from "react-native";
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { exercisesData, songsData } from '@/mock/data';
+import { useSetlistStore } from '@/stores/setlistStore';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Text, View } from 'react-native';
 
 export default function AddItemScreen() {
-  console.log('hi')
+  console.log('hi');
   const router = useRouter();
   const { id } = useLocalSearchParams(); // setlist ID from route
   const addItem = useSetlistStore((s) => s.addItem);
 
-  const [activeTab, setActiveTab] = useState<"exercises" | "songs">("exercises");
-  const [selectedExercise, setSelectedExercise] = useState<string>("");
-  const [selectedSong, setSelectedSong] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<'exercises' | 'songs'>('exercises');
+  const [selectedExercise, setSelectedExercise] = useState<string>('');
+  const [selectedSong, setSelectedSong] = useState<string>('');
 
   const artists = Array.from(new Set(songsData.map((s) => s.artist))).filter(Boolean);
 
-  const [selectedArtist, setSelectedArtist] = useState<string | "">("");
+  const [selectedArtist, setSelectedArtist] = useState<string | ''>('');
   const filteredSongs = selectedArtist
     ? songsData.filter((s) => s.artist === selectedArtist)
     : songsData;
 
   const handleAdd = () => {
-    if (activeTab === "exercises" && selectedExercise) {
+    if (activeTab === 'exercises' && selectedExercise) {
       const ex = exercisesData.find((e) => e.id === selectedExercise);
       if (ex) {
         addItem({
           id: ex.id,
-          type: "exercise",
+          type: 'exercise',
           name: ex.name,
           tempo: ex.goalTempo,
         });
       }
-    } else if (activeTab === "songs" && selectedSong) {
+    } else if (activeTab === 'songs' && selectedSong) {
       const song = songsData.find((s) => s.id === selectedSong);
       if (song) {
         addItem({
           id: song.id,
-          type: "song",
+          type: 'song',
           name: song.name,
           artist: song.artist,
           tempo: song.goalTempo,
         });
       }
     }
-    console.log('there')
+    console.log('there');
     router.back(); // Go back to setlist screen
   };
 
   return (
-    <View className='flex-1 justify-center p-6'>
+    <View className="w-full max-w-md mx-auto justify-center p-6">
       <Text className="text-xl font-bold mb-6">Add Item to Setlist {id}</Text>
 
-      <Tabs className='w-full max-w-[400px] mx-auto flex-col gap-1.5' value={activeTab} onValueChange={(v) => setActiveTab(v as "exercises" | "songs")}>
-        <TabsList className="flex-row w-full">
-          <TabsTrigger
-            value="exercises"
-            className="flex-1"
-          >
+      <Tabs
+        className="gap-1.5"
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as 'exercises' | 'songs')}
+      >
+        <TabsList className="flex-row">
+          <TabsTrigger value="exercises" className="flex-1">
             <Text>Exercises</Text>
           </TabsTrigger>
-          <TabsTrigger
-            value="songs"
-            className="flex-1 text-center py-2 rounded-md text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-gray-900 data-[state=inactive]:text-gray-500 transition-colors"
-          >
-            <Text> Songs </Text>
+          <TabsTrigger value="songs" className="flex-1">
+            <Text> Songs</Text>
           </TabsTrigger>
         </TabsList>
 
@@ -119,13 +123,13 @@ export default function AddItemScreen() {
       <Button
         className="mt-8"
         disabled={
-          (activeTab === "exercises" && !selectedExercise) ||
-          (activeTab === "songs" && !selectedSong)
+          (activeTab === 'exercises' && !selectedExercise) ||
+          (activeTab === 'songs' && !selectedSong)
         }
         onPress={handleAdd}
       >
         Add to Setlist
       </Button>
-    </View >
+    </View>
   );
 }

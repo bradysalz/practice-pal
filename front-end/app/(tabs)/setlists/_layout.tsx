@@ -44,7 +44,7 @@ export default function SetlistStack() {
       />
       <Stack.Screen
         name="add-item"
-      // options
+        // options
       />
     </Stack>
   );

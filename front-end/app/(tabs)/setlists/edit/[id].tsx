@@ -1,13 +1,13 @@
 import { ItemRow } from '@/components/setlists/ItemRow';
+import { ThemedIcon } from '@/components/themed-icon';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { setlistsData } from '@/mock/data';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
-import { Plus, Save } from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
-
 
 export default function EditSetlistPage() {
   const { id } = useLocalSearchParams();
@@ -18,7 +18,6 @@ export default function EditSetlistPage() {
   const [setlist, setSetlist] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
 
   // Function to fetch setlist data based on the ID
   const fetchSetlistData = useCallback(() => {
@@ -49,15 +48,6 @@ export default function EditSetlistPage() {
     }, [fetchSetlistData]) // Re-run this effect if fetchSetlistData changes (due to setlistId change)
   );
 
-  // useEffect(() => {
-  //   setFilteredSongs(
-  //     selectedArtist && selectedArtist !== 'all'
-  //       ? songsData.filter((s) => s.artist === selectedArtist)
-  //       : songsData
-  //   );
-  //   setSelectedSong('');
-  // }, [selectedArtist]);
-
   const handleMoveItem = (index: number, direction: 'up' | 'down') => {
     if (!setlist) return;
     const items = [...setlist.items];
@@ -73,7 +63,7 @@ export default function EditSetlistPage() {
     // Navigate to the modal route
     // Pass the setlistId as a parameter so the modal knows which setlist to add to
     router.push({
-      pathname: '/setlists/edit/add-item',
+      pathname: '/setlists/add-item',
       params: { setlistId: setlistId },
     });
   };
@@ -100,7 +90,7 @@ export default function EditSetlistPage() {
             value={setlist.name}
             onChangeText={(text) => setSetlist({ ...setlist, name: text })}
             placeholder="e.g., Warm-up Routine"
-            className="border p-2 rounded bg-white mb-2"
+            className="border border-slate-300 p-2 rounded bg-white mb-2"
           />
         </View>
         <View>
@@ -109,7 +99,7 @@ export default function EditSetlistPage() {
             value={setlist.description}
             onChangeText={(text) => setSetlist({ ...setlist, description: text })}
             placeholder="Describe your setlist..."
-            className="mb-2 rounded border border-slate-500"
+            className="mb-2 rounded border border-slate-300"
           />
         </View>
       </View>
@@ -117,8 +107,10 @@ export default function EditSetlistPage() {
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-lg font-semibold">Items ({setlist.items.length})</Text>
         <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
-          <Plus size={16} />
-          <Text>Add Item</Text>
+          <View className="flex-row items-center justify-center px-2 py-2 ">
+            <Plus size={16} className="mr-1" />
+            <Text className="font-medium">Add Item</Text>
+          </View>
         </Button>
       </View>
 
@@ -137,11 +129,30 @@ export default function EditSetlistPage() {
       </ScrollView>
 
       <View className="mt-4">
-        <Button onPress={handleSaveSetlist} disabled={!setlist.name || setlist.items.length === 0}>
-          <Save size={16} className="mr-2" />
-          <Text>Save Setlist</Text>
+        <Button
+          variant="default"
+          onPress={handleSaveSetlist}
+          disabled={!setlist.name || setlist.items.length === 0}
+        >
+          <View className="flex-row items-center justify-center px-2 py-2 ">
+            <ThemedIcon
+              name="Save"
+              size={16}
+              color="white" // Used on mobile for color
+              style={{ marginRight: 4 }} // Used on mobile for margin
+              className="text-white mr-2" // Used on web for both color (text-white) and margin (mr-1)
+            />{' '}
+            <Text className="text-white font-medium">Save Setlist</Text>
+          </View>
         </Button>
       </View>
     </View>
   );
 }
+
+// <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
+//   <View className="flex-row items-center justify-center px-2 py-2 ">
+//     <Plus size={16} className="mr-1" />
+//     <Text className="font-medium">Add Item</Text>
+//   </View>
+// </Button>

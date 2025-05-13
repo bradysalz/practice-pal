@@ -16,6 +16,7 @@ import {
   ListMusic,
   Music,
   Plus,
+  Save,
 } from 'lucide-react-native';
 
 // Map icon names to components
@@ -27,6 +28,7 @@ const ICONS = {
   Dumbbell,
   Clock,
   ListMusic,
+  Save,
   Music,
   Plus,
   ArrowLeft,

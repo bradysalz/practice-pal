@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { useRouter } from 'expo-router';
-import { Dumbbell } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -47,27 +46,28 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
 
   return (
     <View
-      className={`rounded-xl mb-3 border-l-4 overflow-hidden transition-all duration-300 ${isExpanded ? 'border-l-red-500' : 'border-l-slate-300'}`}
+      className={`rounded-xl my-3 border-l-4 overflow-hidden transition-all duration-300 ${
+        isExpanded ? 'border-l-red-500' : 'border-l-slate-300'
+      }`}
     >
       <Card>
         <Pressable onPress={handleCardClick}>
           <CardHeader className="p-4 pb-2 flex-row items-center justify-between bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <View>
-              <Text className="font-bold text-md pb-1">{formattedDate}</Text>
+              <Text className="font-bold text-xl pb-1">{formattedDate}</Text>
               <View className="flex-row items-center text-sm text-muted-foreground">
                 <ThemedIcon name="Clock" size={14} style={{ marginRight: 1 }} />
-                <Text>{session.totalDuration} mins</Text>
+                <Text className="ml-1 text-md">{session.totalDuration} mins</Text>
               </View>
             </View>
             <View className="flex-row items-center space-x-2">
               <Badge className="flex-row items-center gap-1 bg-red-100 text-red-700 border-red-200">
-                <Dumbbell size={12} className="text-red-500" />
-                <ThemedIcon name="Dumbbell" size={12} color="red-500" />
-                <Text>{session.exercises.length}</Text>
+                <ThemedIcon name="Dumbbell" size={14} color="red-500" />
+                <Text className="text-lg">{session.exercises.length}</Text>
               </Badge>
               <Badge className="flex-row items-center gap-1 bg-slate-100 text-slate-700 border-slate-200">
-                <ThemedIcon name="Music" size={12} color="slate-500" />
-                <Text>{session.songs.length}</Text>
+                <ThemedIcon name="Music" size={14} color="slate-500" />
+                <Text className="text-lg">{session.songs.length}</Text>
               </Badge>
               <View className={`transition-transform ${isExpanded ? 'rotate-90' : 'rotate-0'}`}>
                 <ThemedIcon name="ChevronRight" size={20} />
@@ -115,13 +115,13 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
               )}
 
               <Button
-                className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white"
+                className="mt-4"
                 onPress={(e) => {
                   e.stopPropagation?.(); // Only on web
                   router.push(`/sessions/${session.id}`);
                 }}
               >
-                <Text>View Full Session</Text>
+                <Text className="text-white font-medium">View Full Session</Text>
               </Button>
             </View>
           </CardContent>
