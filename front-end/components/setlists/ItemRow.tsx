@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { SetlistItem } from '@/types/setlist';
-import { ArrowLeft, Dumbbell, MoveHorizontal, Music, Trash2 } from 'lucide-react-native';
+import { ArrowDown, ArrowUp, Dumbbell, Music, Trash2 } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 
 interface ItemRowProps {
@@ -18,8 +18,7 @@ export const ItemRow = ({ item, index, total, onMoveUp, onMoveDown, onRemove }: 
     <Card className="mb-4 rounded-xl">
       <CardContent className="flex-row justify-between items-center">
         <View className="flex-row items-center space-x-2">
-          <MoveHorizontal size={18} className="text-gray-400" />
-          {item.type === 'exercise' ? <Dumbbell size={16} /> : <Music size={16} />}
+          {item.type === 'exercise' ? <Dumbbell size={20} /> : <Music size={20} />}
           <View>
             <Text className="font-medium">{item.name}</Text>
             {item.artist && <Text className="text-xs text-gray-500">{item.artist}</Text>}
@@ -32,7 +31,7 @@ export const ItemRow = ({ item, index, total, onMoveUp, onMoveDown, onRemove }: 
             onPress={() => onMoveUp(index)}
             disabled={index === 0}
           >
-            <ArrowLeft size={16} className="rotate-90" />
+            <ArrowUp size={20} />
           </Button>
           <Button
             size="icon"
@@ -40,10 +39,10 @@ export const ItemRow = ({ item, index, total, onMoveUp, onMoveDown, onRemove }: 
             onPress={() => onMoveDown(index)}
             disabled={index === total - 1}
           >
-            <ArrowLeft size={16} className="-rotate-90" />
+            <ArrowDown size={20} />
           </Button>
           <Button size="icon" variant="ghost" onPress={() => onRemove(index)}>
-            <Trash2 size={16} className="text-red-500" />
+            <Trash2 size={20} className="text-red-500" />
           </Button>
         </View>
       </CardContent>

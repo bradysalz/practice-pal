@@ -85,27 +85,27 @@ export default function EditSetlistPage() {
     <View className="flex-1 bg-slate-50 p-4">
       <View className="space-y-3 mb-6">
         <View>
-          <Label className="mb-2">Setlist Name</Label>
+          <Label className="text-2xl mb-2">Setlist Name</Label>
           <TextInput
             value={setlist.name}
             onChangeText={(text) => setSetlist({ ...setlist, name: text })}
             placeholder="e.g., Warm-up Routine"
-            className="border border-slate-300 p-2 rounded bg-white mb-2"
+            className="border border-slate-300 p-2 rounded-xl bg-white mb-4"
           />
         </View>
         <View>
-          <Label className="mb-2">Description</Label>
+          <Label className="text-2xl mb-2">Description</Label>
           <Textarea
             value={setlist.description}
             onChangeText={(text) => setSetlist({ ...setlist, description: text })}
             placeholder="Describe your setlist..."
-            className="mb-2 rounded border border-slate-300"
+            className="mb-2 border border-slate-300 rounded-xl"
           />
         </View>
       </View>
 
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-lg font-semibold">Items ({setlist.items.length})</Text>
+        <Text className="text-2xl font-semibold">Items ({setlist.items.length})</Text>
         <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
           <View className="flex-row items-center justify-center px-2 py-2 ">
             <Plus size={16} className="mr-1" />
@@ -134,25 +134,17 @@ export default function EditSetlistPage() {
           onPress={handleSaveSetlist}
           disabled={!setlist.name || setlist.items.length === 0}
         >
-          <View className="flex-row items-center justify-center px-2 py-2 ">
+          <View className="flex-row items-center gap-1 justify-center px-2 py-2 ">
             <ThemedIcon
               name="Save"
-              size={16}
+              size={24}
               color="white" // Used on mobile for color
-              style={{ marginRight: 4 }} // Used on mobile for margin
-              className="text-white mr-2" // Used on web for both color (text-white) and margin (mr-1)
-            />{' '}
-            <Text className="text-white font-medium">Save Setlist</Text>
+              className="text-white" // Used on web for both color (text-white) and margin (mr-1)
+            />
+            <Text className="text-2xl text-white font-medium">Save Setlist</Text>
           </View>
         </Button>
       </View>
     </View>
   );
 }
-
-// <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
-//   <View className="flex-row items-center justify-center px-2 py-2 ">
-//     <Plus size={16} className="mr-1" />
-//     <Text className="font-medium">Add Item</Text>
-//   </View>
-// </Button>
