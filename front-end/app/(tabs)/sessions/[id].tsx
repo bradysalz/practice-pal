@@ -1,82 +1,12 @@
 import { CardWithAccent } from '@/components/card-with-accent';
-import { ThemedIcon } from '@/components/themed-icon';
+import { ThemedIcon } from '@/components/icons/themed-icon';
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { practiceSessionsData } from '@/mock/data';
 import { format } from 'date-fns';
 import { useLocalSearchParams } from 'expo-router';
-import { Clock, Dumbbell, Music } from 'lucide-react-native';
+import { Clock } from 'lucide-react-native';
 import { ScrollView, Text, View } from 'react-native';
-
-// Mock data for demonstration - in a real app, you'd fetch this based on the ID
-const practiceSessionsData = {
-  '1': {
-    id: '1',
-    date: new Date('2024-05-09'),
-    exercises: [
-      {
-        id: 'ex1',
-        name: 'Paradiddles',
-        tempo: 120,
-        duration: 15,
-        notes: 'Focused on keeping consistent dynamics between left and right hand',
-      },
-      {
-        id: 'ex2',
-        name: 'Single Stroke Roll',
-        tempo: 100,
-        duration: 10,
-        notes: 'Worked on speed and endurance',
-      },
-      {
-        id: 'ex3',
-        name: 'Double Stroke Roll',
-        tempo: 90,
-        duration: 10,
-        notes: 'Practiced with accent patterns',
-      },
-    ],
-    songs: [
-      {
-        id: 's1',
-        name: 'Back in Black',
-        artist: 'AC/DC',
-        tempo: 96,
-        duration: 20,
-        notes: 'Focused on the intro fill and keeping steady time',
-      },
-      {
-        id: 's2',
-        name: 'Smells Like Teen Spirit',
-        artist: 'Nirvana',
-        tempo: 116,
-        duration: 15,
-        notes: 'Worked on the verse groove and dynamics',
-      },
-    ],
-    totalDuration: 70,
-    notes: 'Great session today! Made progress on paradiddles at higher tempos.',
-  },
-  '2': {
-    id: '2',
-    date: new Date('2024-05-08'),
-    exercises: [
-      { id: 'ex1', name: 'Paradiddles', tempo: 110, duration: 10, notes: '' },
-      { id: 'ex4', name: 'Flams', tempo: 85, duration: 15, notes: 'Worked on spacing' },
-    ],
-    songs: [
-      {
-        id: 's3',
-        name: 'Enter Sandman',
-        artist: 'Metallica',
-        tempo: 123,
-        duration: 25,
-        notes: 'Focused on the intro and verse groove',
-      },
-    ],
-    totalDuration: 50,
-    notes: 'Shorter session but productive work on flams.',
-  },
-};
 
 export default function PracticeSessionDetailPage() {
   const { id } = useLocalSearchParams();
@@ -109,12 +39,12 @@ export default function PracticeSessionDetailPage() {
           <CardWithAccent accentColor="red-500">
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
-                <Dumbbell size={20} className="mr-2 text-red-500" />
                 <ThemedIcon
                   name="Dumbbell"
                   size={20}
-                  color="text-red-500"
-                  style={{ marginRight: 2 }}
+                  color="red-500"
+                  className="text-red-500 mr-2"
+                  style={{ marginRight: 6 }}
                 />
                 <Text className="text-lg font-semibold">Exercises</Text>
               </View>
@@ -142,7 +72,13 @@ export default function PracticeSessionDetailPage() {
           <CardWithAccent accentColor="slate-500">
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
-                <Music size={20} className="mr-2 text-slate-500" />
+                <ThemedIcon
+                  name="Music"
+                  size={20}
+                  color="slate-500"
+                  className="text-slate-500 mr-2"
+                  style={{ marginRight: 6 }}
+                />
                 <Text className="text-lg font-semibold">Songs</Text>
               </View>
             </CardHeader>

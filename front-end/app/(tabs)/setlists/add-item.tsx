@@ -14,7 +14,6 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 export default function AddItemScreen() {
-  console.log('hi');
   const router = useRouter();
   const { id } = useLocalSearchParams(); // setlist ID from route
   const addItem = useSetlistStore((s) => s.addItem);
@@ -22,13 +21,6 @@ export default function AddItemScreen() {
   const [activeTab, setActiveTab] = useState<'exercises' | 'songs'>('exercises');
   const [selectedExercise, setSelectedExercise] = useState<string>('');
   const [selectedSong, setSelectedSong] = useState<string>('');
-
-  const artists = Array.from(new Set(songsData.map((s) => s.artist))).filter(Boolean);
-
-  const [selectedArtist, setSelectedArtist] = useState<string | ''>('');
-  const filteredSongs = selectedArtist
-    ? songsData.filter((s) => s.artist === selectedArtist)
-    : songsData;
 
   const handleAdd = () => {
     if (activeTab === 'exercises' && selectedExercise) {
@@ -53,7 +45,6 @@ export default function AddItemScreen() {
         });
       }
     }
-    console.log('there');
     router.back(); // Go back to setlist screen
   };
 
@@ -64,7 +55,10 @@ export default function AddItemScreen() {
       <Tabs
         className="gap-1.5"
         value={activeTab}
-        onValueChange={(v) => setActiveTab(v as 'exercises' | 'songs')}
+        onValueChange={(v) => {
+          console.log('Tab value changed to:', v);
+          setActiveTab(v as 'exercises' | 'songs');
+        }}
       >
         <TabsList className="flex-row">
           <TabsTrigger value="exercises" className="flex-1">
@@ -82,38 +76,21 @@ export default function AddItemScreen() {
             </SelectTrigger>
             <SelectContent>
               {exercisesData.map((ex) => (
-                <SelectItem key={ex.id} value={ex.id}>
-                  {ex.name}
-                </SelectItem>
+                <SelectItem key={ex.id} value={ex.id} label={ex.name} />
               ))}
             </SelectContent>
           </Select>
         </TabsContent>
 
         <TabsContent value="songs" className="mt-4">
-          <Select value={selectedArtist} onValueChange={setSelectedArtist}>
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by Artist" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All</SelectItem>
-              {artists.map((artist) => (
-                <SelectItem key={artist} value={artist}>
-                  {artist}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
           <Select value={selectedSong} onValueChange={setSelectedSong}>
             <SelectTrigger>
               <SelectValue placeholder="Select Song" />
             </SelectTrigger>
             <SelectContent>
-              {filteredSongs.map((song) => (
-                <SelectItem key={song.id} value={song.id}>
-                  {song.name}
-                </SelectItem>
+              {console.log('Data being mapped for Select:', songsData)} {/* Add this line */}
+              {songsData.map((song) => (
+                <SelectItem key={song.id} label={song.name} value={song.id} />
               ))}
             </SelectContent>
           </Select>
@@ -128,7 +105,7 @@ export default function AddItemScreen() {
         }
         onPress={handleAdd}
       >
-        Add to Setlist
+        <Text className="text-white font-medium">Add to Setlist</Text>
       </Button>
     </View>
   );

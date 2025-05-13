@@ -1,13 +1,15 @@
+import { ThemedIcon } from '@/components/icons/themed-icon';
 import { ItemRow } from '@/components/setlists/ItemRow';
-import { ThemedIcon } from '@/components/themed-icon';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { setlistsData } from '@/mock/data';
+import { SetlistItem } from '@/types/setlist';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
-import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
+import { Alert, Text, TextInput, View } from 'react-native';
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 
 export default function EditSetlistPage() {
   const { id } = useLocalSearchParams();
@@ -48,16 +50,6 @@ export default function EditSetlistPage() {
     }, [fetchSetlistData]) // Re-run this effect if fetchSetlistData changes (due to setlistId change)
   );
 
-  const handleMoveItem = (index: number, direction: 'up' | 'down') => {
-    if (!setlist) return;
-    const items = [...setlist.items];
-    const target = direction === 'up' ? index - 1 : index + 1;
-    if (target < 0 || target >= items.length) return;
-
-    [items[index], items[target]] = [items[target], items[index]];
-    setSetlist({ ...setlist, items });
-  };
-
   // Function to open the Add Item modal
   const handleOpenAddItemModal = () => {
     // Navigate to the modal route
@@ -80,6 +72,31 @@ export default function EditSetlistPage() {
   };
 
   if (!setlist) return <Text>Loading...</Text>;
+
+  const renderItem = ({
+    item,
+    index,
+    drag,
+    isActive,
+  }: {
+    item: SetlistItem;
+    index: number;
+    drag: () => void;
+    isActive: boolean;
+  }) => {
+    return (
+      // Optional: Provides a scaling animation while dragging
+      <ScaleDecorator>
+        <ItemRow
+          item={item}
+          index={index}
+          onRemove={() => handleRemoveItem(index)} // Pass the index
+          drag={drag} // Pass the drag function to your ItemRow
+          isActive={isActive} // Pass the isActive state to your ItemRow for styling
+        />
+      </ScaleDecorator>
+    );
+  };
 
   return (
     <View className="flex-1 bg-slate-50 p-4">
@@ -105,7 +122,7 @@ export default function EditSetlistPage() {
       </View>
 
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-2xl font-semibold">Items ({setlist.items.length})</Text>
+        <Text className="text-2xl font-semibold">Items</Text>
         <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
           <View className="flex-row items-center justify-center px-2 py-2 ">
             <Plus size={16} className="mr-1" />
@@ -114,19 +131,14 @@ export default function EditSetlistPage() {
         </Button>
       </View>
 
-      <ScrollView className="space-y-3">
-        {setlist.items.map((item, index) => (
-          <ItemRow
-            key={`${item.id}-${index}`}
-            item={item}
-            index={index}
-            total={setlist.items.length}
-            onMoveUp={(i) => handleMoveItem(i, 'up')}
-            onMoveDown={(i) => handleMoveItem(i, 'down')}
-            onRemove={handleRemoveItem}
-          />
-        ))}
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <DraggableFlatList
+          data={setlist.items}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id} // Use a unique key for each item
+          onDragEnd={({ data }) => setSetlist({ ...setlist, items: data })} // Update state with the new order
+        />
+      </View>
 
       <View className="mt-4">
         <Button

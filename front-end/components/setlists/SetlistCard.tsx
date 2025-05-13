@@ -2,8 +2,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Setlist } from '@/types/setlist';
-import { Edit, Trash2 } from 'lucide-react-native';
 import { Text, View } from 'react-native';
+import { ThemedIcon } from '../icons/themed-icon';
 
 interface Props {
   setlist: Setlist;
@@ -13,7 +13,7 @@ interface Props {
 
 export const SetlistCard = ({ setlist, onEdit, onDelete }: Props) => {
   return (
-    <View className="rounded-xl mb-3 overflow-hidden">
+    <View className="rounded-xl mb-3 overflow-hidden px-2">
       <View className="border-1 border-slate-300">
         <Card className="rounded-xl">
           <CardHeader className="flex-row justify-between items-center">
@@ -41,10 +41,10 @@ export const SetlistCard = ({ setlist, onEdit, onDelete }: Props) => {
               <Text className="text-md text-gray-500">Last practiced: {setlist.lastPracticed}</Text>
               <View className="flex-row space-x-2">
                 <Button variant="ghost" size="icon" onPress={() => onDelete(setlist.id)}>
-                  <Trash2 size={24} className="text-gray-500" />
+                  <ThemedIcon name="Trash2" size={24} color="red-500" className="text-red-500" />
                 </Button>
                 <Button variant="ghost" size="icon" onPress={() => onEdit(setlist.id)}>
-                  <Edit size={24} className="text-gray-500" />
+                  <ThemedIcon name="Edit" size={24} color="red-500" className="text-red-500" />
                 </Button>
               </View>
             </View>

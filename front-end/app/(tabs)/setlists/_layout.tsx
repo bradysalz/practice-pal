@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/themed-icon';
+import { ThemedIcon } from '@/components/icons/themed-icon';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { Stack } from 'expo-router';
@@ -18,7 +18,7 @@ function newSetlistButton() {
   return (
     <View className="px-4">
       <Button className="flex-row rounded-xl bg-white-500 border border-slate-300">
-        <ThemedIcon name="Plus" color="gray-700" size={16} />
+        <ThemedIcon name="Plus" color="gray-700" size={20} />
         <Text className="text-gray-700">New Setlist</Text>
       </Button>
     </View>

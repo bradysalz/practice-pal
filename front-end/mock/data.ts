@@ -1,3 +1,73 @@
+export const practiceSessionsData = {
+  '1': {
+    id: '1',
+    date: new Date('2024-05-09'),
+    exercises: [
+      {
+        id: 'ex1',
+        name: 'Paradiddles',
+        tempo: 120,
+        duration: 15,
+        notes: 'Focused on keeping consistent dynamics between left and right hand',
+      },
+      {
+        id: 'ex2',
+        name: 'Single Stroke Roll',
+        tempo: 100,
+        duration: 10,
+        notes: 'Worked on speed and endurance',
+      },
+      {
+        id: 'ex3',
+        name: 'Double Stroke Roll',
+        tempo: 90,
+        duration: 10,
+        notes: 'Practiced with accent patterns',
+      },
+    ],
+    songs: [
+      {
+        id: 's1',
+        name: 'Back in Black',
+        artist: 'AC/DC',
+        tempo: 96,
+        duration: 20,
+        notes: 'Focused on the intro fill and keeping steady time',
+      },
+      {
+        id: 's2',
+        name: 'Smells Like Teen Spirit',
+        artist: 'Nirvana',
+        tempo: 116,
+        duration: 15,
+        notes: 'Worked on the verse groove and dynamics',
+      },
+    ],
+    totalDuration: 70,
+    notes: 'Great session today! Made progress on paradiddles at higher tempos.',
+  },
+  '2': {
+    id: '2',
+    date: new Date('2024-05-08'),
+    exercises: [
+      { id: 'ex1', name: 'Paradiddles', tempo: 110, duration: 10, notes: '' },
+      { id: 'ex4', name: 'Flams', tempo: 85, duration: 15, notes: 'Worked on spacing' },
+    ],
+    songs: [
+      {
+        id: 's3',
+        name: 'Enter Sandman',
+        artist: 'Metallica',
+        tempo: 123,
+        duration: 25,
+        notes: 'Focused on the intro and verse groove',
+      },
+    ],
+    totalDuration: 50,
+    notes: 'Shorter session but productive work on flams.',
+  },
+};
+
 export const recentSessions = [
   {
     id: '1',
@@ -125,4 +195,40 @@ export const songsData = [
   { id: 's3', type: 'song', name: 'Enter Sandman', artist: 'Metallica', goalTempo: 123 },
   { id: 's4', type: 'song', name: 'Tom Sawyer', artist: 'Rush', goalTempo: 88 },
   { id: 's5', type: 'song', name: 'Rosanna', artist: 'Toto', goalTempo: 84 },
+];
+
+// Mock data for books
+export const bookData = [
+  {
+    id: 'b1',
+    name: 'Stick Control',
+    author: 'George Lawrence Stone',
+    sections: 3,
+    exercises: 12,
+    coverColor: 'bg-red-100',
+  },
+  {
+    id: 'b2',
+    name: 'Syncopation',
+    author: 'Ted Reed',
+    sections: 2,
+    exercises: 8,
+    coverColor: 'bg-blue-100',
+  },
+  {
+    id: 'b3',
+    name: 'Advanced Techniques for the Modern Drummer',
+    author: 'Jim Chapin',
+    sections: 1,
+    exercises: 6,
+    coverColor: 'bg-green-100',
+  },
+  {
+    id: 'b4',
+    name: 'The Art of Bop Drumming',
+    author: 'John Riley',
+    sections: 4,
+    exercises: 15,
+    coverColor: 'bg-purple-100',
+  },
 ];

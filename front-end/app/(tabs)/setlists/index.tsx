@@ -9,46 +9,11 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { setlistsData } from '@/mock/data';
 import { useRouter } from 'expo-router';
 import { ListMusic, Plus } from 'lucide-react-native';
 import { useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
-
-const setlistsData = [
-  {
-    id: 'sl1',
-    name: 'Warm-up Routine',
-    description: 'A complete warm-up routine with essential rudiments',
-    items: [
-      { id: 'ex1', type: 'exercise', name: 'Single Stroke Roll', tempo: 120 },
-      { id: 'ex3', type: 'exercise', name: 'Double Stroke Roll', tempo: 90 },
-      { id: 'ex4', type: 'exercise', name: 'Paradiddles', tempo: 110 },
-    ],
-    lastPracticed: '2 days ago',
-  },
-  {
-    id: 'sl2',
-    name: 'Rock Classics',
-    description: 'Classic rock songs for practice',
-    items: [
-      { id: 's1', type: 'song', name: 'Back in Black', artist: 'AC/DC', tempo: 96 },
-      { id: 's2', type: 'song', name: 'Smells Like Teen Spirit', artist: 'Nirvana', tempo: 116 },
-      { id: 's3', type: 'song', name: 'Enter Sandman', artist: 'Metallica', tempo: 123 },
-    ],
-    lastPracticed: '1 week ago',
-  },
-  {
-    id: 'sl3',
-    name: 'Coordination Workout',
-    description: 'Exercises focused on improving coordination',
-    items: [
-      { id: 'ex4', type: 'exercise', name: 'Paradiddles', tempo: 110 },
-      { id: 'ex7', type: 'exercise', name: 'Independence Exercise 1', tempo: 95 },
-      { id: 'ex8', type: 'exercise', name: 'Independence Exercise 2', tempo: 90 },
-    ],
-    lastPracticed: 'Yesterday',
-  },
-];
 
 export default function SetlistsPage() {
   const router = useRouter();
