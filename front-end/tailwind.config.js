@@ -1,10 +1,32 @@
 const { hairlineWidth } = require('nativewind/theme');
+const colors = require('tailwindcss/colors');
+
+// removing old colors
+delete colors.lightBlue;
+delete colors.warmGray;
+delete colors.trueGray;
+delete colors.coolGray;
+delete colors.blueGray;
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
   presets: [require('nativewind/preset')],
+  safelist: [
+    'bg-red-100',
+    'bg-orange-100',
+    'bg-yellow-100',
+    'bg-green-100',
+    'bg-blue-100',
+    'bg-purple-100',
+    'bg-pink-100',
+    'bg-emerald-100',
+    'bg-slate-100',
+    'bg-zinc-100',
+    'bg-neutral-100',
+    'bg-stone-100',
+  ],
   theme: {
     container: {
       center: true,
@@ -15,6 +37,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        ...colors, // re-include tailwind colors
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
