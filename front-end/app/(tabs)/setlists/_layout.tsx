@@ -42,6 +42,10 @@ export default function SetlistStack() {
           title: 'Edit Setlist',
         }}
       />
+      <Stack.Screen
+        name="add-item"
+      // options
+      />
     </Stack>
   );
 }

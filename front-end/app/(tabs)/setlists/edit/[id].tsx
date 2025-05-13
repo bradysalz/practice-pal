@@ -73,7 +73,7 @@ export default function EditSetlistPage() {
     // Navigate to the modal route
     // Pass the setlistId as a parameter so the modal knows which setlist to add to
     router.push({
-      pathname: '/(modals)/add-setlist-item',
+      pathname: '/setlists/edit/add-item',
       params: { setlistId: setlistId },
     });
   };
