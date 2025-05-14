@@ -60,7 +60,7 @@ export default function LibraryPage() {
           <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
             {filteredBooks.length > 0 ? (
               filteredBooks.map((book) => (
-                <Pressable key={book.id} onPress={() => router.push(`/library/books/${book.id}`)}>
+                <Pressable key={book.id} onPress={() => router.push(`/library/book/${book.id}`)}>
                   <Card className="mb-4">
                     <CardContent className="flex-row p-0">
                       <View className={`${book.coverColor} w-24 items-center justify-center`}>

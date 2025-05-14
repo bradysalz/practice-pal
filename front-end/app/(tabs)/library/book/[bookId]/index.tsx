@@ -7,11 +7,12 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 import { SectionCard } from '@/components/library/SectionCard';
 import { bookData } from '@/mock/data';
+
 export default function BookDetailPage() {
-  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
-  const book = bookData.find((b) => b.id === id);
+  const { bookId } = useLocalSearchParams<{ bookId: string }>();
+  const book = bookData.find((b) => b.id === bookId);
 
   if (!book) return <NotFound />;
 
@@ -41,13 +42,12 @@ export default function BookDetailPage() {
       </Card>
       <View className="space-y-4">
         {book.sections.map((section) => {
-          const sectionSlug = section.name.toLowerCase().replace(/\s+/g, '-');
           return (
             <SectionCard
-              key={sectionSlug}
+              key={section.id}
               sectionName={section.name}
               exercises={section.exercises}
-              onPress={() => router.push(`/library/sections/${sectionSlug}`)}
+              onPress={() => router.push(`library/book/${bookId}/section/${section.id}`)}
             />
           );
         })}
