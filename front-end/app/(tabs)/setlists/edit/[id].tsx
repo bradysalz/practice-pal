@@ -1,13 +1,15 @@
+import { ThemedIcon } from '@/components/icons/themed-icon';
 import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { setlistsData } from '@/mock/data';
+import { SetlistItem } from '@/types/setlist';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
-import { Plus, Save } from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
-import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
-
+import { Alert, Text, TextInput, View } from 'react-native';
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 
 export default function EditSetlistPage() {
   const { id } = useLocalSearchParams();
@@ -18,7 +20,6 @@ export default function EditSetlistPage() {
   const [setlist, setSetlist] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
 
   // Function to fetch setlist data based on the ID
   const fetchSetlistData = useCallback(() => {
@@ -49,31 +50,12 @@ export default function EditSetlistPage() {
     }, [fetchSetlistData]) // Re-run this effect if fetchSetlistData changes (due to setlistId change)
   );
 
-  // useEffect(() => {
-  //   setFilteredSongs(
-  //     selectedArtist && selectedArtist !== 'all'
-  //       ? songsData.filter((s) => s.artist === selectedArtist)
-  //       : songsData
-  //   );
-  //   setSelectedSong('');
-  // }, [selectedArtist]);
-
-  const handleMoveItem = (index: number, direction: 'up' | 'down') => {
-    if (!setlist) return;
-    const items = [...setlist.items];
-    const target = direction === 'up' ? index - 1 : index + 1;
-    if (target < 0 || target >= items.length) return;
-
-    [items[index], items[target]] = [items[target], items[index]];
-    setSetlist({ ...setlist, items });
-  };
-
   // Function to open the Add Item modal
   const handleOpenAddItemModal = () => {
     // Navigate to the modal route
     // Pass the setlistId as a parameter so the modal knows which setlist to add to
     router.push({
-      pathname: '/setlists/edit/add-item',
+      pathname: '/setlists/add-item',
       params: { setlistId: setlistId },
     });
   };
@@ -91,55 +73,88 @@ export default function EditSetlistPage() {
 
   if (!setlist) return <Text>Loading...</Text>;
 
+  const renderItem = ({
+    item,
+    index,
+    drag,
+    isActive,
+  }: {
+    item: SetlistItem;
+    index: number;
+    drag: () => void;
+    isActive: boolean;
+  }) => {
+    return (
+      // Optional: Provides a scaling animation while dragging
+      <ScaleDecorator>
+        <ItemRow
+          item={item}
+          index={index}
+          onRemove={() => handleRemoveItem(index)} // Pass the index
+          drag={drag} // Pass the drag function to your ItemRow
+          isActive={isActive} // Pass the isActive state to your ItemRow for styling
+        />
+      </ScaleDecorator>
+    );
+  };
+
   return (
     <View className="flex-1 bg-slate-50 p-4">
       <View className="space-y-3 mb-6">
         <View>
-          <Label className="mb-2">Setlist Name</Label>
+          <Label className="text-2xl mb-2">Setlist Name</Label>
           <TextInput
             value={setlist.name}
             onChangeText={(text) => setSetlist({ ...setlist, name: text })}
             placeholder="e.g., Warm-up Routine"
-            className="border p-2 rounded bg-white mb-2"
+            className="border border-slate-300 p-2 rounded-xl bg-white mb-4"
           />
         </View>
         <View>
-          <Label className="mb-2">Description</Label>
+          <Label className="text-2xl mb-2">Description</Label>
           <Textarea
             value={setlist.description}
             onChangeText={(text) => setSetlist({ ...setlist, description: text })}
             placeholder="Describe your setlist..."
-            className="mb-2 rounded border border-slate-500"
+            className="mb-2 border border-slate-300 rounded-xl"
           />
         </View>
       </View>
 
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-lg font-semibold">Items ({setlist.items.length})</Text>
+        <Text className="text-2xl font-semibold">Items</Text>
         <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
-          <Plus size={16} />
-          <Text>Add Item</Text>
+          <View className="flex-row items-center justify-center px-2 py-2 ">
+            <Plus size={16} className="mr-1" />
+            <Text className="font-medium">Add Item</Text>
+          </View>
         </Button>
       </View>
 
-      <ScrollView className="space-y-3">
-        {setlist.items.map((item, index) => (
-          <ItemRow
-            key={`${item.id}-${index}`}
-            item={item}
-            index={index}
-            total={setlist.items.length}
-            onMoveUp={(i) => handleMoveItem(i, 'up')}
-            onMoveDown={(i) => handleMoveItem(i, 'down')}
-            onRemove={handleRemoveItem}
-          />
-        ))}
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <DraggableFlatList
+          data={setlist.items}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id} // Use a unique key for each item
+          onDragEnd={({ data }) => setSetlist({ ...setlist, items: data })} // Update state with the new order
+        />
+      </View>
 
       <View className="mt-4">
-        <Button onPress={handleSaveSetlist} disabled={!setlist.name || setlist.items.length === 0}>
-          <Save size={16} className="mr-2" />
-          <Text>Save Setlist</Text>
+        <Button
+          variant="default"
+          onPress={handleSaveSetlist}
+          disabled={!setlist.name || setlist.items.length === 0}
+        >
+          <View className="flex-row items-center gap-1 justify-center px-2 py-2 ">
+            <ThemedIcon
+              name="Save"
+              size={24}
+              color="white" // Used on mobile for color
+              className="text-white" // Used on web for both color (text-white) and margin (mr-1)
+            />
+            <Text className="text-2xl text-white font-medium">Save Setlist</Text>
+          </View>
         </Button>
       </View>
     </View>

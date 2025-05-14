@@ -12,10 +12,13 @@ import {
   Clock,
   Drum,
   Dumbbell,
+  Edit,
   Home,
   ListMusic,
   Music,
   Plus,
+  Save,
+  Trash2,
 } from 'lucide-react-native';
 
 // Map icon names to components
@@ -26,11 +29,14 @@ const ICONS = {
   BarChart,
   Dumbbell,
   Clock,
+  Edit,
   ListMusic,
+  Save,
   Music,
   Plus,
   ArrowLeft,
   ChevronRight,
+  Trash2,
 } as const;
 
 type IconName = keyof typeof ICONS;
