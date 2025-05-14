@@ -190,11 +190,89 @@ export const exercisesData = [
 ];
 
 export const songsData = [
-  { id: 's1', type: 'song', name: 'Back in Black', artist: 'AC/DC', goalTempo: 96 },
-  { id: 's2', type: 'song', name: 'Smells Like Teen Spirit', artist: 'Nirvana', goalTempo: 116 },
-  { id: 's3', type: 'song', name: 'Enter Sandman', artist: 'Metallica', goalTempo: 123 },
-  { id: 's4', type: 'song', name: 'Tom Sawyer', artist: 'Rush', goalTempo: 88 },
-  { id: 's5', type: 'song', name: 'Rosanna', artist: 'Toto', goalTempo: 84 },
+  {
+    id: 's1',
+    type: 'song',
+    name: 'Back in Black',
+    artist: 'AC/DC',
+    goalTempo: 96,
+    lastPracticed: '2 days ago',
+  },
+  {
+    id: 's2',
+    type: 'song',
+    name: 'Smells Like Teen Spirit',
+    artist: 'Nirvana',
+    goalTempo: 116,
+    lastPracticed: '4 days ago',
+  },
+  {
+    id: 's3',
+    type: 'song',
+    name: 'Enter Sandman',
+    artist: 'Metallica',
+    goalTempo: 123,
+    lastPracticed: '1 week ago',
+  },
+  {
+    id: 's4',
+    type: 'song',
+    name: 'Tom Sawyer',
+    artist: 'Rush',
+    goalTempo: 88,
+    lastPracticed: '1 days ago',
+  },
+  {
+    id: 's5',
+    type: 'song',
+    name: 'Rosanna',
+    artist: 'Toto',
+    goalTempo: 84,
+    lastPracticed: '2 days ago',
+  },
+];
+
+export const bookData = [
+  {
+    id: 'b1',
+    name: 'Stick Control',
+    author: 'George Lawrence Stone',
+    sections: [
+      { id: 1, name: 'Basic Stickings', exercises: 4 },
+      { id: 2, name: 'Accent Variations', exercises: 5 },
+      { id: 3, name: 'Roll Techniques', exercises: 3 },
+    ],
+    coverColor: 'bg-red-100',
+  },
+  {
+    id: 'b2',
+    name: 'Syncopation',
+    author: 'Ted Reed',
+    sections: [
+      { id: 4, name: 'Eighth Note Syncopation', exercises: 5 },
+      { id: 5, name: 'Triplet Figures', exercises: 3 },
+    ],
+    coverColor: 'bg-blue-100',
+  },
+  {
+    id: 'b3',
+    name: 'Advanced Techniques for the Modern Drummer',
+    author: 'Jim Chapin',
+    sections: [{ id: 7, name: 'Jazz Independence Exercises', exercises: 6 }],
+    coverColor: 'bg-green-100',
+  },
+  {
+    id: 'b4',
+    name: 'The Art of Bop Drumming',
+    author: 'John Riley',
+    sections: [
+      { id: 1, name: 'Timekeeping Essentials', exercises: 6 },
+      { id: 2, name: 'Comping Variations', exercises: 4 },
+      { id: 3, name: 'Brush Technique', exercises: 3 },
+      { id: 4, name: 'Soloing Concepts', exercises: 2 },
+    ],
+    coverColor: 'bg-purple-100',
+  },
 ];
 
 // Mock data for books
