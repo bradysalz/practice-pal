@@ -16,6 +16,12 @@ export default function LibraryStackLayout() {
           title: 'My Library',
         }}
       />
+      <Stack.Screen
+        name="add-item"
+        options={{
+          title: 'Add Item',
+        }}
+      />
       {/* Book Detail screen */}
       <Stack.Screen
         name="book/[bookId]/index" // Corresponds to app/(tabs)/library/book/[bookId]/index.tsx
@@ -35,14 +41,6 @@ export default function LibraryStackLayout() {
         name="book/[bookId]/section/[sectionId]/exercise/[id]" // Corresponds to app/(tabs)/library/book/[bookId]/section/[sectionId]/exercise/[id].tsx
         options={{
           title: 'Exercise Details', // Set dynamically in screen
-        }}
-      />
-
-      {/* List of Artists */}
-      <Stack.Screen
-        name="artists/index"
-        options={{
-          title: 'Artists',
         }}
       />
 

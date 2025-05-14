@@ -274,3 +274,39 @@ export const bookData = [
     coverColor: 'bg-purple-100',
   },
 ];
+
+// Mock data for books
+export const bookData = [
+  {
+    id: 'b1',
+    name: 'Stick Control',
+    author: 'George Lawrence Stone',
+    sections: 3,
+    exercises: 12,
+    coverColor: 'bg-red-100',
+  },
+  {
+    id: 'b2',
+    name: 'Syncopation',
+    author: 'Ted Reed',
+    sections: 2,
+    exercises: 8,
+    coverColor: 'bg-blue-100',
+  },
+  {
+    id: 'b3',
+    name: 'Advanced Techniques for the Modern Drummer',
+    author: 'Jim Chapin',
+    sections: 1,
+    exercises: 6,
+    coverColor: 'bg-green-100',
+  },
+  {
+    id: 'b4',
+    name: 'The Art of Bop Drumming',
+    author: 'John Riley',
+    sections: 4,
+    exercises: 15,
+    coverColor: 'bg-purple-100',
+  },
+];
