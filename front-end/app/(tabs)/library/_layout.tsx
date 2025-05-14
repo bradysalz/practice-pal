@@ -38,14 +38,6 @@ export default function LibraryStackLayout() {
         }}
       />
 
-      {/* List of Artists */}
-      <Stack.Screen
-        name="artists/index"
-        options={{
-          title: 'Artists',
-        }}
-      />
-
       {/* Songs by an Arists */}
       <Stack.Screen
         name="artists/[id]"

@@ -100,7 +100,7 @@ export default function LibraryPage() {
           <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
             {filteredSongs.length > 0 ? (
               filteredSongs.map((song) => (
-                <Pressable key={song.id} onPress={() => router.push(`/stats/songs/${song.id}`)}>
+                <Pressable key={song.id} onPress={() => router.push(`/library/song/${song.id}`)}>
                   <CardWithAccent className="mb-4">
                     <CardHeader className="flex-row justify-between items-center p-4 pb-2">
                       <View>
