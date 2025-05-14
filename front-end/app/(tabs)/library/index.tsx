@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
-import { BookOpen, ChevronRight, Music, Search } from 'lucide-react-native';
+import { BookOpen, ChevronRight, Music, Plus, Search } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { CardWithAccent } from '@/components/card-with-accent';
+
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,7 +14,6 @@ export default function LibraryPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'books' | 'songs'>('books');
-
   const filteredBooks = bookData.filter(
     (book) =>
       book.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -37,7 +37,6 @@ export default function LibraryPage() {
           className="pl-8 pr-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900"
         />
       </View>
-
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="flex-row space-x-2 mb-4">
           <TabsTrigger
@@ -71,7 +70,7 @@ export default function LibraryPage() {
                         <Text className="text-slate-500">{book.author}</Text>
                         <View className="flex-row space-x-2 mt-2">
                           <Badge variant="secondary" className="text-sm">
-                            {book.sections.length} sections
+                            <Text>{book.sections.length} sections</Text>
                           </Badge>
                           <Badge variant="secondary" className="text-sm">
                             <Text>
@@ -125,6 +124,13 @@ export default function LibraryPage() {
           </ScrollView>
         </TabsContent>
       </Tabs>
+
+      <Pressable
+        onPress={() => router.push('/library/add-item')}
+        className="absolute bottom-6 right-6 bg-primary rounded-full w-16 h-16 items-center justify-center shadow-lg"
+      >
+        <Plus size={28} className="text-white" />
+      </Pressable>
     </View>
   );
 }

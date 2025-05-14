@@ -16,6 +16,12 @@ export default function LibraryStackLayout() {
           title: 'My Library',
         }}
       />
+      <Stack.Screen
+        name="add-item"
+        options={{
+          title: 'Add Item',
+        }}
+      />
       {/* Book Detail screen */}
       <Stack.Screen
         name="book/[bookId]/index" // Corresponds to app/(tabs)/library/book/[bookId]/index.tsx
