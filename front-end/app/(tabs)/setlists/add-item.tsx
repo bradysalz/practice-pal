@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import {
+  Option,
   Select,
   SelectContent,
   SelectItem,
@@ -19,12 +20,13 @@ export default function AddItemScreen() {
   const addItem = useSetlistStore((s) => s.addItem);
 
   const [activeTab, setActiveTab] = useState<'exercises' | 'songs'>('exercises');
-  const [selectedExercise, setSelectedExercise] = useState<string>('');
-  const [selectedSong, setSelectedSong] = useState<string>('');
+  const emptyOption = { value: '', label: '' };
+  const [selectedExercise, setSelectedExercise] = useState<Option>(emptyOption);
+  const [selectedSong, setSelectedSong] = useState<Option>(emptyOption);
 
   const handleAdd = () => {
     if (activeTab === 'exercises' && selectedExercise) {
-      const ex = exercisesData.find((e) => e.id === selectedExercise);
+      const ex = exercisesData.find((e) => e.id === selectedExercise.label);
       if (ex) {
         addItem({
           id: ex.id,
@@ -34,7 +36,7 @@ export default function AddItemScreen() {
         });
       }
     } else if (activeTab === 'songs' && selectedSong) {
-      const song = songsData.find((s) => s.id === selectedSong);
+      const song = songsData.find((s) => s.id === selectedSong.label);
       if (song) {
         addItem({
           id: song.id,
@@ -70,7 +72,7 @@ export default function AddItemScreen() {
         </TabsList>
 
         <TabsContent value="exercises" className="mt-4">
-          <Select value={selectedExercise} onValueChange={setSelectedExercise}>
+          <Select onValueChange={setSelectedExercise}>
             <SelectTrigger>
               <SelectValue placeholder="Choose an exercise" />
             </SelectTrigger>
@@ -83,12 +85,11 @@ export default function AddItemScreen() {
         </TabsContent>
 
         <TabsContent value="songs" className="mt-4">
-          <Select value={selectedSong} onValueChange={setSelectedSong}>
+          <Select onValueChange={setSelectedSong}>
             <SelectTrigger>
               <SelectValue placeholder="Select Song" />
             </SelectTrigger>
             <SelectContent>
-              {console.log('Data being mapped for Select:', songsData)} {/* Add this line */}
               {songsData.map((song) => (
                 <SelectItem key={song.id} label={song.name} value={song.id} />
               ))}

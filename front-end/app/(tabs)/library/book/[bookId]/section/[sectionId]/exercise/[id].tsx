@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { useLocalSearchParams } from 'expo-router';
 import { Clock } from 'lucide-react-native';
 import { useState } from 'react';
 import { FlatList, Text, TextInput, View } from 'react-native';
@@ -17,7 +16,7 @@ const mockExercise = {
 };
 
 export default function ExerciseDetailPage() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  // const { id } = useLocalSearchParams<{ id: string }>();
   const [goalTempo, setGoalTempo] = useState(String(mockExercise.goalTempo));
 
   const handleUpdateGoal = () => {

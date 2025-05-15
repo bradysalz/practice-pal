@@ -1,14 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { bookData, setlistsData, songsData } from '@/mock/data';
+import { Book, Section } from '@/types/library';
 import { router } from 'expo-router';
 import { Play } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 export default function MakeSessionPage() {
-  const [activeTab, setActiveTab] = useState<'setlists' | 'books' | 'songs'>('setlists');
-
-  const [viewMode, setViewMode] = useState<'tabs' | 'book' | 'section'>('tabs');
+  const [activeTab, setActiveTab] = useState<string>('setlists');
+  const [viewMode, setViewMode] = useState<string>('tabs');
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
 

@@ -1,5 +1,5 @@
 import { Card, CardHeader } from '@/components/ui/card';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ChevronRight, Music } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 
@@ -15,7 +15,7 @@ const mockArtist = {
 
 export default function ArtistDetailPage() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  // const { id } = useLocalSearchParams<{ id: string }>();
 
   const handleSongPress = (songId: string) => {
     router.push(`library/songs/${songId}`);

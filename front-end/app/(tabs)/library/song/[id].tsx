@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { Clock } from 'lucide-react-native';
 import { useState } from 'react';
 import { FlatList, Pressable, Text, TextInput, View } from 'react-native';
@@ -18,7 +18,7 @@ const mockSong = {
 };
 
 export default function SongDetailPage() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  // const { id } = useLocalSearchParams<{ id: string }>();
   const [goalTempo, setGoalTempo] = useState(String(mockSong.goalTempo));
 
   const handleBackToArtist = () => {

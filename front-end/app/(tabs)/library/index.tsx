@@ -12,7 +12,7 @@ import { bookData, songsData } from '@/mock/data';
 export default function LibraryPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'books' | 'songs'>('books');
+  const [activeTab, setActiveTab] = useState<string>('books');
   const filteredBooks = bookData.filter(
     (book) =>
       book.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

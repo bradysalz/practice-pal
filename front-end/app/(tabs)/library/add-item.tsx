@@ -6,7 +6,7 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 export default function AddItemPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'books' | 'songs'>('books');
+  const [activeTab, setActiveTab] = useState<string>('books');
 
   // Form state for Book
   const [bookName, setBookName] = useState('');

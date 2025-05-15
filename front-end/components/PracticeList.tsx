@@ -22,6 +22,9 @@ export default function PracticeList({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [practices, setPractice] = useState<ExerciseWithJoins[]>([]);
 
+  // TODO: tsc lint
+  console.log(loading);
+
   useEffect(() => {
     if (!session) return;
 
