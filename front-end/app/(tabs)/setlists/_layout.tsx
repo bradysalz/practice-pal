@@ -5,14 +5,15 @@ import { Stack } from 'expo-router';
 import React from 'react'; // Import React
 import { View } from 'react-native';
 
-function newTitleStyle() {
-  return (
-    <View>
-      <ThemedIcon name="ListMusic" color="red-500" size={24} />
-      <Text>Setlists</Text>
-    </View>
-  );
-}
+// TODO: put icon in header
+// function newTitleStyle() {
+//   return (
+//     <View>
+//       <ThemedIcon name="ListMusic" color="red-500" size={24} />
+//       <Text>Setlists</Text>
+//     </View>
+//   );
+// }
 
 function newSetlistButton() {
   return (

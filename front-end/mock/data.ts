@@ -1,3 +1,5 @@
+import { Setlist } from '@/types/setlist';
+
 export const practiceSessionsData = {
   '1': {
     id: '1',
@@ -115,7 +117,7 @@ export const recentSessions = [
   },
 ];
 
-export const setlistsData = [
+export const setlistsData: Setlist[] = [
   {
     id: 'sl1',
     name: 'Warm-up Routine',

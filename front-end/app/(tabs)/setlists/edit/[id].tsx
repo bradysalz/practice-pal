@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { setlistsData } from '@/mock/data';
-import { SetlistItem } from '@/types/setlist';
+import { Setlist, SetlistItem } from '@/types/setlist';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { Alert, Text, TextInput, View } from 'react-native';
-import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import DraggableFlatList, {
+  RenderItemParams,
+  ScaleDecorator,
+} from 'react-native-draggable-flatlist';
 
 export default function EditSetlistPage() {
   const { id } = useLocalSearchParams();
@@ -17,9 +20,12 @@ export default function EditSetlistPage() {
 
   const router = useRouter();
 
-  const [setlist, setSetlist] = useState<any>(null);
+  const [setlist, setSetlist] = useState<Setlist | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // TODO: tsc happy
+  console.log(isLoading, error);
 
   // Function to fetch setlist data based on the ID
   const fetchSetlistData = useCallback(() => {
@@ -30,7 +36,6 @@ export default function EditSetlistPage() {
     // Simulate fetching data from your source (e.g., Supabase)
     // Replace this with your actual data fetching logic
     const data = setlistsData.find((s) => s.id === setlistId);
-
     if (data) {
       setSetlist(data);
       setIsLoading(false);
@@ -61,6 +66,9 @@ export default function EditSetlistPage() {
   };
 
   const handleRemoveItem = (index: number) => {
+    if (!setlist) {
+      return;
+    }
     const items = [...setlist.items];
     items.splice(index, 1);
     setSetlist({ ...setlist, items });
@@ -73,17 +81,9 @@ export default function EditSetlistPage() {
 
   if (!setlist) return <Text>Loading...</Text>;
 
-  const renderItem = ({
-    item,
-    index,
-    drag,
-    isActive,
-  }: {
-    item: SetlistItem;
-    index: number;
-    drag: () => void;
-    isActive: boolean;
-  }) => {
+  const renderItem = ({ item, getIndex, drag, isActive }: RenderItemParams<SetlistItem>) => {
+    const index = getIndex() ?? 0; // fallback if undefined
+
     return (
       // Optional: Provides a scaling animation while dragging
       <ScaleDecorator>
