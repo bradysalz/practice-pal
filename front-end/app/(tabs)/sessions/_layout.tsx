@@ -18,6 +18,13 @@ export default function HomeStack() {
           // Add options like headerRight buttons here
         }}
       />
+      <Stack.Screen
+        name="make-session" // Corresponds to app/(tabs)/home/[id].js (Your Session Detail)
+        options={{
+          title: 'Create Session', // Title for the header when viewing details
+          // Add options like headerRight buttons here
+        }}
+      />
       {/* If you had other screens specifically part of the Home stack, list them here */}
     </Stack>
   );
