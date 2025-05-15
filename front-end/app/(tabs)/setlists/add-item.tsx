@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { exercisesData, songsData } from '@/mock/data';
-import { useSetlistStore } from '@/stores/setlistStore';
+import { useSetlistStore } from '@/stores/setlist-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
