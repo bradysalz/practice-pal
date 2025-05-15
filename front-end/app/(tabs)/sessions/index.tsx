@@ -1,5 +1,6 @@
 import { PracticeSessionCard } from '@/components/practice-session-card';
 import { recentSessions } from '@/mock/data';
+import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
@@ -13,7 +14,10 @@ export default function RecentSessionsPage() {
       </ScrollView>
 
       <View className="absolute bottom-4 w-full max-w-md px-4">
-        <Pressable className="flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80">
+        <Pressable
+          className="flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
+          onPress={() => router.push('/sessions/make-session')}
+        >
           <Plus size={20} color="white" className="mr-2" />
           <Text className="text-white font-semibold text-lg">Start Session</Text>
         </Pressable>
