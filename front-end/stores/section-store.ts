@@ -30,7 +30,7 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
   sections: [],
 
   fetchSections: async () => {
-    const { data, error } = await supabase.from('sections').select('*');
+    const { data, error } = await supabase.from('section_with_counts').select('*');
     if (error) {
       console.error('Fetch failed', error);
       return;

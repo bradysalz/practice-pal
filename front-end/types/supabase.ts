@@ -147,6 +147,13 @@ export type Database = {
             foreignKeyName: "exercises_section_id_fkey"
             columns: ["section_id"]
             isOneToOne: false
+            referencedRelation: "section_with_counts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
             referencedRelation: "sections"
             referencedColumns: ["id"]
           },
@@ -482,6 +489,40 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "books_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      section_with_counts: {
+        Row: {
+          book_id: string | null
+          created_at: string | null
+          created_by: string | null
+          exercise_count: number | null
+          id: string | null
+          name: string | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_with_counts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sections_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"

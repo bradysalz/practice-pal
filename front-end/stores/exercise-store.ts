@@ -21,7 +21,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
   fetchExercisesBySection: async (section_id) => {
     const { data, error } = await supabase
-      .from('exercise_with_stats')
+      .from('exercises')
       .select('*')
       .eq('section_id', section_id);
 

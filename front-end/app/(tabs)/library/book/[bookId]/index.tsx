@@ -24,6 +24,7 @@ export default function BookDetailPage() {
 
   const book = useBooksStore((state) => state.books.find((book) => book.id === bookId));
   const sections = useSectionsStore((state) => state.sections);
+  const usefulSections = sections.filter((section) => section.book_id === bookId);
 
   if (!book) return <NotFound />;
 
@@ -49,7 +50,7 @@ export default function BookDetailPage() {
         </CardContent>
       </Card>
       <View className="space-y-4">
-        {sections.map((section) => {
+        {usefulSections.map((section) => {
           return (
             <SectionCard
               key={section.id}
