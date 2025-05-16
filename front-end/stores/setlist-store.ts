@@ -1,40 +1,60 @@
-import { Setlist, SetlistItem } from '@/types/setlist';
+import { supabase } from '@/lib/supabase';
+import { Database } from '@/types/supabase';
+import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-interface SetlistState {
-  currentSetlist: Setlist | null;
-  setSetlist: (setlist: Setlist) => void;
-  addItem: (item: SetlistItem) => void;
-  removeItem: (index: number) => void;
-  reorderItems: (items: SetlistItem[]) => void;
-  clearSetlist: () => void;
-}
+type SetlistRow = Database['public']['Tables']['setlists']['Row'];
+type SetlistInsert = Database['public']['Tables']['setlists']['Insert'];
+type InputLocalSetlist = Omit<SetlistInsert, 'id' | 'created_at' | 'updated_at'>;
 
-export const useSetlistStore = create<SetlistState>((set) => ({
-  currentSetlist: null,
+type SetlistsState = {
+  setlists: SetlistRow[];
+  addSetlistLocal: (setlist: InputLocalSetlist) => string;
+  syncAddSetlist: (tempId: string) => Promise<void>;
+  fetchSetlists: () => Promise<void>;
+};
 
-  setSetlist: (setlist) => set({ currentSetlist: setlist }),
+export const useSetlistsStore = create<SetlistsState>((set, get) => ({
+  setlists: [],
 
-  addItem: (item) =>
-    set((state) => ({
-      currentSetlist: state.currentSetlist
-        ? { ...state.currentSetlist, items: [...state.currentSetlist.items, item] }
-        : state.currentSetlist,
-    })),
+  fetchSetlists: async () => {
+    const { data, error } = await supabase.from('setlists').select('*');
+    if (error) {
+      console.error('Fetch failed', error);
+      return;
+    }
+    set({ setlists: data as SetlistRow[] });
+  },
 
-  removeItem: (index) =>
-    set((state) => {
-      if (!state.currentSetlist) return state;
-      const newItems = [...state.currentSetlist.items];
-      newItems.splice(index, 1);
-      return { currentSetlist: { ...state.currentSetlist, items: newItems } };
-    }),
+  addSetlistLocal: (setlist) => {
+    const id = uuidv4();
+    const now = new Date().toISOString();
 
-  reorderItems: (items) =>
-    set((state) => {
-      if (!state.currentSetlist) return state;
-      return { currentSetlist: { ...state.currentSetlist, items } };
-    }),
+    const newSetlist: SetlistRow = {
+      ...setlist,
+      id,
+      name: setlist.name ?? null,
+      created_at: now,
+      updated_at: now,
+    };
 
-  clearSetlist: () => set({ currentSetlist: null }),
+    set((state) => ({ setlists: [...state.setlists, newSetlist] }));
+    return id;
+  },
+
+  syncAddSetlist: async (id) => {
+    const localSetlist = get().setlists.find((s) => s.id === id);
+    if (!localSetlist) return;
+
+    const { data, error } = await supabase.from('setlists').insert(localSetlist).select().single();
+
+    if (error) {
+      console.error('Sync failed', error);
+      // Optional: mark as failed, etc.
+    } else {
+      set((state) => ({
+        setlists: state.setlists.map((s) => (s.id === id ? data : s)),
+      }));
+    }
+  },
 }));

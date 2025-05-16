@@ -5,12 +5,11 @@ import { create } from 'zustand';
 
 type ArtistRow = Database['public']['Tables']['artists']['Row'];
 type ArtistInsert = Database['public']['Tables']['artists']['Insert'];
-
-type LocalArtist = ArtistRow & { tempId?: string };
+type InputArist = Omit<ArtistInsert, 'id' | 'created_at' | 'updated_at'>;
 
 type ArtistsState = {
-  artists: LocalArtist[];
-  addArtistLocal: (artist: Omit<ArtistInsert, 'id' | 'created_at' | 'updated_at'>) => string;
+  artists: ArtistRow[];
+  addArtistLocal: (artist: InputArist) => string;
   syncAddArtist: (tempId: string) => Promise<void>;
   fetchArtists: () => Promise<void>;
 };
@@ -28,39 +27,34 @@ export const useArtistsStore = create<ArtistsState>((set, get) => ({
   },
 
   addArtistLocal: (artist) => {
-    const tempId = uuidv4();
-    const newArtist: LocalArtist = {
-      ...artist,
-      id: -1, // placeholder ID to satisfy type (or null if you prefer)
+    const id = uuidv4();
+    const now = new Date().toISOString();
+
+    const newArtist: ArtistRow = {
+      id,
       created_by: artist.created_by,
       name: artist.name,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      tempId,
+      created_at: now,
+      updated_at: now,
     };
+
     set((state) => ({ artists: [...state.artists, newArtist] }));
-    return tempId;
+    return id;
   },
 
-  syncAddArtist: async (tempId) => {
-    const localArtist = get().artists.find((s) => s.tempId === tempId);
+  syncAddArtist: async (id) => {
+    const localArtist = get().artists.find((s) => s.id === id);
     if (!localArtist) return;
 
-    const { created_by, name } = localArtist;
-
-    const payload: ArtistInsert = {
-      created_by,
-      name,
-    };
-
-    const { data, error } = await supabase.from('artists').insert(payload).select().single();
+    const { data, error } = await supabase.from('artists').insert(localArtist).select().single();
 
     if (error) {
       console.error('Sync failed', error);
-      // Optional: mark sync failure, revert, etc.
+      // Optionally mark artist as needing retry or show error UI
     } else {
+      // Update local data with fresh server fields (if needed)
       set((state) => ({
-        artists: state.artists.map((s) => (s.tempId === tempId ? data : s)),
+        artists: state.artists.map((s) => (s.id === id ? data : s)),
       }));
     }
   },

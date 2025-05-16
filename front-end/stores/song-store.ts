@@ -5,12 +5,11 @@ import { create } from 'zustand';
 
 type SongRow = Database['public']['Tables']['songs']['Row'];
 type SongInsert = Database['public']['Tables']['songs']['Insert'];
-
-type LocalSong = SongRow & { tempId?: string };
+type InputLocalSong = Omit<SongInsert, 'id' | 'created_at' | 'updated_at'>;
 
 type SongsState = {
-  songs: LocalSong[];
-  addSongLocal: (song: Omit<SongInsert, 'id' | 'created_at' | 'updated_at'>) => string;
+  songs: SongRow[];
+  addSongLocal: (song: InputLocalSong) => string;
   syncAddSong: (tempId: string) => Promise<void>;
   fetchSongs: () => Promise<void>;
 };
@@ -29,41 +28,34 @@ export const useSongsStore = create<SongsState>((set, get) => ({
   },
 
   addSongLocal: (song) => {
-    const tempId = uuidv4();
-    const newSong: LocalSong = {
+    const id = uuidv4();
+    const now = new Date().toISOString();
+
+    const newSong: SongRow = {
       ...song,
-      id: -1, // placeholder ID to satisfy type (or null if you prefer)
-      created_by: song.created_by,
-      name: song.name,
+      id,
       artist_id: song.artist_id ?? null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      tempId,
+      goal_tempo: song.goal_tempo ?? null,
+      created_at: now,
+      updated_at: now,
     };
+
     set((state) => ({ songs: [...state.songs, newSong] }));
-    return tempId;
+    return id;
   },
 
-  syncAddSong: async (tempId) => {
-    const localSong = get().songs.find((s) => s.tempId === tempId);
+  syncAddSong: async (id) => {
+    const localSong = get().songs.find((s) => s.id === id);
     if (!localSong) return;
 
-    const { artist_id, created_by, name } = localSong;
-
-    const payload: SongInsert = {
-      artist_id,
-      created_by,
-      name,
-    };
-
-    const { data, error } = await supabase.from('songs').insert(payload).select().single();
+    const { data, error } = await supabase.from('songs').insert(localSong).select().single();
 
     if (error) {
       console.error('Sync failed', error);
       // Optional: mark sync failure, revert, etc.
     } else {
       set((state) => ({
-        songs: state.songs.map((s) => (s.tempId === tempId ? data : s)),
+        songs: state.songs.map((s) => (s.id === id ? data : s)),
       }));
     }
   },
