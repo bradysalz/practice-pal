@@ -13,18 +13,23 @@ type ExercisesState = {
   exercises: ExerciseRow[];
   addExerciseLocal: (exercise: InputLocalExercise) => string;
   syncAddExercise: (tempId: string) => Promise<void>;
-  fetchExercises: () => Promise<void>;
+  fetchExercisesBySection: (section_id: string) => Promise<void>;
 };
 
 export const useExercisesStore = create<ExercisesState>((set, get) => ({
   exercises: [],
 
-  fetchExercises: async () => {
-    const { data, error } = await supabase.from('exercises').select('*');
+  fetchExercisesBySection: async (section_id) => {
+    const { data, error } = await supabase
+      .from('exercise_with_stats')
+      .select('*')
+      .eq('section_id', section_id);
+
     if (error) {
       console.error('Fetch failed', error);
       return;
     }
+
     set({ exercises: data as ExerciseRow[] });
   },
 
@@ -34,20 +39,22 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     const newExercise: ExerciseRow = {
       id,
+      created_by: exercise.created_by,
+      name: exercise.name ?? null,
+      section_id: exercise.section_id,
+      goal_tempo: exercise.goal_tempo ?? null,
+      filepath: exercise.filepath ?? null,
+      sort_position: exercise.sort_position ?? null,
       created_at: now,
       updated_at: now,
-      name: exercise.name ?? null,
-      filepath: exercise.filepath ?? null,
-      goal_tempo: exercise.goal_tempo ?? null,
-      exercise: exercise.exercise ?? null,
-      ...exercise,
     };
+
     set((state) => ({ exercises: [...state.exercises, newExercise] }));
     return id;
   },
 
   syncAddExercise: async (id) => {
-    const localExercise = get().exercises.find((s) => s.id === id);
+    const localExercise = get().exercises.find((e) => e.id === id);
     if (!localExercise) return;
 
     const { data, error } = await supabase
@@ -58,10 +65,9 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     if (error) {
       console.error('Sync failed', error);
-      // Optional: mark sync failure, revert, etc.
     } else {
       set((state) => ({
-        exercises: state.exercises.map((s) => (s.id === id ? data : s)),
+        exercises: state.exercises.map((e) => (e.id === id ? data : e)),
       }));
     }
   },

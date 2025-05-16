@@ -1,14 +1,17 @@
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useRouter } from 'expo-router';
-import { BookOpen, ChevronRight, Music, Plus, Search } from 'lucide-react-native';
+import { BookOpen, ChevronRight, Music, Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CardWithAccent } from '@/components/card-with-accent';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { bookData } from '@/mock/data';
 import { useArtistsStore } from '@/stores/artist-store';
+import { useBooksStore } from '@/stores/book-store';
+import { useSectionsStore } from '@/stores/section-store';
 import { useSongsStore } from '@/stores/song-store';
 
 export default function LibraryPage() {
@@ -16,24 +19,35 @@ export default function LibraryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<string>('books');
 
-  const filteredBooks = bookData.filter(
-    (book) =>
-      book.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   // Zustand blocks
+  const fetchBooks = useBooksStore((state) => state.fetchBooks);
+  const fetchSections = useSectionsStore((state) => state.fetchSections);
   const fetchArtists = useArtistsStore((state) => state.fetchArtists);
   const fetchSongs = useSongsStore((state) => state.fetchSongs);
+
+  // Always fetch all items on library load
   useEffect(() => {
+    fetchBooks();
+    fetchSections();
     fetchArtists();
     fetchSongs();
-  }, [fetchArtists, fetchSongs]);
+  }, [fetchBooks, fetchSections, fetchArtists, fetchSongs]);
 
+  const books = useBooksStore((state) => state.books);
   const songs = useSongsStore((state) => state.songs);
   const artists = useArtistsStore((state) => state.artists);
 
-  // faster iteration than full list
+  // Book Building
+  const filteredBooks = books.filter((book) =>
+    book.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const bookSections = (bookId: string) => {
+    const sections = useSectionsStore.getState().sections;
+    return sections.filter((section) => section.book_id === bookId);
+  };
+
+  // Song building
   const artistMap = Object.fromEntries(artists.map((a) => [a.id, a.name]));
 
   const songsWithArtistNames = songs.map((song) => {
@@ -48,57 +62,60 @@ export default function LibraryPage() {
       (song.artist && song.artist.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const tabBarHeight = useBottomTabBarHeight();
+
+  const insets = useSafeAreaInsets();
   return (
     <View className="flex-1 bg-slate-50/50 p-4">
-      <View className="mb-6 relative">
-        <Search className="absolute left-3 top-3 text-slate-400" size={16} />
-        <TextInput
-          placeholder="Search library..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          className="pl-8 pr-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900"
-        />
+      <View className="mb-6">
+        <View className="relative w-full">
+          <TextInput
+            placeholder="Search library..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900"
+          />
+        </View>
       </View>
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="flex-row space-x-2 mb-4">
-          <TabsTrigger
-            value="books"
-            className="flex-1 flex-row items-center justify-center space-x-1"
-          >
-            <BookOpen size={16} />
-            <Text>Books</Text>
-          </TabsTrigger>
-          <TabsTrigger
-            value="songs"
-            className="flex-1 flex-row items-center justify-center space-x-1"
-          >
-            <Music size={16} />
-            <Text>Songs</Text>
-          </TabsTrigger>
-        </TabsList>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="">
+        <View className="p-4 bg-slate-100 mb-4">
+          <TabsList className="flex-row">
+            <TabsTrigger value="books" className="flex-1">
+              <View className="flex-row items-center justify-center gap-x-2">
+                <BookOpen size={28} />
+                <Text className="text-3xl">Books</Text>
+              </View>
+            </TabsTrigger>
+            <TabsTrigger value="songs" className="flex-1">
+              <View className="flex-row items-center justify-center gap-x-2">
+                <Music size={28} />
+                <Text className="text-3xl">Songs</Text>
+              </View>
+            </TabsTrigger>
+          </TabsList>
+        </View>
 
         <TabsContent value="books">
-          <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+          <ScrollView contentContainerStyle={{ paddingBottom: tabBarHeight + insets.bottom + 48 }}>
             {filteredBooks.length > 0 ? (
               filteredBooks.map((book) => (
                 <Pressable key={book.id} onPress={() => router.push(`/library/book/${book.id}`)}>
                   <Card className="mb-4">
                     <CardContent className="flex-row p-0">
-                      <View className={`${book.coverColor} w-24 items-center justify-center`}>
+                      <View
+                        className={`bg-${book.cover_color}-100 w-24 items-center justify-center`}
+                      >
                         <BookOpen size={32} className="text-slate-700" />
                       </View>
                       <View className="flex-1 p-4">
                         <Text className="font-medium text-lg">{book.name}</Text>
-                        <Text className="text-slate-500">{book.author}</Text>
-                        <View className="flex-row space-x-2 mt-2">
-                          <Badge variant="secondary" className="text-sm">
-                            <Text>{book.sections.length} sections</Text>
+                        <View className="flex-row mt-2">
+                          <Badge variant="secondary" className="text-sm mr-5">
+                            <Text>{bookSections(book.id).length} sections</Text>
                           </Badge>
                           <Badge variant="secondary" className="text-sm">
-                            <Text>
-                              {book.sections.reduce((sum, section) => sum + section.exercises, 0)}{' '}
-                              exercises
-                            </Text>
+                            <Text>{book.exercise_count} exercises</Text>
                           </Badge>
                         </View>
                       </View>
