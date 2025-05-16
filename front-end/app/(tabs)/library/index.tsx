@@ -1,25 +1,48 @@
 import { useRouter } from 'expo-router';
 import { BookOpen, ChevronRight, Music, Plus, Search } from 'lucide-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { CardWithAccent } from '@/components/card-with-accent';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { bookData, songsData } from '@/mock/data';
+import { bookData } from '@/mock/data';
+import { useArtistsStore } from '@/stores/artist-store';
+import { useSongsStore } from '@/stores/song-store';
 
 export default function LibraryPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<string>('books');
+
   const filteredBooks = bookData.filter(
     (book) =>
       book.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredSongs = songsData.filter(
+  // Zustand blocks
+  const fetchArtists = useArtistsStore((state) => state.fetchArtists);
+  const fetchSongs = useSongsStore((state) => state.fetchSongs);
+  useEffect(() => {
+    fetchArtists();
+    fetchSongs();
+  }, [fetchArtists, fetchSongs]);
+
+  const songs = useSongsStore((state) => state.songs);
+  const artists = useArtistsStore((state) => state.artists);
+
+  // faster iteration than full list
+  const artistMap = Object.fromEntries(artists.map((a) => [a.id, a.name]));
+
+  const songsWithArtistNames = songs.map((song) => {
+    if (!song.artist_id) return { ...song, artist: '' };
+    if (artistMap[song.artist_id]) return { ...song, artist: artistMap[song.artist_id] };
+    return { ...song, artist: '' };
+  });
+
+  const filteredSongs = songsWithArtistNames.filter(
     (song) =>
       song.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (song.artist && song.artist.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -109,8 +132,10 @@ export default function LibraryPage() {
                       </View>
                     </CardHeader>
                     <CardContent className="flex-row justify-between items-center px-4 pt-0 pb-4">
-                      <Text className="text-sm text-slate-500">Goal: {song.goalTempo} BPM</Text>
-                      <Text className="text-xs">Last practiced: {song.lastPracticed}</Text>
+                      <Text className="text-sm text-slate-500">
+                        Goal: {/* song.goalTempo */} BPM
+                      </Text>
+                      <Text className="text-xs">Last practiced: {/* song.lastPracticed */}</Text>
                     </CardContent>
                   </CardWithAccent>
                 </Pressable>

@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { exercisesData, songsData } from '@/mock/data';
-import { useSetlistStore } from '@/stores/setlistStore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
@@ -17,7 +16,7 @@ import { Text, View } from 'react-native';
 export default function AddItemScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams(); // setlist ID from route
-  const addItem = useSetlistStore((s) => s.addItem);
+  // const addItem = useSetlistsStore((s) => s.addItem);
 
   const [activeTab, setActiveTab] = useState<'exercises' | 'songs'>('exercises');
   const emptyOption = { value: '', label: '' };
@@ -25,28 +24,28 @@ export default function AddItemScreen() {
   const [selectedSong, setSelectedSong] = useState<Option>(emptyOption);
 
   const handleAdd = () => {
-    if (activeTab === 'exercises' && selectedExercise) {
-      const ex = exercisesData.find((e) => e.id === selectedExercise.label);
-      if (ex) {
-        addItem({
-          id: ex.id,
-          type: 'exercise',
-          name: ex.name,
-          tempo: ex.goalTempo,
-        });
-      }
-    } else if (activeTab === 'songs' && selectedSong) {
-      const song = songsData.find((s) => s.id === selectedSong.label);
-      if (song) {
-        addItem({
-          id: song.id,
-          type: 'song',
-          name: song.name,
-          artist: song.artist,
-          tempo: song.goalTempo,
-        });
-      }
-    }
+    // if (activeTab === 'exercises' && selectedExercise) {
+    //   const ex = exercisesData.find((e) => e.id === selectedExercise.label);
+    //   //   if (ex) {
+    //   //     addItem({
+    //   //       id: ex.id,
+    //   //       type: 'exercise',
+    //   //       name: ex.name,
+    //   //       tempo: ex.goalTempo,
+    //   //     });
+    //   //   }
+    //   // } else if (activeTab === 'songs' && selectedSong) {
+    //   //   const song = songsData.find((s) => s.id === selectedSong.label);
+    //   //   if (song) {
+    //   //     addItem({
+    //   //       id: song.id,
+    //   //       type: 'song',
+    //   //       name: song.name,
+    //   //       artist: song.artist,
+    //   //       tempo: song.goalTempo,
+    //   //     });
+    //   //   }
+    // }
     router.back(); // Go back to setlist screen
   };
 
