@@ -68,6 +68,7 @@ export type Database = {
       }
       books: {
         Row: {
+          cover_color: string | null
           created_at: string
           created_by: string
           id: string
@@ -75,6 +76,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          cover_color?: string | null
           created_at?: string
           created_by: string
           id: string
@@ -82,6 +84,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          cover_color?: string | null
           created_at?: string
           created_by?: string
           id?: string
@@ -102,34 +105,34 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string
-          exercise: number | null
           filepath: string | null
           goal_tempo: number | null
           id: string
           name: string | null
           section_id: string | null
+          sort_position: number | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           created_by: string
-          exercise?: number | null
           filepath?: string | null
           goal_tempo?: number | null
           id: string
           name?: string | null
           section_id?: string | null
+          sort_position?: number | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           created_by?: string
-          exercise?: number | null
           filepath?: string | null
           goal_tempo?: number | null
           id?: string
           name?: string | null
           section_id?: string | null
+          sort_position?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -138,6 +141,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "section_with_counts"
             referencedColumns: ["id"]
           },
           {
@@ -179,7 +189,7 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
-          section: string
+          name: string
           updated_at: string
         }
         Insert: {
@@ -187,7 +197,7 @@ export type Database = {
           created_at?: string
           created_by: string
           id: string
-          section: string
+          name: string
           updated_at?: string
         }
         Update: {
@@ -195,10 +205,17 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
-          section?: string
+          name?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_with_counts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sections_book_id_fkey"
             columns: ["book_id"]
@@ -459,7 +476,60 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      book_with_counts: {
+        Row: {
+          cover_color: string | null
+          created_at: string | null
+          created_by: string | null
+          exercise_count: number | null
+          id: string | null
+          name: string | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "books_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      section_with_counts: {
+        Row: {
+          book_id: string | null
+          created_at: string | null
+          created_by: string | null
+          exercise_count: number | null
+          id: string | null
+          name: string | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_with_counts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sections_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

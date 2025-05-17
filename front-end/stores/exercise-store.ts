@@ -13,41 +13,70 @@ type ExercisesState = {
   exercises: ExerciseRow[];
   addExerciseLocal: (exercise: InputLocalExercise) => string;
   syncAddExercise: (tempId: string) => Promise<void>;
-  fetchExercises: () => Promise<void>;
+  updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
+  syncUpdateExercise: (id: string) => Promise<void>;
+  fetchExercisesBySection: (section_id: string) => Promise<void>;
 };
 
 export const useExercisesStore = create<ExercisesState>((set, get) => ({
   exercises: [],
 
-  fetchExercises: async () => {
-    const { data, error } = await supabase.from('exercises').select('*');
+  fetchExercisesBySection: async (section_id) => {
+    const { data, error } = await supabase
+      .from('exercises')
+      .select('*')
+      .eq('section_id', section_id);
+
     if (error) {
       console.error('Fetch failed', error);
       return;
     }
+
     set({ exercises: data as ExerciseRow[] });
   },
 
+  updateExerciseLocal: (id, updates) => {
+    set((state) => ({
+      exercises: state.exercises.map((e) =>
+        e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
+      ),
+    }));
+  },
+
+  syncUpdateExercise: async (id) => {
+    const exercise = get().exercises.find((e) => e.id === id);
+    if (!exercise) return;
+
+    const { id: _, created_at, ...updatePayload } = exercise;
+
+    const { error } = await supabase.from('exercises').update(updatePayload).eq('id', id);
+
+    if (error) {
+      console.error('Failed to sync exercise update:', error);
+    }
+  },
   addExerciseLocal: (exercise) => {
     const id = uuidv4();
     const now = new Date().toISOString();
 
     const newExercise: ExerciseRow = {
       id,
+      created_by: exercise.created_by,
+      name: exercise.name ?? null,
+      section_id: exercise.section_id,
+      goal_tempo: exercise.goal_tempo ?? null,
+      filepath: exercise.filepath ?? null,
+      sort_position: exercise.sort_position ?? null,
       created_at: now,
       updated_at: now,
-      name: exercise.name ?? null,
-      filepath: exercise.filepath ?? null,
-      goal_tempo: exercise.goal_tempo ?? null,
-      exercise: exercise.exercise ?? null,
-      ...exercise,
     };
+
     set((state) => ({ exercises: [...state.exercises, newExercise] }));
     return id;
   },
 
   syncAddExercise: async (id) => {
-    const localExercise = get().exercises.find((s) => s.id === id);
+    const localExercise = get().exercises.find((e) => e.id === id);
     if (!localExercise) return;
 
     const { data, error } = await supabase
@@ -58,10 +87,9 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     if (error) {
       console.error('Sync failed', error);
-      // Optional: mark sync failure, revert, etc.
     } else {
       set((state) => ({
-        exercises: state.exercises.map((s) => (s.id === id ? data : s)),
+        exercises: state.exercises.map((e) => (e.id === id ? data : e)),
       }));
     }
   },
