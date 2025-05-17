@@ -1,6 +1,7 @@
 # Local dev stuff
 seed.sql
 dump.sql
+mock_data.sql
 .vscode/
 
 

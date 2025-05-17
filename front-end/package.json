@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "gen:types": "npx supabase gen types typescript --linked > $(git rev-parse --show-toplevel)/front-end/types/supabase.ts"
+    "gen:types": "npx supabase gen types typescript --linked > $(git rev-parse --show-toplevel)/front-end/types/supabase.ts",
+    "gen:data": "node scripts/data-gen.js"
   },
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
