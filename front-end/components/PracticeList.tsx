@@ -76,7 +76,7 @@ export default function PracticeList({ session }: { session: Session }) {
         {practices.map((ex, i) => (
           <View key={i} style={{ marginBottom: 12 }}>
             <Text style={{ fontWeight: 'bold' }}>{ex.name}</Text>
-            <Text>Section: {ex.sections?.section ?? '—'}</Text>
+            <Text>Section: {ex.sections?.name ?? '—'}</Text>
             <Text>Book: {ex.sections?.books?.name ?? '—'}</Text>
           </View>
         ))}
