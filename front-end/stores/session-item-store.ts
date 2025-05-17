@@ -15,9 +15,9 @@ type SessionItemsState = {
   sessionItemsByExercise: { [exerciseId: string]: SessionItemRow[] };
   sessionItemsBySong: { [songId: string]: SessionItemRow[] };
 
-  fetchBySessionId: (sessionId: string) => Promise<void>;
-  fetchByExerciseId: (exerciseId: string) => Promise<void>;
-  fetchBySongId: (songId: string) => Promise<void>;
+  fetchSessionItemBySessionId: (sessionId: string) => Promise<void>;
+  fetchSessionItemByExerciseId: (exerciseId: string) => Promise<void>;
+  fetchSessionItemBySongId: (songId: string) => Promise<void>;
 
   addSessionItemLocal: (item: InputLocalSessionItem) => string;
   syncAddSessionItem: (tempId: string) => Promise<void>;
@@ -28,7 +28,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   sessionItemsByExercise: {},
   sessionItemsBySong: {},
 
-  fetchBySessionId: async (sessionId) => {
+  fetchSessionItemBySessionId: async (sessionId) => {
     const { data, error } = await supabase
       .from('session_items')
       .select('*')
@@ -47,7 +47,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
   },
 
-  fetchByExerciseId: async (exerciseId) => {
+  fetchSessionItemByExerciseId: async (exerciseId) => {
     const { data, error } = await supabase
       .from('session_items')
       .select('*')
@@ -66,7 +66,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
   },
 
-  fetchBySongId: async (songId) => {
+  fetchSessionItemBySongId: async (songId) => {
     const { data, error } = await supabase.from('session_items').select('*').eq('song_id', songId);
 
     if (error) {

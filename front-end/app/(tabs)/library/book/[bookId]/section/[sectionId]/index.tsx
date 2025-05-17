@@ -21,7 +21,6 @@ export default function SectionDetailPage() {
     fetchExercisesBySection(sectionId);
   }, [fetchExercisesBySection, sectionId]);
 
-  console.log(exercises);
   const book = books.find((b) => b.id === bookId);
   const section = sections.find((s) => s.id === sectionId);
 
@@ -29,7 +28,7 @@ export default function SectionDetailPage() {
   if (!section) return <Text>Section not found</Text>;
 
   const handleExercisePress = (exerciseId: string) => {
-    router.push(`/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
+    router.push(`library/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
   };
 
   return (

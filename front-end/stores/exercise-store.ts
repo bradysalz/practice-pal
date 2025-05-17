@@ -13,6 +13,8 @@ type ExercisesState = {
   exercises: ExerciseRow[];
   addExerciseLocal: (exercise: InputLocalExercise) => string;
   syncAddExercise: (tempId: string) => Promise<void>;
+  updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
+  syncUpdateExercise: (id: string) => Promise<void>;
   fetchExercisesBySection: (section_id: string) => Promise<void>;
 };
 
@@ -33,6 +35,26 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     set({ exercises: data as ExerciseRow[] });
   },
 
+  updateExerciseLocal: (id, updates) => {
+    set((state) => ({
+      exercises: state.exercises.map((e) =>
+        e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
+      ),
+    }));
+  },
+
+  syncUpdateExercise: async (id) => {
+    const exercise = get().exercises.find((e) => e.id === id);
+    if (!exercise) return;
+
+    const { id: _, created_at, ...updatePayload } = exercise;
+
+    const { error } = await supabase.from('exercises').update(updatePayload).eq('id', id);
+
+    if (error) {
+      console.error('Failed to sync exercise update:', error);
+    }
+  },
   addExerciseLocal: (exercise) => {
     const id = uuidv4();
     const now = new Date().toISOString();
