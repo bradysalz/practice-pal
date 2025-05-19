@@ -242,6 +242,7 @@ export type Database = {
           session_id: string | null
           song_id: string | null
           tempo: number | null
+          type: string
           updated_at: string
         }
         Insert: {
@@ -253,6 +254,7 @@ export type Database = {
           session_id?: string | null
           song_id?: string | null
           tempo?: number | null
+          type: string
           updated_at?: string
         }
         Update: {
@@ -264,6 +266,7 @@ export type Database = {
           session_id?: string | null
           song_id?: string | null
           tempo?: number | null
+          type?: string
           updated_at?: string
         }
         Relationships: [
@@ -289,6 +292,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "session_items_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions_with_items"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "session_items_song_id_fkey"
             columns: ["song_id"]
             isOneToOne: false
@@ -303,6 +313,7 @@ export type Database = {
           created_by: string
           duration: number | null
           id: string
+          notes: string | null
           updated_at: string
         }
         Insert: {
@@ -310,6 +321,7 @@ export type Database = {
           created_by: string
           duration?: number | null
           id: string
+          notes?: string | null
           updated_at?: string
         }
         Update: {
@@ -317,6 +329,7 @@ export type Database = {
           created_by?: string
           duration?: number | null
           id?: string
+          notes?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -386,6 +399,13 @@ export type Database = {
             columns: ["setlist_id"]
             isOneToOne: false
             referencedRelation: "setlists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "setlist_items_setlist_id_fkey"
+            columns: ["setlist_id"]
+            isOneToOne: false
+            referencedRelation: "setlists_with_items"
             referencedColumns: ["id"]
           },
           {
@@ -523,6 +543,46 @@ export type Database = {
           },
           {
             foreignKeyName: "sections_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sessions_with_items: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          duration: number | null
+          exercise_count: number | null
+          id: string | null
+          song_count: number | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      setlists_with_items: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          exercise_count: number | null
+          id: string | null
+          name: string | null
+          song_count: number | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "setlists_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
