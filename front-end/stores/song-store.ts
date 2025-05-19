@@ -3,7 +3,7 @@ import { Database } from '@/types/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-type SongRow = Database['public']['Tables']['songs']['Row'];
+export type SongRow = Database['public']['Tables']['songs']['Row'];
 type SongInsert = Database['public']['Tables']['songs']['Insert'];
 type InputLocalSong = Omit<SongInsert, 'id' | 'created_at' | 'updated_at'>;
 
