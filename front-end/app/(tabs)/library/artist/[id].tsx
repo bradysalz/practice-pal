@@ -1,31 +1,32 @@
 import { Card, CardHeader } from '@/components/ui/card';
-import { useRouter } from 'expo-router';
+import { useArtistsStore } from '@/stores/artist-store';
+import { useSongsStore } from '@/stores/song-store';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronRight, Music } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 
-// Mock Data
-const mockArtist = {
-  id: '1',
-  name: 'John Doe Trio',
-  songs: [
-    { id: 's1', name: 'Blue Bossa' },
-    { id: 's2', name: 'All The Things You Are' },
-  ],
-};
-
 export default function ArtistDetailPage() {
   const router = useRouter();
-  // const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  // Zustand stores
+  const artists = useArtistsStore((state) => state.artists);
+  const songs = useSongsStore((state) => state.songs);
+  // Loads already done on the library
+
+  const artist = artists.find((a) => a.id === id);
+  const filteredSongs = songs.filter((s) => s.artist_id === id);
 
   const handleSongPress = (songId: string) => {
-    router.push(`library/songs/${songId}`);
+    router.push(`library/song/${songId}`);
   };
 
+  if (!artist) return <Text>Artist not found!</Text>;
   return (
     <View className="flex-1 bg-white p-4 space-y-6">
-      <Text className="text-2xl font-bold">{mockArtist.name}</Text>
+      <Text className="text-2xl font-bold">{artist.name}</Text>
 
-      {mockArtist.songs.map((song) => (
+      {filteredSongs.map((song) => (
         <Pressable
           key={song.id}
           onPress={() => handleSongPress(song.id)}
