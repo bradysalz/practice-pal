@@ -1,6 +1,6 @@
 # practice-pal
 
-[![CI](https://github.com/brady/practice-pal/actions/workflows/pr.yaml/badge.svg?branch=main)](https://github.com/brady/practice-pal/actions/workflows/pr.yaml)
+[![CI](https://github.com/bradysalz/practice-pal/actions/workflows/pr.yaml/badge.svg?branch=master)](https://github.com/bradysalz/practice-pal/actions/workflows/pr.yaml)
 
 a tool to help me practice more + better (note: i made this instead of practicing though...)
 
