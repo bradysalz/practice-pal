@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
-import { groupSessionItems } from '@/lib/utils/session-items';
+import { groupItems } from '@/lib/utils/filter';
 import { SessionWithItems } from '@/types/session';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -21,7 +21,7 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
     setIsExpanded(!isExpanded);
   };
 
-  const { exercises, songs } = groupSessionItems(session.session_items);
+  const { exercises, songs } = groupItems(session.session_items);
 
   return (
     <View

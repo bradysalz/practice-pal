@@ -1,14 +1,7 @@
 import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { InputLocalSetlistItem, SetlistItemRow } from '@/types/setlist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
-
-type SetlistItemRow = Database['public']['Tables']['setlist_items']['Row'];
-type SetlistItemInsert = Database['public']['Tables']['setlist_items']['Insert'];
-type InputLocalSetlistItem = Omit<SetlistItemInsert, 'id' | 'created_at' | 'updated_at'> & {
-  setlist_id: string;
-  position: number; // enforce always present, adjust as needed
-};
 
 type SetlistItemsState = {
   setlistItems: SetlistItemRow[];
