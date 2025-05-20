@@ -1,4 +1,4 @@
-import { PracticeSessionCard } from '@/components/practice-session-card';
+import { PracticeSessionCard } from '@/components/sessions/PracticeSessionCard';
 import { useSessionsStore } from '@/stores/session-store';
 import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';

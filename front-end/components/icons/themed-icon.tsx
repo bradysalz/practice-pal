@@ -49,21 +49,27 @@ interface ThemedIconProps {
   style?: StyleProp<ViewStyle | TextStyle>; // RN style
 }
 
-export const ThemedIcon = ({
-  name,
-  size = 24,
-  color = 'slate-500',
-  className,
-  style,
-}: ThemedIconProps) => {
+// Set default tailwind color tokens per icon
+const DEFAULT_COLORS: Record<string, string> = {
+  Dumbbell: 'orange-500',
+  Music: 'orange-500',
+  Plus: 'white',
+};
+
+export const ThemedIcon = ({ name, size = 24, className, style }: ThemedIconProps) => {
+  const color = DEFAULT_COLORS[name] || 'slate-500';
   const IconComponent = ICONS[name];
   // const scheme = useColorScheme(); // Optional if you want to react to dark mode tokens later
 
-  let resolvedColor = getTailwindColor(color);
+  const resolvedColor = getTailwindColor(color);
 
   const iconProps = {
     size,
-    ...(Platform.OS === 'web' ? { className } : { color: resolvedColor, style }),
+    ...(Platform.OS === 'web'
+      ? {
+          className: `text-${color} ${className}`.trim(), // auto-apply tailwind text color
+        }
+      : { color: resolvedColor, style }),
   };
 
   return <IconComponent {...iconProps} />;
