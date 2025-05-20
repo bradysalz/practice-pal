@@ -3,7 +3,7 @@ import { ThemedIcon } from '@/components/icons/themed-icon';
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
-import { groupSessionItems } from '@/lib/utils/session-items';
+import { groupItems } from '@/lib/utils/filter';
 import { useSessionsStore } from '@/stores/session-store';
 import { useLocalSearchParams } from 'expo-router';
 import { Clock } from 'lucide-react-native';
@@ -20,7 +20,7 @@ export default function PracticeSessionDetailPage() {
   }, [fetchSessionDetail, id]);
 
   const session = useSessionsStore((state) => state.sessionDetailMap)[id];
-  const { exercises, songs } = groupSessionItems(session.session_items);
+  const { exercises, songs } = groupItems(session.session_items);
 
   if (!session) {
     return (

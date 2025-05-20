@@ -9,27 +9,34 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { setlistsData } from '@/mock/data';
+import { useSetlistsStore } from '@/stores/setlist-store';
 import { useRouter } from 'expo-router';
 import { ListMusic, Plus } from 'lucide-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
 
 export default function SetlistsPage() {
   const router = useRouter();
-  const [setlists, setSetlists] = useState(setlistsData);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newSetlistData, setNewSetlistData] = useState({ name: '', description: '' });
 
+  const fetchSetlists = useSetlistsStore((state) => state.fetchSetlists);
+
+  useEffect(() => {
+    fetchSetlists();
+  }, [fetchSetlists]);
+
+  const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
+  console.log(setlistDetailMap);
+
   const handleCreateSetlist = () => {
     const newSetlist = {
-      id: `sl${setlists.length + 1}`,
+      id: `sl23`,
       name: newSetlistData.name,
       description: newSetlistData.description,
       items: [],
       lastPracticed: 'Never',
     };
-    setSetlists([...setlists, newSetlist]);
     setNewSetlistData({ name: '', description: '' });
     setIsCreateDialogOpen(false);
     router.push(`/setlists/edit/${newSetlist.id}`);
@@ -45,7 +52,7 @@ export default function SetlistsPage() {
       {
         text: 'Delete',
         style: 'destructive',
-        onPress: () => setSetlists(setlists.filter((s) => s.id !== id)),
+        // onPress: () => setSetlists(setlists.filter((s) => s.id !== id)),
       },
     ]);
   };
@@ -53,10 +60,10 @@ export default function SetlistsPage() {
   return (
     <View className="flex-1 bg-slate-100 p-4">
       <ScrollView className="space-y-4">
-        {setlists.length > 0 ? (
-          setlists.map((setlist) => (
+        {Object.keys(setlistDetailMap).length > 0 ? (
+          Object.entries(setlistDetailMap).map(([id, setlist]) => (
             <SetlistCard
-              key={setlist.id}
+              key={id}
               setlist={setlist}
               onEdit={handleEditSetlist}
               onDelete={handleDeleteSetlist}

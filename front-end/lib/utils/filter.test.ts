@@ -1,4 +1,4 @@
-import { groupSessionItems } from '@/lib/utils/session-items';
+import { groupItems } from '@/lib/utils/filter';
 import { SessionItemWithNested } from '@/types/session';
 
 describe('groupSessionItems', () => {
@@ -75,7 +75,7 @@ describe('groupSessionItems', () => {
   ];
 
   it('groups session items into exercises and songs', () => {
-    const { exercises, songs } = groupSessionItems(mockItems);
+    const { exercises, songs } = groupItems(mockItems);
 
     expect(exercises.length).toBe(1);
     expect(exercises[0].exercise.name).toBe('Exercise 1');
@@ -85,7 +85,7 @@ describe('groupSessionItems', () => {
   });
 
   it('returns empty arrays when input is empty', () => {
-    const { exercises, songs } = groupSessionItems([]);
+    const { exercises, songs } = groupItems([]);
     expect(exercises).toEqual([]);
     expect(songs).toEqual([]);
   });

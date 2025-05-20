@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { setlistsData } from '@/mock/data';
-import { Setlist, SetlistItem } from '@/types/setlist';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
@@ -20,7 +19,7 @@ export default function EditSetlistPage() {
 
   const router = useRouter();
 
-  const [setlist, setSetlist] = useState<Setlist | null>(null);
+  const [setlist, setSetlist] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -81,7 +80,7 @@ export default function EditSetlistPage() {
 
   if (!setlist) return <Text>Loading...</Text>;
 
-  const renderItem = ({ item, getIndex, drag, isActive }: RenderItemParams<SetlistItem>) => {
+  const renderItem = ({ item, getIndex, drag, isActive }: RenderItemParams<any>) => {
     const index = getIndex() ?? 0; // fallback if undefined
 
     return (
