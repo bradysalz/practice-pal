@@ -20,7 +20,6 @@ export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
 
   const handleCardClick = () => {
     setIsExpanded(!isExpanded);
-    console.log(session);
   };
 
   const { bookMap, songMap } = getBookAndSongNamesFromSession(session.session_items);

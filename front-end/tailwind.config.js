@@ -120,4 +120,11 @@ module.exports = {
     },
   },
   plugins: [require('tailwindcss-animate')],
+  experimental: {
+    cssInterop: [
+      {
+        package: 'lucide-react-native',
+      },
+    ],
+  },
 };

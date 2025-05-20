@@ -54,22 +54,20 @@ const DEFAULT_COLORS: Record<string, string> = {
   Dumbbell: 'orange-500',
   Music: 'orange-500',
   Plus: 'white',
+  Trash2: 'red-500',
 };
 
 export const ThemedIcon = ({ name, size = 24, className, style }: ThemedIconProps) => {
-  const color = DEFAULT_COLORS[name] || 'slate-500';
   const IconComponent = ICONS[name];
+  const color = DEFAULT_COLORS[name] || 'slate-500';
   // const scheme = useColorScheme(); // Optional if you want to react to dark mode tokens later
 
   const resolvedColor = getTailwindColor(color);
 
   const iconProps = {
     size,
-    ...(Platform.OS === 'web'
-      ? {
-          className: `text-${color} ${className}`.trim(), // auto-apply tailwind text color
-        }
-      : { color: resolvedColor, style }),
+    color: resolvedColor,
+    ...(Platform.OS === 'web' ? { className } : { style }),
   };
 
   return <IconComponent {...iconProps} />;

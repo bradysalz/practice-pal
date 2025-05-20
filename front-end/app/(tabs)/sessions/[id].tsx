@@ -31,20 +31,20 @@ export default function PracticeSessionDetailPage() {
   }
 
   return (
-    <View className="flex-1 bg-slate-50/50 px-4 py-6">
+    <View className="flex-1 px-4 py-6">
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         {/* Header */}
         <View className="mb-6">
           <Text className="text-2xl font-bold">{formatTimestampToDate(session.created_at)}</Text>
           <View className="flex-row items-center mt-1">
-            <Clock size={14} className="mr-1 text-slate-500" />
-            <Text className="text-sm text-slate-500">{formatToMinutes(session.duration!)} min</Text>
+            <Clock size={20} className="mr-1 text-slate-500" />
+            <Text className="text-lg text-slate-500">{formatToMinutes(session.duration!)} min</Text>
           </View>
         </View>
 
         {/* Exercises */}
         {exercises.length > 0 && (
-          <CardWithAccent accentColor="red-500">
+          <CardWithAccent accentColor="orange-500">
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
                 <ThemedIcon
@@ -77,7 +77,7 @@ export default function PracticeSessionDetailPage() {
 
         {/* Songs */}
         {songs.length > 0 && (
-          <CardWithAccent accentColor="slate-500">
+          <CardWithAccent accentColor="orange-500">
             <CardHeader className="pb-2">
               <View className="flex-row items-center">
                 <ThemedIcon
@@ -112,7 +112,7 @@ export default function PracticeSessionDetailPage() {
         )}
 
         {/* Notes */}
-        <CardWithAccent accentColor="slate-300">
+        <CardWithAccent accentColor="orange-500">
           <CardHeader className="pb-2">
             <Text className="text-lg font-semibold">Session Notes</Text>
           </CardHeader>
