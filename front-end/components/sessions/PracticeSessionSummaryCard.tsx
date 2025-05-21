@@ -3,18 +3,18 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
-import { getBookAndSongNamesFromSession } from '@/lib/utils/filter';
+import { getBookAndSongNamesFromSession } from '@/lib/utils/session';
 import { SessionWithItems } from '@/types/session';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Separator } from '../ui/separator';
 
-type PracticeSessionCardProps = {
+type PracticeSessionSummaryCardProps = {
   session: SessionWithItems;
 };
 
-export function PracticeSessionCard({ session }: PracticeSessionCardProps) {
+export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCardProps) {
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
 

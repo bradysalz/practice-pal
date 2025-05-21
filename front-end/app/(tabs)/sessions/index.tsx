@@ -1,4 +1,4 @@
-import { PracticeSessionCard } from '@/components/sessions/PracticeSessionCard';
+import { PracticeSessionSummaryCard } from '@/components/sessions/PracticeSessionSummaryCard';
 import { useSessionsStore } from '@/stores/session-store';
 import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
@@ -20,7 +20,7 @@ export default function RecentSessionsPage() {
     <View className="flex-1 bg-white items-center">
       <ScrollView className="w-full max-w-md px-4 mt-6 space-y-4 mb-24">
         {sessionsWithItems.map((session) => (
-          <PracticeSessionCard key={session.id} session={session} />
+          <PracticeSessionSummaryCard key={session.id} session={session} />
         ))}
       </ScrollView>
 

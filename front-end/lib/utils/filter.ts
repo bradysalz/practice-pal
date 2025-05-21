@@ -1,5 +1,3 @@
-import { SessionItemWithNested } from '@/types/session';
-
 // Shared constraint to ensure the item has the necessary shape
 type HasTypeAndPossiblyExerciseOrSong = {
   type: string;
@@ -23,23 +21,4 @@ export function groupItems<T extends HasTypeAndPossiblyExerciseOrSong>(items: T[
   const exercises = items.filter(isExerciseItem);
   const songs = items.filter(isSongItem);
   return { exercises, songs };
-}
-
-export function getBookAndSongNamesFromSession(items: SessionItemWithNested[]) {
-  const bookMap = new Map<string, string>();
-  const songMap = new Map<string, string>();
-
-  for (const item of items) {
-    const book = item.exercise?.section?.book;
-    if (book && book.id && book.name && !bookMap.has(book.id)) {
-      bookMap.set(book.id, book.name);
-    }
-
-    const song = item.song;
-    if (song && song.id && song.name && !songMap.has(song.id)) {
-      songMap.set(song.id, song.name);
-    }
-  }
-
-  return { bookMap, songMap };
 }

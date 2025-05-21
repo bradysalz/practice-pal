@@ -16,6 +16,7 @@ import {
   Home,
   ListMusic,
   Music,
+  NotebookPen,
   Plus,
   Save,
   Trash2,
@@ -33,6 +34,7 @@ const ICONS = {
   ListMusic,
   Save,
   Music,
+  NotebookPen,
   Plus,
   ArrowLeft,
   ChevronRight,
@@ -55,6 +57,7 @@ const DEFAULT_COLORS: Record<string, string> = {
   Music: 'orange-500',
   Plus: 'white',
   Trash2: 'red-500',
+  NotebookPen: 'orange-500',
 };
 
 export const ThemedIcon = ({ name, size = 24, className, style }: ThemedIconProps) => {
