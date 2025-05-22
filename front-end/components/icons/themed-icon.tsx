@@ -16,6 +16,7 @@ import {
   Home,
   ListMusic,
   Music,
+  NotebookPen,
   Plus,
   Save,
   Trash2,
@@ -33,6 +34,7 @@ const ICONS = {
   ListMusic,
   Save,
   Music,
+  NotebookPen,
   Plus,
   ArrowLeft,
   ChevronRight,
@@ -49,21 +51,26 @@ interface ThemedIconProps {
   style?: StyleProp<ViewStyle | TextStyle>; // RN style
 }
 
-export const ThemedIcon = ({
-  name,
-  size = 24,
-  color = 'slate-500',
-  className,
-  style,
-}: ThemedIconProps) => {
+// Set default tailwind color tokens per icon
+const DEFAULT_COLORS: Record<string, string> = {
+  Dumbbell: 'orange-500',
+  Music: 'orange-500',
+  Plus: 'white',
+  Trash2: 'red-500',
+  NotebookPen: 'orange-500',
+};
+
+export const ThemedIcon = ({ name, size = 24, className, style }: ThemedIconProps) => {
   const IconComponent = ICONS[name];
+  const color = DEFAULT_COLORS[name] || 'slate-500';
   // const scheme = useColorScheme(); // Optional if you want to react to dark mode tokens later
 
-  let resolvedColor = getTailwindColor(color);
+  const resolvedColor = getTailwindColor(color);
 
   const iconProps = {
     size,
-    ...(Platform.OS === 'web' ? { className } : { color: resolvedColor, style }),
+    color: resolvedColor,
+    ...(Platform.OS === 'web' ? { className } : { style }),
   };
 
   return <IconComponent {...iconProps} />;

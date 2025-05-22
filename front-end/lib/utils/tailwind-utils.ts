@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import colors from 'tailwindcss/colors';
@@ -18,10 +16,10 @@ export function getTailwindColor(colorToken: string): string | undefined {
     return colorToken;
   }
 
-  if (Platform.OS === 'web') {
-    // On web, just return the Tailwind class name as a string
-    return colorToken;
-  }
+  // if (Platform.OS === 'web') {
+  //   // On web, just return the Tailwind class name as a string
+  //   return colorToken;
+  // }
 
   if (colorToken.startsWith('#')) {
     return colorToken;

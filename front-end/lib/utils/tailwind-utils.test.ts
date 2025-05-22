@@ -21,9 +21,9 @@ describe('getTailwindColor', () => {
     expect(getTailwindColor('black')).toBe('black');
   });
 
-  it('returns color token as-is on web', () => {
+  it('resolves known color tokens on web', () => {
     Object.defineProperty(Platform, 'OS', { value: 'web' });
-    expect(getTailwindColor('red-500')).toBe('red-500');
+    expect(getTailwindColor('red-500')).toBe(colors.red['500']);
   });
 
   it('resolves known color tokens on native', () => {

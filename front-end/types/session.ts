@@ -2,12 +2,12 @@ import { Database } from '@/types/supabase';
 
 type SessionRow = Database['public']['Tables']['sessions']['Row'];
 
-type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
-type SongRow = Database['public']['Tables']['songs']['Row'];
-type ArtistRow = Database['public']['Tables']['artists']['Row'];
-type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
-type SectionRow = Database['public']['Tables']['sections']['Row'];
-type BookRow = Database['public']['Tables']['books']['Row'];
+export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
+export type SongRow = Database['public']['Tables']['songs']['Row'];
+export type ArtistRow = Database['public']['Tables']['artists']['Row'];
+export type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
+export type SectionRow = Database['public']['Tables']['sections']['Row'];
+export type BookRow = Database['public']['Tables']['books']['Row'];
 
 export type SessionItemWithNested = SessionItemRow & {
   song:
