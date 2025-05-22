@@ -1,9 +1,11 @@
 import {
+  ArtistRow,
   BookRow,
   ExerciseRow,
   SectionRow,
   SessionItemRow,
   SessionItemWithNested,
+  SongRow,
 } from '@/types/session';
 
 export type ExerciseWithSession = ExerciseRow & {
@@ -17,6 +19,43 @@ type SectionWithExercises = SectionRow & {
 type BookWithSections = BookRow & {
   sections: SectionWithExercises[];
 };
+
+type SongWithSession = SongRow & {
+  session: SessionItemRow;
+};
+
+type ArtistWithSongs = ArtistRow & {
+  songs: SongWithSession[];
+};
+
+export function groupSongsByArtistWithSession(items: SessionItemWithNested[]): ArtistWithSongs[] {
+  const artistsMap = new Map<string, ArtistWithSongs>();
+
+  items.forEach((item) => {
+    if (!item.song || !item.song.artist) return;
+
+    const artist = item.song.artist;
+    const song = item.song;
+    const session = item;
+
+    // Get or create artist entry
+    let artistEntry = artistsMap.get(artist.id);
+    if (!artistEntry) {
+      artistEntry = { ...artist, songs: [] };
+      artistsMap.set(artist.id, artistEntry);
+    }
+
+    // Add song + session (avoid duplicates per session)
+    const alreadyExists = artistEntry.songs.some(
+      (s) => s.id === song.id && s.session.id === session.id
+    );
+    if (!alreadyExists) {
+      artistEntry.songs.push({ ...song, session });
+    }
+  });
+
+  return Array.from(artistsMap.values());
+}
 
 export function groupExercisesByBookAndSectionWithSession(
   items: SessionItemWithNested[]

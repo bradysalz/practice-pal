@@ -1,7 +1,7 @@
 import { ThemedIcon } from '@/components/icons/themed-icon';
 import { ExerciseDetailCard } from '@/components/sessions/ExerciseDetailCard';
 import { NotesDetailCard } from '@/components/sessions/NotesDetailCard';
-import { SongDetailCardCard } from '@/components/sessions/SongDetailCard';
+import { SongDetailCard } from '@/components/sessions/SongDetailCard';
 import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
 import { groupItems } from '@/lib/utils/filter';
 import { useSessionsStore } from '@/stores/session-store';
@@ -41,7 +41,7 @@ export default function PracticeSessionDetailPage() {
           </View>
         </View>
         <ExerciseDetailCard items={exercises} />
-        <SongDetailCardCard items={songs} />
+        <SongDetailCard items={songs} />
         <NotesDetailCard notes={session.notes} />
       </ScrollView>
     </View>
