@@ -1,7 +1,13 @@
+export interface Exercise {
+  id: string;
+  name: string;
+  goalTempo?: number;
+}
+
 export interface Section {
   id: number;
   name: string;
-  exercises: number;
+  exercises: Exercise[];
 }
 
 export interface Book {

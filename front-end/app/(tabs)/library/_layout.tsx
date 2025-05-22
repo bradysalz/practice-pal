@@ -46,7 +46,7 @@ export default function LibraryStackLayout() {
 
       {/* Songs by an Arists */}
       <Stack.Screen
-        name="artists/[id]"
+        name="artist/[id]"
         options={{
           title: 'Artist Details', // Default title
           // Example of dynamically setting title based on artist data
@@ -55,7 +55,7 @@ export default function LibraryStackLayout() {
 
       {/* Song Details */}
       <Stack.Screen
-        name="songs/[id]"
+        name="song/[id]"
         options={{
           title: 'Song Details', // Default title
           // Example of dynamically setting title based on song data

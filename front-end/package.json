@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start --tunnel -c",
+    "start": "expo start -c --tunnel",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -74,7 +74,9 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-jest": "^29.3.4",
     "uuid": "^11.1.0",
-    "zustand": "^5.0.4"
+    "zustand": "^5.0.4",
+    "expo-dev-client": "~5.1.8",
+    "react-native-get-random-values": "~1.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

@@ -1,4 +1,6 @@
 import '@/global.css';
+import 'react-native-get-random-values'; // For UUIDs
+
 
 import { SessionProvider } from '@/components/SessionProvider';
 import { NAV_THEME } from '@/lib/constants';
@@ -6,7 +8,6 @@ import { useColorScheme } from '@/lib/useColorScheme';
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -22,7 +23,7 @@ const DARK_THEME: Theme = {
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from 'expo-router';
 
 export default function RootLayout() {
@@ -52,7 +53,7 @@ export default function RootLayout() {
       <SessionProvider>
         <GestureHandlerRootView>
           <Stack>
-            <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+            {/* <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} /> */}
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>

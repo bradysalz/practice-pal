@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import {
   InputLocalSession,
+  LocalSession,
   SessionInsert,
   SessionWithCountsRow,
   SessionWithItems,
@@ -12,11 +13,15 @@ type SessionsState = {
   sessions: SessionWithCountsRow[];
   sessionsWithItems: SessionWithItems[];
   sessionDetailMap: Record<string, SessionWithItems>;
+  currentSession: LocalSession | null;
   addSessionLocal: (session: InputLocalSession) => string;
   syncAddSession: (tempId: string) => Promise<void>;
   fetchSessions: () => Promise<void>;
   fetchSessionDetail: (sessionId: string) => Promise<void>;
   fetchRecentSessionsWithItems: (limit: number) => Promise<void>;
+  initializeLocalSession: (session: InputLocalSession) => void;
+  clearLocalSession: () => void;
+  updateLocalSession: (updates: Partial<InputLocalSession>) => void;
 };
 
 function toSessionInsert(session: SessionWithCountsRow): SessionInsert {
@@ -28,6 +33,7 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
   sessions: [],
   sessionsWithItems: [],
   sessionDetailMap: {},
+  currentSession: null,
 
   fetchSessions: async () => {
     const { data, error } = await supabase
@@ -152,6 +158,38 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
 
     set((state) => ({
       sessions: state.sessions.map((s) => (s.id === tempId ? data : s)),
+    }));
+  },
+
+  initializeLocalSession: (session: InputLocalSession) => {
+    const id = uuidv4();
+    const now = new Date().toISOString();
+
+    const newSession: LocalSession = {
+      id,
+      created_at: now,
+      updated_at: now,
+      duration: session.duration ?? null,
+      notes: session.notes ?? null,
+      session_items: session.session_items ?? [],
+    };
+
+    set({ currentSession: newSession });
+  },
+
+  clearLocalSession: () => {
+    set({ currentSession: null });
+  },
+
+  updateLocalSession: (updates: Partial<InputLocalSession>) => {
+    set((state) => ({
+      currentSession: state.currentSession
+        ? {
+            ...state.currentSession,
+            ...updates,
+            updated_at: new Date().toISOString(),
+          }
+        : null,
     }));
   },
 }));
