@@ -11,6 +11,7 @@ type SetlistsState = {
   clearDraftSetlist: () => void;
   setDraftSetlist: (draft: InputLocalSetlist) => void;
   syncDraftSetlist: (tempId: string) => Promise<void>;
+  updateSetlist: (setlist: SetlistWithItems) => Promise<void>;
 };
 
 export const useSetlistsStore = create<SetlistsState>((set, get) => ({
@@ -130,6 +131,93 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
         [id]: data,
       },
       draftSetlist: null,
+    }));
+  },
+
+  updateSetlist: async (setlist: SetlistWithItems) => {
+    const now = new Date().toISOString();
+
+    // Step 1: Update the setlist
+    const { error: setlistError } = await supabase
+      .from('setlists')
+      .update({
+        name: setlist.name,
+        description: setlist.description,
+        updated_at: now,
+      })
+      .eq('id', setlist.id);
+
+    if (setlistError) {
+      console.error('Failed to update setlist', setlistError);
+      throw new Error('Failed to update setlist');
+    }
+
+    // Step 2: Delete existing items
+    const { error: deleteError } = await supabase
+      .from('setlist_items')
+      .delete()
+      .eq('setlist_id', setlist.id);
+
+    if (deleteError) {
+      console.error('Failed to delete existing setlist items', deleteError);
+      throw new Error('Failed to update setlist items');
+    }
+
+    // Step 3: Insert updated items
+    const setlistItemInserts = setlist.setlist_items.map((item, index) => ({
+      ...item,
+      id: uuidv4(), // Generate new IDs for items
+      setlist_id: setlist.id,
+      order: index, // Preserve the order from the UI
+      updated_at: now,
+      created_at: now,
+    }));
+
+    const { error: insertError } = await supabase
+      .from('setlist_items')
+      .insert(setlistItemInserts);
+
+    if (insertError) {
+      console.error('Failed to insert updated setlist items', insertError);
+      throw new Error('Failed to update setlist items');
+    }
+
+    // Step 4: Fetch updated data to ensure consistency
+    const { data, error: viewError } = await supabase
+      .from('setlists_with_items')
+      .select(
+        `
+        *,
+        setlist_items (
+          *,
+          song:song_id (
+            *,
+            artist:artist_id (*)
+          ),
+          exercise:exercise_id (
+            *,
+            section:section_id (
+              *,
+              book:book_id (*)
+            )
+          )
+        )
+      `
+      )
+      .eq('id', setlist.id)
+      .single();
+
+    if (viewError) {
+      console.error('Failed to fetch updated setlist', viewError);
+      throw new Error('Failed to fetch updated setlist');
+    }
+
+    // Step 5: Update store
+    set((state) => ({
+      setlistDetailMap: {
+        ...state.setlistDetailMap,
+        [setlist.id]: data,
+      },
     }));
   },
 }));

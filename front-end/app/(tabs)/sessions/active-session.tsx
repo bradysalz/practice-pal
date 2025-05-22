@@ -12,15 +12,9 @@ export default function ActiveSessionPage() {
   const insets = useSafeAreaInsets();
   const { currentSession, updateLocalSession, clearLocalSession } = useSessionsStore();
   const songs = useSongsStore((state) => state.songs);
-  const fetchSongs = useSongsStore((state) => state.fetchSongs);
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [tempos, setTempos] = useState<Record<string, string>>({});
-
-  // Fetch songs if needed
-  useEffect(() => {
-    fetchSongs();
-  }, [fetchSongs]);
 
   // Initialize tempos from session items
   useEffect(() => {

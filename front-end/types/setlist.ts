@@ -4,7 +4,7 @@ export type SetlistRow = Database['public']['Tables']['setlists']['Row'];
 
 export type SetlistItemRow = Database['public']['Tables']['setlist_items']['Row'];
 export type SetlistItemInsert = Database['public']['Tables']['setlist_items']['Insert'];
-export type InputLocalSetlistItem = Omit<SetlistItemInsert, 'id' | 'created_at' | 'updated_at'> & {
+export type InputLocalSetlistItem = Omit<SetlistItemInsert, 'id' | 'created_by' | 'created_at' | 'updated_at'> & {
   setlist_id: string;
   position: number; // enforce always present, adjust as needed
 };

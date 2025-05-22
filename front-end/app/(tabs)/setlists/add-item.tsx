@@ -1,112 +1,67 @@
-import { Button } from '@/components/ui/button';
-import {
-  Option,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { BooksTab } from '@/components/setlists/BooksTab';
+import { SongsTab } from '@/components/setlists/SongsTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { exercisesData, songsData } from '@/mock/data';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Check } from 'lucide-react-native';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AddItemScreen() {
-  const router = useRouter();
-  const { id } = useLocalSearchParams(); // setlist ID from route
-  // const addItem = useSetlistsStore((s) => s.addItem);
-
-  const [activeTab, setActiveTab] = useState<'exercises' | 'songs'>('exercises');
-  const emptyOption = { value: '', label: '' };
-  const [selectedExercise, setSelectedExercise] = useState<Option>(emptyOption);
-  const [selectedSong, setSelectedSong] = useState<Option>(emptyOption);
-
-  const handleAdd = () => {
-    // if (activeTab === 'exercises' && selectedExercise) {
-    //   const ex = exercisesData.find((e) => e.id === selectedExercise.label);
-    //   //   if (ex) {
-    //   //     addItem({
-    //   //       id: ex.id,
-    //   //       type: 'exercise',
-    //   //       name: ex.name,
-    //   //       tempo: ex.goalTempo,
-    //   //     });
-    //   //   }
-    //   // } else if (activeTab === 'songs' && selectedSong) {
-    //   //   const song = songsData.find((s) => s.id === selectedSong.label);
-    //   //   if (song) {
-    //   //     addItem({
-    //   //       id: song.id,
-    //   //       type: 'song',
-    //   //       name: song.name,
-    //   //       artist: song.artist,
-    //   //       tempo: song.goalTempo,
-    //   //     });
-    //   //   }
-    // }
-    router.back(); // Go back to setlist screen
-  };
+  const { setlistId } = useLocalSearchParams<{ setlistId: string }>();
+  const [activeTab, setActiveTab] = useState<string>('books');
+  const insets = useSafeAreaInsets();
 
   return (
-    <View className="w-full max-w-md mx-auto justify-center p-6">
-      <Text className="text-xl font-bold mb-6">Add Item to Setlist {id}</Text>
+    <View className="flex-1 bg-white">
+      <ScrollView className="flex-1 px-4 pt-6">
+        {/* Search */}
+        <TextInput
+          placeholder="Search..."
+          className="px-3 py-2 border border-slate-300 rounded-md bg-white mb-6"
+        />
 
-      <Tabs
-        className="gap-1.5"
-        value={activeTab}
-        onValueChange={(v) => {
-          console.log('Tab value changed to:', v);
-          setActiveTab(v as 'exercises' | 'songs');
-        }}
+        {/* Tabs */}
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as 'books' | 'songs')}
+        >
+          <TabsList className="flex-row space-x-2 mb-6">
+            <TabsTrigger value="books" className="flex-1">
+              <View className="flex-row items-center justify-center">
+                <Text className="text-xl">Books</Text>
+              </View>
+            </TabsTrigger>
+            <TabsTrigger value="songs" className="flex-1">
+              <View className="flex-row items-center justify-center">
+                <Text className="text-xl">Songs</Text>
+              </View>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="books">
+            <BooksTab />
+          </TabsContent>
+
+          <TabsContent value="songs">
+            <SongsTab />
+          </TabsContent>
+        </Tabs>
+      </ScrollView>
+
+      {/* Done Button */}
+      <View
+        className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200"
+        style={{ paddingBottom: insets.bottom }}
       >
-        <TabsList className="flex-row">
-          <TabsTrigger value="exercises" className="flex-1">
-            <Text>Exercises</Text>
-          </TabsTrigger>
-          <TabsTrigger value="songs" className="flex-1">
-            <Text> Songs</Text>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="exercises" className="mt-4">
-          <Select onValueChange={setSelectedExercise}>
-            <SelectTrigger>
-              <SelectValue placeholder="Choose an exercise" />
-            </SelectTrigger>
-            <SelectContent>
-              {exercisesData.map((ex) => (
-                <SelectItem key={ex.id} value={ex.id} label={ex.name} />
-              ))}
-            </SelectContent>
-          </Select>
-        </TabsContent>
-
-        <TabsContent value="songs" className="mt-4">
-          <Select onValueChange={setSelectedSong}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Song" />
-            </SelectTrigger>
-            <SelectContent>
-              {songsData.map((song) => (
-                <SelectItem key={song.id} label={song.name} value={song.id} />
-              ))}
-            </SelectContent>
-          </Select>
-        </TabsContent>
-      </Tabs>
-
-      <Button
-        className="mt-8"
-        disabled={
-          (activeTab === 'exercises' && !selectedExercise) ||
-          (activeTab === 'songs' && !selectedSong)
-        }
-        onPress={handleAdd}
-      >
-        <Text className="text-white font-medium">Add to Setlist</Text>
-      </Button>
+        <Pressable
+          className="mx-4 my-4 flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
+          onPress={() => router.back()}
+        >
+          <Check size={20} color="white" className="mr-2" />
+          <Text className="text-white font-semibold text-lg">Done</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }

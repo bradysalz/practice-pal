@@ -7,12 +7,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { FloatingActionButton } from '@/components/ui/floating-action-button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { useRouter } from 'expo-router';
 import { ListMusic, Plus } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Alert, ScrollView, Text, TextInput, View } from 'react-native';
 
 export default function SetlistsPage() {
@@ -20,26 +21,31 @@ export default function SetlistsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newSetlistData, setNewSetlistData] = useState({ name: '', description: '' });
 
-  const fetchSetlists = useSetlistsStore((state) => state.fetchSetlists);
-
-  useEffect(() => {
-    fetchSetlists();
-  }, [fetchSetlists]);
-
   const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
-  console.log(setlistDetailMap);
+  const setDraftSetlist = useSetlistsStore((state) => state.setDraftSetlist);
 
   const handleCreateSetlist = () => {
     const newSetlist = {
-      id: `sl23`,
       name: newSetlistData.name,
       description: newSetlistData.description,
-      items: [],
-      lastPracticed: 'Never',
+      created_by: 'local-user',
+      setlistItems: [],
     };
+    setDraftSetlist(newSetlist);
     setNewSetlistData({ name: '', description: '' });
     setIsCreateDialogOpen(false);
-    router.push(`/setlists/edit/${newSetlist.id}`);
+    router.push(`/setlists/edit/new`);
+  };
+
+  const handleFabPress = () => {
+    const newSetlist = {
+      name: 'New Setlist',
+      description: '',
+      created_by: 'local-user', // TODO: get from auth context
+      setlistItems: [],
+    };
+    setDraftSetlist(newSetlist);
+    router.push(`/setlists/edit/new`);
   };
 
   const handleEditSetlist = (id: string) => {
@@ -52,7 +58,7 @@ export default function SetlistsPage() {
       {
         text: 'Delete',
         style: 'destructive',
-        // onPress: () => setSetlists(setlists.filter((s) => s.id !== id)),
+        // onPress: () => setSetlists(setlists.filter((s) => s.id !== id)), // TODO: delete setlist
       },
     ]);
   };
@@ -117,6 +123,8 @@ export default function SetlistsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <FloatingActionButton onPress={handleFabPress} />
     </View>
   );
 }

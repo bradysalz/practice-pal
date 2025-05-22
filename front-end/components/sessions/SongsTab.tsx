@@ -16,20 +16,20 @@ export function SongsTab() {
       (item) => item.song_id === songId
     );
 
-    // Only add if song doesn't already exist
-    if (!isDuplicate) {
-      updateLocalSession({
-        session_items: [
-          ...currentSession.session_items,
-          {
-            song_id: songId,
-            exercise_id: null,
-            notes: null,
-            tempo: null,
-          },
-        ],
-      });
-    }
+    if (!isDuplicate) { return; }
+
+    updateLocalSession({
+      session_items: [
+        ...currentSession.session_items,
+        {
+          song_id: songId,
+          exercise_id: null,
+          notes: null,
+          tempo: null,
+        },
+      ],
+    });
+
   };
 
   return (

@@ -26,7 +26,14 @@ export default function SessionsStack() {
           headerShown: true,
         }}
       />
-      {/* If you had other screens specifically part of the Home stack, list them here */}
+      <Stack.Screen
+        name="add-item-to-session"
+        options={{
+          title: 'Add Item',
+          headerShown: true,
+        }}
+      />
+
     </Stack>
   );
 }

@@ -1,7 +1,7 @@
 import '@/global.css';
 import 'react-native-get-random-values'; // For UUIDs
 
-
+import { DataProvider } from '@/components/providers/DataProvider';
 import { SessionProvider } from '@/components/SessionProvider';
 import { NAV_THEME } from '@/lib/constants';
 import { useColorScheme } from '@/lib/useColorScheme';
@@ -51,14 +51,16 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <SessionProvider>
-        <GestureHandlerRootView>
-          <Stack>
+        <DataProvider>
+          <GestureHandlerRootView>
             {/* <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} /> */}
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <PortalHost />
-        </GestureHandlerRootView>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <PortalHost />
+          </GestureHandlerRootView>
+        </DataProvider>
       </SessionProvider>
     </ThemeProvider>
   );

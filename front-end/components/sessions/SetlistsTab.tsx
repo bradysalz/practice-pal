@@ -54,6 +54,8 @@ export function SetlistsTab() {
       return null;
     }).filter((item): item is InputLocalSessionItem => item !== null);
 
+    console.log('newItems', newItems);
+    console.log('currentSession.session_items', currentSession.session_items);
     // Filter out any items that are already in the session
     const itemsToAdd = newItems.filter((newItem) => {
       return !currentSession.session_items.some(

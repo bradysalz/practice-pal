@@ -3,10 +3,11 @@ import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { setlistsData } from '@/mock/data';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useSetlistsStore } from '@/stores/setlist-store';
+import { SetlistWithItems } from '@/types/setlist';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Text, TextInput, View } from 'react-native';
 import DraggableFlatList, {
   RenderItemParams,
@@ -16,82 +17,114 @@ import DraggableFlatList, {
 export default function EditSetlistPage() {
   const { id } = useLocalSearchParams();
   const setlistId = id as string;
-
   const router = useRouter();
 
-  const [setlist, setSetlist] = useState<any | null>(null);
+  // Get setlist from store
+  const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
+  const draftSetlist = useSetlistsStore((state) => state.draftSetlist);
+  const syncDraftSetlist = useSetlistsStore((state) => state.syncDraftSetlist);
+  const updateSetlist = useSetlistsStore((state) => state.updateSetlist);
+
+  const [localSetlist, setLocalSetlist] = useState<SetlistWithItems | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // TODO: tsc happy
-  console.log(isLoading, error);
-
-  // Function to fetch setlist data based on the ID
-  const fetchSetlistData = useCallback(() => {
-    console.log(`Fetching setlist data for ID: ${setlistId}`);
-    setIsLoading(true);
-    setError(null); // Clear previous errors
-
-    // Simulate fetching data from your source (e.g., Supabase)
-    // Replace this with your actual data fetching logic
-    const data = setlistsData.find((s) => s.id === setlistId);
-    if (data) {
-      setSetlist(data);
-      setIsLoading(false);
+  // Initialize local state once on mount
+  useEffect(() => {
+    if (setlistId === 'new') {
+      if (!draftSetlist) {
+        setError('No draft setlist found');
+      } else {
+        setLocalSetlist({
+          id: 'new',
+          name: draftSetlist.name ?? '',
+          description: draftSetlist.description ?? '',
+          created_by: draftSetlist.created_by,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          setlist_items: [],
+          song_count: 0,
+          exercise_count: 0,
+        });
+      }
     } else {
-      // Handle case where setlist is not found
-      setSetlist(null);
-      setError(`Setlist with ID ${setlistId} not found.`);
-      setIsLoading(false);
+      const storeSetlist = setlistDetailMap[setlistId];
+      if (storeSetlist) {
+        setLocalSetlist(storeSetlist);
+      } else {
+        setError(`Setlist with ID ${setlistId} not found.`);
+      }
     }
-  }, [setlistId]); // Recreate this function if setlistId changes
+    setIsLoading(false);
+  }, [setlistId, setlistDetailMap, draftSetlist]);
 
-  // useFocusEffect runs the effect when the screen is focused or re-focused
-  // This is ideal for fetching data that might have changed while the screen was unfocused
-  useFocusEffect(
-    useCallback(() => {
-      fetchSetlistData();
-    }, [fetchSetlistData]) // Re-run this effect if fetchSetlistData changes (due to setlistId change)
-  );
-
-  // Function to open the Add Item modal
   const handleOpenAddItemModal = () => {
-    // Navigate to the modal route
-    // Pass the setlistId as a parameter so the modal knows which setlist to add to
+    if (!localSetlist) return;
     router.push({
       pathname: '/setlists/add-item',
-      params: { setlistId: setlistId },
+      params: { setlistId: localSetlist.id },
     });
   };
 
   const handleRemoveItem = (index: number) => {
-    if (!setlist) {
-      return;
-    }
-    const items = [...setlist.items];
+    if (!localSetlist) return;
+
+    const items = [...localSetlist.setlist_items];
     items.splice(index, 1);
-    setSetlist({ ...setlist, items });
+    setLocalSetlist({ ...localSetlist, setlist_items: items });
   };
 
-  const handleSaveSetlist = () => {
-    Alert.alert('Save', 'Setlist saved!');
-    router.push('/setlists');
+  const handleSaveSetlist = async () => {
+    if (!localSetlist) return;
+
+    try {
+      if (setlistId === 'new') {
+        await syncDraftSetlist('new');
+      } else {
+        await updateSetlist(localSetlist);
+      }
+      Alert.alert('Success', 'Setlist saved successfully!');
+      router.push('/setlists');
+    } catch (err) {
+      Alert.alert('Error', 'Failed to save setlist. Please try again.');
+      console.log(err);
+    }
   };
 
-  if (!setlist) return <Text>Loading...</Text>;
+  if (isLoading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text>Loading setlist...</Text>
+      </View>
+    );
+  }
+
+  if (error || !localSetlist) {
+    return (
+      <View className="flex-1 items-center justify-center p-4">
+        <Text className="text-red-500">{error || 'Setlist not found'}</Text>
+        <Button
+          variant="outline"
+          onPress={() => router.push('/setlists')}
+          className="mt-4"
+        >
+          <Text>Go Back to Setlists</Text>
+        </Button>
+      </View>
+    );
+  }
 
   const renderItem = ({ item, getIndex, drag, isActive }: RenderItemParams<any>) => {
-    const index = getIndex() ?? 0; // fallback if undefined
+    const index = getIndex() ?? 0;
 
     return (
-      // Optional: Provides a scaling animation while dragging
       <ScaleDecorator>
         <ItemRow
           item={item}
           index={index}
-          onRemove={() => handleRemoveItem(index)} // Pass the index
-          drag={drag} // Pass the drag function to your ItemRow
-          isActive={isActive} // Pass the isActive state to your ItemRow for styling
+          onRemove={() => handleRemoveItem(index)}
+          drag={drag}
+          isActive={isActive}
         />
       </ScaleDecorator>
     );
@@ -103,8 +136,8 @@ export default function EditSetlistPage() {
         <View>
           <Label className="text-2xl mb-2">Setlist Name</Label>
           <TextInput
-            value={setlist.name}
-            onChangeText={(text) => setSetlist({ ...setlist, name: text })}
+            value={localSetlist.name || ''}
+            onChangeText={(text) => setLocalSetlist({ ...localSetlist, name: text })}
             placeholder="e.g., Warm-up Routine"
             className="border border-slate-300 p-2 rounded-xl bg-white mb-4"
           />
@@ -112,8 +145,8 @@ export default function EditSetlistPage() {
         <View>
           <Label className="text-2xl mb-2">Description</Label>
           <Textarea
-            value={setlist.description}
-            onChangeText={(text) => setSetlist({ ...setlist, description: text })}
+            value={localSetlist.description || ''}
+            onChangeText={(text) => setLocalSetlist({ ...localSetlist, description: text })}
             placeholder="Describe your setlist..."
             className="mb-2 border border-slate-300 rounded-xl"
           />
@@ -122,7 +155,7 @@ export default function EditSetlistPage() {
 
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-2xl font-semibold">Items</Text>
-        <Button size="sm" variant="outline" onPress={() => handleOpenAddItemModal()}>
+        <Button size="sm" variant="outline" onPress={handleOpenAddItemModal}>
           <View className="flex-row items-center justify-center px-2 py-2 ">
             <Plus size={16} className="mr-1" />
             <Text className="font-medium">Add Item</Text>
@@ -132,10 +165,10 @@ export default function EditSetlistPage() {
 
       <View style={{ flex: 1 }}>
         <DraggableFlatList
-          data={setlist.items}
+          data={localSetlist.setlist_items}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id} // Use a unique key for each item
-          onDragEnd={({ data }) => setSetlist({ ...setlist, items: data })} // Update state with the new order
+          keyExtractor={(item) => item.id}
+          onDragEnd={({ data }) => setLocalSetlist({ ...localSetlist, setlist_items: data })}
         />
       </View>
 
@@ -143,14 +176,14 @@ export default function EditSetlistPage() {
         <Button
           variant="default"
           onPress={handleSaveSetlist}
-          disabled={!setlist.name || setlist.items.length === 0}
+          disabled={!localSetlist.name || localSetlist.setlist_items.length === 0}
         >
           <View className="flex-row items-center gap-1 justify-center px-2 py-2 ">
             <ThemedIcon
               name="Save"
               size={24}
-              color="white" // Used on mobile for color
-              className="text-white" // Used on web for both color (text-white) and margin (mr-1)
+              color="white"
+              className="text-white"
             />
             <Text className="text-2xl text-white font-medium">Save Setlist</Text>
           </View>
