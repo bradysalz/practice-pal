@@ -5,7 +5,7 @@ export interface Exercise {
 }
 
 export interface Section {
-  id: number;
+  id: string;
   name: string;
   exercises: Exercise[];
 }

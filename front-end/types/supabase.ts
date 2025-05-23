@@ -351,7 +351,6 @@ export type Database = {
           position: number
           setlist_id: string
           song_id: string | null
-          tempo: number
           type: string
           updated_at: string
         }
@@ -363,7 +362,6 @@ export type Database = {
           position: number
           setlist_id?: string
           song_id?: string | null
-          tempo: number
           type: string
           updated_at?: string
         }
@@ -375,7 +373,6 @@ export type Database = {
           position?: number
           setlist_id?: string
           song_id?: string | null
-          tempo?: number
           type?: string
           updated_at?: string
         }

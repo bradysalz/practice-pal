@@ -23,7 +23,6 @@ export const useSongsStore = create<SongsState>((set, get) => ({
       console.error('Fetch failed', error);
       return;
     }
-    console.log(data);
     set({ songs: data as SongRow[] });
   },
 

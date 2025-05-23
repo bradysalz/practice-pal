@@ -1,14 +1,14 @@
 import { BooksTab } from '@/components/setlists/BooksTab';
 import { SongsTab } from '@/components/setlists/SongsTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AddItemScreen() {
-  const { setlistId } = useLocalSearchParams<{ setlistId: string }>();
+
   const [activeTab, setActiveTab] = useState<string>('books');
   const insets = useSafeAreaInsets();
 

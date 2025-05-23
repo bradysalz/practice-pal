@@ -3,11 +3,12 @@ import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { createDraftFromSetlist, createNewDraft } from '@/lib/utils/draft-setlist';
+import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
-import { SetlistWithItems } from '@/types/setlist';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Alert, Text, TextInput, View } from 'react-native';
 import DraggableFlatList, {
   RenderItemParams,
@@ -19,90 +20,80 @@ export default function EditSetlistPage() {
   const setlistId = id as string;
   const router = useRouter();
 
-  // Get setlist from store
+  // Get stores
   const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
-  const draftSetlist = useSetlistsStore((state) => state.draftSetlist);
-  const syncDraftSetlist = useSetlistsStore((state) => state.syncDraftSetlist);
-  const updateSetlist = useSetlistsStore((state) => state.updateSetlist);
+  const { updateSetlist, insertSetlist } = useSetlistsStore();
 
-  const [localSetlist, setLocalSetlist] = useState<SetlistWithItems | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    draftSetlist,
+    setDraftSetlist,
+    clearDraftSetlist,
+    removeItemFromDraft,
+    reorderDraftItems,
+  } = useDraftSetlistsStore();
 
-  // Initialize local state once on mount
+  // Initialize draft on mount
   useEffect(() => {
+    clearDraftSetlist();
+
     if (setlistId === 'new') {
-      if (!draftSetlist) {
-        setError('No draft setlist found');
-      } else {
-        setLocalSetlist({
-          id: 'new',
-          name: draftSetlist.name ?? '',
-          description: draftSetlist.description ?? '',
-          created_by: draftSetlist.created_by,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          setlist_items: [],
-          song_count: 0,
-          exercise_count: 0,
-        });
-      }
+      setDraftSetlist(createNewDraft());
     } else {
-      const storeSetlist = setlistDetailMap[setlistId];
-      if (storeSetlist) {
-        setLocalSetlist(storeSetlist);
-      } else {
-        setError(`Setlist with ID ${setlistId} not found.`);
+      const existingSetlist = setlistDetailMap[setlistId];
+      if (existingSetlist) {
+        setDraftSetlist(createDraftFromSetlist(existingSetlist));
       }
     }
-    setIsLoading(false);
-  }, [setlistId, setlistDetailMap, draftSetlist]);
+  }, [setlistId, setlistDetailMap]);
 
   const handleOpenAddItemModal = () => {
-    if (!localSetlist) return;
+    if (!draftSetlist) return;
     router.push({
       pathname: '/setlists/add-item',
-      params: { setlistId: localSetlist.id },
+      params: { setlistId: draftSetlist.id },
     });
   };
 
   const handleRemoveItem = (index: number) => {
-    if (!localSetlist) return;
-
-    const items = [...localSetlist.setlist_items];
-    items.splice(index, 1);
-    setLocalSetlist({ ...localSetlist, setlist_items: items });
+    if (!draftSetlist) return;
+    const item = draftSetlist.items[index];
+    removeItemFromDraft(item.id);
   };
 
   const handleSaveSetlist = async () => {
-    if (!localSetlist) return;
+    if (!draftSetlist) return;
 
     try {
       if (setlistId === 'new') {
-        await syncDraftSetlist('new');
+        await insertSetlist(draftSetlist);
       } else {
-        await updateSetlist(localSetlist);
+        const existingSetlist = setlistDetailMap[setlistId];
+        if (!existingSetlist) {
+          throw new Error('Setlist not found');
+        }
+        await updateSetlist({
+          ...draftSetlist,
+          id: existingSetlist.id,
+        });
       }
-      Alert.alert('Success', 'Setlist saved successfully!');
+
+      // Clear the draft and navigate back
+      clearDraftSetlist();
       router.push('/setlists');
-    } catch (err) {
-      Alert.alert('Error', 'Failed to save setlist. Please try again.');
-      console.log(err);
+    } catch (error) {
+      console.error('Failed to save setlist:', error);
+      Alert.alert(
+        'Error',
+        'Failed to save setlist. Please try again.',
+        [{ text: 'OK' }]
+      );
     }
   };
 
-  if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <Text>Loading setlist...</Text>
-      </View>
-    );
-  }
-
-  if (error || !localSetlist) {
+  if (!draftSetlist) {
     return (
       <View className="flex-1 items-center justify-center p-4">
-        <Text className="text-red-500">{error || 'Setlist not found'}</Text>
+        <Text className="text-red-500">Loading setlist...</Text>
         <Button
           variant="outline"
           onPress={() => router.push('/setlists')}
@@ -136,8 +127,8 @@ export default function EditSetlistPage() {
         <View>
           <Label className="text-2xl mb-2">Setlist Name</Label>
           <TextInput
-            value={localSetlist.name || ''}
-            onChangeText={(text) => setLocalSetlist({ ...localSetlist, name: text })}
+            value={draftSetlist.name || ''}
+            onChangeText={(text) => setDraftSetlist({ ...draftSetlist, name: text })}
             placeholder="e.g., Warm-up Routine"
             className="border border-slate-300 p-2 rounded-xl bg-white mb-4"
           />
@@ -145,8 +136,8 @@ export default function EditSetlistPage() {
         <View>
           <Label className="text-2xl mb-2">Description</Label>
           <Textarea
-            value={localSetlist.description || ''}
-            onChangeText={(text) => setLocalSetlist({ ...localSetlist, description: text })}
+            value={draftSetlist.description || ''}
+            onChangeText={(text) => setDraftSetlist({ ...draftSetlist, description: text })}
             placeholder="Describe your setlist..."
             className="mb-2 border border-slate-300 rounded-xl"
           />
@@ -165,10 +156,10 @@ export default function EditSetlistPage() {
 
       <View style={{ flex: 1 }}>
         <DraggableFlatList
-          data={localSetlist.setlist_items}
+          data={draftSetlist.items}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          onDragEnd={({ data }) => setLocalSetlist({ ...localSetlist, setlist_items: data })}
+          onDragEnd={({ data }) => reorderDraftItems(data)}
         />
       </View>
 
@@ -176,7 +167,7 @@ export default function EditSetlistPage() {
         <Button
           variant="default"
           onPress={handleSaveSetlist}
-          disabled={!localSetlist.name || localSetlist.setlist_items.length === 0}
+          disabled={!draftSetlist.name}
         >
           <View className="flex-row items-center gap-1 justify-center px-2 py-2 ">
             <ThemedIcon

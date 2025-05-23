@@ -1,22 +1,16 @@
 import { supabase } from '@/lib/supabase';
-import { InputLocalSetlist, SetlistWithItems } from '@/types/setlist';
+import { DraftSetlist, SetlistInsert, SetlistItemInsert, SetlistWithItems } from '@/types/setlist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type SetlistsState = {
   setlistDetailMap: Record<string, SetlistWithItems>;
   fetchSetlists: () => Promise<void>;
-
-  draftSetlist: InputLocalSetlist | null;
-  clearDraftSetlist: () => void;
-  setDraftSetlist: (draft: InputLocalSetlist) => void;
-  syncDraftSetlist: (tempId: string) => Promise<void>;
-  updateSetlist: (setlist: SetlistWithItems) => Promise<void>;
+  updateSetlist: (setlist: DraftSetlist) => Promise<void>;
+  insertSetlist: (draft: DraftSetlist) => Promise<void>;
 };
 
 export const useSetlistsStore = create<SetlistsState>((set, get) => ({
-  draftSetlist: null,
-  draftSetlistItems: [],
   setlistDetailMap: {},
 
   fetchSetlists: async () => {
@@ -54,87 +48,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     });
   },
 
-  setDraftSetlist: (draft) => set({ draftSetlist: draft }),
-
-  clearDraftSetlist: () => set({ draftSetlist: null }),
-
-  syncDraftSetlist: async () => {
-    const draft = get().draftSetlist;
-    if (!draft || draft.setlistItems.length === 0) return;
-
-    const id = uuidv4();
-    const now = new Date().toISOString();
-
-    const setlistInsert = {
-      ...draft,
-      id,
-      created_at: now,
-      updated_at: now,
-    };
-
-    // Step 1: Insert setlist
-    const { error: setlistError } = await supabase.from('setlists').insert(setlistInsert);
-    if (setlistError) {
-      console.error('Failed to insert setlist', setlistError);
-      return;
-    }
-
-    // Step 2: Insert setlist items
-    const setlistItemInserts = draft.setlistItems.map((item) => ({
-      ...item,
-      id: uuidv4(),
-      setlist_id: id,
-      created_at: now,
-      updated_at: now,
-    }));
-
-    const { error: itemsError } = await supabase.from('setlist_items').insert(setlistItemInserts);
-    if (itemsError) {
-      console.error('Failed to insert setlist items', itemsError);
-      return;
-    }
-
-    // Step 3: Fetch from view to get fully joined result
-    const { data, error: viewError } = await supabase
-      .from('setlists_with_items')
-      .select(
-        `
-      *,
-      setlist_items (
-        *,
-        song:song_id (
-          *,
-          artist:artist_id (*)
-        ),
-        exercise:exercise_id (
-          *,
-          section:section_id (
-            *,
-            book:book_id (*)
-          )
-        )
-      )
-    `
-      )
-      .eq('id', id)
-      .single();
-
-    if (viewError) {
-      console.error('Failed to fetch hydrated setlist from view', viewError);
-      return;
-    }
-
-    // Step 4: Store in map + clear draft
-    set((state) => ({
-      setlistDetailMap: {
-        ...state.setlistDetailMap,
-        [id]: data,
-      },
-      draftSetlist: null,
-    }));
-  },
-
-  updateSetlist: async (setlist: SetlistWithItems) => {
+  updateSetlist: async (setlist: DraftSetlist) => {
     const now = new Date().toISOString();
 
     // Step 1: Update the setlist
@@ -164,11 +78,13 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 3: Insert updated items
-    const setlistItemInserts = setlist.setlist_items.map((item, index) => ({
-      ...item,
+    const setlistItemInserts = setlist.items.map((item, index) => ({
       id: uuidv4(), // Generate new IDs for items
       setlist_id: setlist.id,
-      order: index, // Preserve the order from the UI
+      type: item.type,
+      song_id: item.type === 'song' ? item.song?.id : null,
+      exercise_id: item.type === 'exercise' ? item.exercise?.id : null,
+      position: index,
       updated_at: now,
       created_at: now,
     }));
@@ -217,6 +133,93 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
       setlistDetailMap: {
         ...state.setlistDetailMap,
         [setlist.id]: data,
+      },
+    }));
+  },
+
+  insertSetlist: async (draft: DraftSetlist) => {
+    const now = new Date().toISOString();
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    if (!userId) throw new Error('User not authenticated');
+
+    // Step 1: Insert the setlist
+    const setlistInsert: SetlistInsert = {
+      id: draft.id,
+      name: draft.name,
+      description: draft.description,
+      created_by: userId,
+      created_at: now,
+      updated_at: now,
+    };
+
+    const { error: setlistError } = await supabase
+      .from('setlists')
+      .insert(setlistInsert);
+
+    if (setlistError) {
+      console.error('Failed to insert setlist', setlistError);
+      throw new Error('Failed to insert setlist');
+    }
+
+    // Step 2: Insert items
+    const setlistItemInserts: SetlistItemInsert[] = draft.items.map((item, index) => ({
+      id: uuidv4(),
+      setlist_id: draft.id,
+      type: item.type,
+      song_id: item.type === 'song' ? item.song?.id : null,
+      exercise_id: item.type === 'exercise' ? item.exercise?.id : null,
+      position: index,
+      created_by: userId,
+      created_at: now,
+      updated_at: now,
+    }));
+
+    const { error: itemsError } = await supabase
+      .from('setlist_items')
+      .insert(setlistItemInserts);
+
+    if (itemsError) {
+      console.error('Failed to insert setlist items', itemsError);
+      // Cleanup the setlist since items failed
+      await supabase.from('setlists').delete().eq('id', draft.id);
+      throw new Error('Failed to insert setlist items');
+    }
+
+    // Step 3: Fetch updated data to ensure consistency
+    const { data, error: viewError } = await supabase
+      .from('setlists_with_items')
+      .select(
+        `
+        *,
+        setlist_items (
+          *,
+          song:song_id (
+            *,
+            artist:artist_id (*)
+          ),
+          exercise:exercise_id (
+            *,
+            section:section_id (
+              *,
+              book:book_id (*)
+            )
+          )
+        )
+      `
+      )
+      .eq('id', draft.id)
+      .single();
+
+    if (viewError) {
+      console.error('Failed to fetch inserted setlist', viewError);
+      throw new Error('Failed to fetch inserted setlist');
+    }
+
+    // Step 4: Update store
+    set((state) => ({
+      setlistDetailMap: {
+        ...state.setlistDetailMap,
+        [draft.id]: data,
       },
     }));
   },

@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { SetlistItemWithNested } from '@/types/setlist';
+import { DraftSetlistItem } from '@/types/setlist';
 import { Dumbbell, GripVertical, Music, Trash2 } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 interface ItemContentProps {
-  item: SetlistItemWithNested;
+  item: DraftSetlistItem;
 }
 
 interface ItemRowProps {
-  item: SetlistItemWithNested;
+  item: DraftSetlistItem;
   index: number;
   onRemove: (index: number) => void;
   drag: () => void; // Function to initiate drag
@@ -18,7 +18,7 @@ interface ItemRowProps {
 
 const ItemContent = ({ item }: ItemContentProps) => {
   // TODO: de-dupe this with setlistcard
-  const displayItem = (item: SetlistItemWithNested): string => {
+  const displayItem = (item: DraftSetlistItem): string => {
     if (item.type === 'song') {
       const artist_name = ' - ' + item.song?.artist?.name || '';
       return `${item.song?.name}${artist_name}`;

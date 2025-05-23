@@ -240,7 +240,7 @@ export const bookData = [
     coverColor: '#FF6B6B',
     sections: [
       {
-        id: 1,
+        id: 's1',
         name: 'Single Strokes',
         exercises: [
           { id: 'ex1', name: 'Single Stroke Roll', goalTempo: 120 },
@@ -248,7 +248,7 @@ export const bookData = [
         ],
       },
       {
-        id: 2,
+        id: 's2',
         name: 'Double Strokes',
         exercises: [
           { id: 'ex3', name: 'Double Stroke Roll', goalTempo: 90 },
@@ -264,7 +264,7 @@ export const bookData = [
     coverColor: '#4ECDC4',
     sections: [
       {
-        id: 3,
+        id: 's3',
         name: 'Quarter Note Variations',
         exercises: [
           { id: 'ex5', name: 'Quarter Note Syncopation', goalTempo: 85 },
@@ -272,7 +272,7 @@ export const bookData = [
         ],
       },
       {
-        id: 4,
+        id: 's4',
         name: 'Eighth Note Variations',
         exercises: [
           { id: 'ex7', name: 'Eighth Note Syncopation', goalTempo: 80 },
