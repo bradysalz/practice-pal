@@ -1,60 +1,61 @@
 import { AddRemoveButton } from '@/components/shared/AddRemoveButton';
-import { bookData } from '@/mock/data';
-import { useSessionsStore } from '@/stores/session-store';
-import { Book, Exercise, Section } from '@/types/library';
-import { InputLocalSessionItem } from '@/types/session';
-import { useState } from 'react';
+import { exerciseToDraftSessionItem } from '@/lib/utils/draft-session';
+import { BookWithCountsRow, useBooksStore } from '@/stores/book-store';
+import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
+import { useExercisesStore } from '@/stores/exercise-store';
+import { SectionWithCountsRow, useSectionsStore } from '@/stores/section-store';
+import { ExerciseRow } from '@/types/session';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 export function BooksTab() {
   const [viewMode, setViewMode] = useState<'list' | 'book' | 'section'>('list');
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [selectedSection, setSelectedSection] = useState<Section | null>(null);
-  const { currentSession, updateLocalSession } = useSessionsStore();
+  const [selectedBook, setSelectedBook] = useState<BookWithCountsRow | null>(null);
+  const [selectedSection, setSelectedSection] = useState<SectionWithCountsRow | null>(null);
 
-  const handleToggleExercise = (exercise: Exercise) => {
-    if (!currentSession || !selectedSection || !selectedBook) return;
+  // Store hooks
+  const { draftSession, addItemToDraft, removeItemFromDraft } = useDraftSessionsStore();
+  const { exercises, fetchExercisesBySection } = useExercisesStore();
+  const books = useBooksStore((state) => state.books);
+  const sections = useSectionsStore((state) => state.sections);
 
-    const isAdded = currentSession.session_items.some(
-      (item) => item.exercise_id === exercise.id
+  // Fetch exercises when section is selected
+  useEffect(() => {
+    if (selectedSection) {
+      fetchExercisesBySection(selectedSection.id);
+    }
+  }, [selectedSection?.id, fetchExercisesBySection]);
+
+  const handleToggleExercise = (exercise: ExerciseRow) => {
+    if (!draftSession || !selectedSection || !selectedBook) return;
+
+    const isAdded = draftSession.items.some(
+      (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
     );
 
     if (isAdded) {
-      // Remove the exercise
-      updateLocalSession({
-        session_items: currentSession.session_items.filter(
-          (item) => item.exercise_id !== exercise.id
-        ),
-      });
+      // Find the item ID to remove
+      const itemToRemove = draftSession.items.find(
+        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
+      );
+      if (itemToRemove) {
+        removeItemFromDraft(itemToRemove.id);
+      }
     } else {
       // Add the exercise with its book and section context
-      const newItem: InputLocalSessionItem = {
-        exercise_id: exercise.id,
-        song_id: null,
-        notes: null,
-        tempo: exercise.goalTempo ?? null,
-        exercise: {
-          id: exercise.id,
-          name: exercise.name,
-          section: {
-            id: selectedSection.id,
-            name: selectedSection.name,
-            book: {
-              id: selectedBook.id,
-              name: selectedBook.name,
-              author: selectedBook.author,
-            },
-          },
-        },
-      };
-
-      updateLocalSession({
-        session_items: [...currentSession.session_items, newItem],
-      });
+      addItemToDraft(
+        exerciseToDraftSessionItem(
+          exercise,
+          selectedSection,
+          selectedBook
+        )
+      );
     }
   };
 
   if (viewMode === 'section' && selectedSection) {
+    const sectionExercises = exercises[selectedSection.id] || [];
+
     return (
       <View className="space-y-2 mt-4">
         <Pressable className="mb-2" onPress={() => setViewMode('book')}>
@@ -62,9 +63,9 @@ export function BooksTab() {
         </Pressable>
 
         <Text className="text-xl font-bold">{selectedSection.name}</Text>
-        {selectedSection.exercises.map((exercise) => {
-          const isAdded = currentSession?.session_items.some(
-            (item) => item.exercise_id === exercise.id
+        {sectionExercises.map((exercise) => {
+          const isAdded = draftSession?.items.some(
+            (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
           );
 
           return (
@@ -74,8 +75,8 @@ export function BooksTab() {
             >
               <View>
                 <Text className="font-medium">{exercise.name}</Text>
-                {exercise.goalTempo && (
-                  <Text className="text-sm text-slate-500">Goal: {exercise.goalTempo} BPM</Text>
+                {exercise.goal_tempo && (
+                  <Text className="text-sm text-slate-500">Goal: {exercise.goal_tempo} BPM</Text>
                 )}
               </View>
               <AddRemoveButton
@@ -90,6 +91,8 @@ export function BooksTab() {
   }
 
   if (viewMode === 'book' && selectedBook) {
+    const bookSections = sections.filter(section => section.book_id === selectedBook.id);
+
     return (
       <View className="space-y-2 mt-4">
         <Pressable className="mb-2" onPress={() => setViewMode('list')}>
@@ -97,7 +100,7 @@ export function BooksTab() {
         </Pressable>
 
         <Text className="text-xl font-bold">{selectedBook.name}</Text>
-        {selectedBook.sections.map((section) => (
+        {bookSections.map((section) => (
           <Pressable
             key={section.id}
             className="flex-row items-center justify-between p-4 bg-slate-100 rounded-md active:opacity-80"
@@ -115,7 +118,7 @@ export function BooksTab() {
 
   return (
     <View className="space-y-2 mt-4">
-      {bookData.map((book) => (
+      {books.map((book) => (
         <Pressable
           key={book.id}
           className="flex-row items-center justify-between p-4 bg-slate-100 rounded-md active:opacity-80"
@@ -126,7 +129,6 @@ export function BooksTab() {
         >
           <View>
             <Text className="font-medium">{book.name}</Text>
-            <Text className="text-sm text-slate-500">{book.author}</Text>
           </View>
         </Pressable>
       ))}

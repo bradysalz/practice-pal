@@ -24,8 +24,8 @@ export default function EditSetlistPage() {
   const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
   const { updateSetlist, insertSetlist } = useSetlistsStore();
 
+  const draftSetlist = useDraftSetlistsStore((state) => state.draftSetlist);
   const {
-    draftSetlist,
     setDraftSetlist,
     clearDraftSetlist,
     removeItemFromDraft,
@@ -44,7 +44,7 @@ export default function EditSetlistPage() {
         setDraftSetlist(createDraftFromSetlist(existingSetlist));
       }
     }
-  }, [setlistId, setlistDetailMap]);
+  }, [setlistId, setlistDetailMap, clearDraftSetlist, setDraftSetlist]);
 
   const handleOpenAddItemModal = () => {
     if (!draftSetlist) return;

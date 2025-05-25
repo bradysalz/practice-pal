@@ -11,19 +11,19 @@ export type BookRow = Database['public']['Tables']['books']['Row'];
 
 export type SessionItemWithNested = SessionItemRow & {
   song:
-    | (SongRow & {
-        artist: ArtistRow | null;
-      })
-    | null;
+  | (SongRow & {
+    artist: ArtistRow | null;
+  })
+  | null;
   exercise:
-    | (ExerciseRow & {
-        section:
-          | (SectionRow & {
-              book: BookRow | null;
-            })
-          | null;
-      })
+  | (ExerciseRow & {
+    section:
+    | (SectionRow & {
+      book: BookRow | null;
+    })
     | null;
+  })
+  | null;
 };
 
 // Local exercise details for display
@@ -58,22 +58,45 @@ export type SessionWithCountsRow = SessionRow & {
 };
 export type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
 
-// When creating a local session, created_by will be added by the store
-export type InputLocalSession = Omit<SessionInsert, 'id' | 'created_at' | 'updated_at' | 'created_by'> & {
-  created_by?: string;
-  session_items?: InputLocalSessionItem[];
-};
-
-// A session that exists only locally
-export type LocalSession = {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  duration: number | null;
-  notes: string | null;
-  session_items: InputLocalSessionItem[];
-};
 
 export type SessionWithItems = SessionWithCountsRow & {
   session_items: SessionItemWithNested[];
+};
+
+
+// Manual create types for local sessions
+export type DraftSessionItem = {
+  id: string;
+  type: 'exercise' | 'song';
+  notes: string | null;
+  tempo: number | null;
+
+  // one of these is defined based on `type`
+  exercise?: {
+    id: string;
+    name: string | null;
+    section: {
+      id: string;
+      name: string;
+      book: {
+        id: string;
+        name: string;
+      };
+    };
+  };
+  song?: {
+    id: string;
+    name: string;
+    artist?: {
+      id: string;
+      name: string;
+    };
+  };
+};
+
+export type DraftSession = {
+  id: string;
+  notes: string | null;
+  duration: number | null;
+  items: DraftSessionItem[];
 };

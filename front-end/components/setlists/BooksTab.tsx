@@ -3,7 +3,7 @@ import { useBooksStore } from '@/stores/book-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
-import { Exercise } from '@/types/library';
+import { ExerciseRow } from '@/types/session';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { SongActionButtons } from '../shared/SongActionButtons';
@@ -37,7 +37,7 @@ export function BooksTab() {
 
   if (!draftSetlist) return null;
 
-  const handleAddExercise = (exercise: Exercise) => {
+  const handleAddExercise = (exercise: ExerciseRow) => {
     if (!selectedSection || !selectedBook) return;
 
     const draftItem = exerciseToDraftSetlistItem(
@@ -48,7 +48,7 @@ export function BooksTab() {
     addItemToDraft(draftItem);
   };
 
-  const handleRemoveExercise = (exercise: Exercise) => {
+  const handleRemoveExercise = (exercise: ExerciseRow) => {
     const itemToRemove = draftSetlist.items.find(
       item => item.type === 'exercise' && item.exercise?.id === exercise.id
     );
@@ -58,6 +58,8 @@ export function BooksTab() {
   };
 
   if (viewMode === 'section' && selectedSection) {
+    const sectionExercises = exercises[selectedSection.id] || [];
+
     return (
       <View className="space-y-2 mt-4">
         <Pressable className="mb-2" onPress={() => setViewMode('book')}>
@@ -65,7 +67,7 @@ export function BooksTab() {
         </Pressable>
 
         <Text className="text-xl font-bold">{selectedSection.name}</Text>
-        {exercises.map((exercise) => {
+        {sectionExercises.map((exercise) => {
           if (!exercise.name) return null;
 
           const isAdded = draftSetlist.items.some(

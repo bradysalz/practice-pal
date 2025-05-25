@@ -1,9 +1,42 @@
-import { SongRow } from "@/stores/song-store";
-import { Exercise } from "@/types/library";
-import { DraftSetlist, DraftSetlistItem, SetlistWithItems } from '@/types/setlist';
+import { BookWithCountsRow } from "@/stores/book-store";
+import { SectionWithCountsRow } from "@/stores/section-store";
+import { ArtistRow, ExerciseRow, SongRow } from "@/types/session";
+import { DraftSetlist, DraftSetlistItem, SetlistItemWithNested, SetlistWithItems } from '@/types/setlist';
 import { v4 as uuidv4 } from 'uuid';
 
-export function songRowToDraftSetlistItem(song: SongRow, artist?: { id: string; name: string }): DraftSetlistItem {
+export function setlistItemToDraftSetlistItem(item: SetlistItemWithNested): DraftSetlistItem {
+  if (item.song && item.song_id) {
+    return {
+      id: item.id,
+      type: 'song' as const,
+      song: {
+        id: item.song_id,
+        name: item.song.name ?? '',
+      },
+    };
+  } else if (item.exercise && item.exercise.section?.book && item.exercise_id) {
+    return {
+      id: item.id,
+      type: 'exercise' as const,
+      exercise: {
+        id: item.exercise_id,
+        name: item.exercise.name ?? '',
+        section: {
+          id: item.exercise.section.id.toString(),
+          name: item.exercise.section.name ?? '',
+          book: {
+            id: item.exercise.section.book.id,
+            name: item.exercise.section.book.name ?? '',
+          },
+        },
+      },
+    };
+  }
+  // Should not be possible to reach
+  throw new Error('Invalid setlist item');
+}
+
+export function songRowToDraftSetlistItem(song: SongRow, artist?: ArtistRow): DraftSetlistItem {
   return {
     id: uuidv4(),
     type: 'song',
@@ -13,12 +46,12 @@ export function songRowToDraftSetlistItem(song: SongRow, artist?: { id: string; 
       artist: artist
     }
   };
-};
+}
 
 export function exerciseToDraftSetlistItem(
-  exercise: Exercise,
-  section?: { id: string; name: string },
-  book?: { id: string; name: string }
+  exercise: ExerciseRow,
+  section: SectionWithCountsRow,
+  book: BookWithCountsRow
 ): DraftSetlistItem {
   return {
     id: uuidv4(),
@@ -26,15 +59,17 @@ export function exerciseToDraftSetlistItem(
     exercise: {
       id: exercise.id,
       name: exercise.name,
-      section: section ? {
+      section: {
         id: section.id,
         name: section.name,
-        book: book
-      } : undefined
+        book: {
+          id: book.id,
+          name: book.name,
+        }
+      }
     }
   };
-};
-
+}
 
 export function createNewDraft(): DraftSetlist {
   return {

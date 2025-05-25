@@ -1,6 +1,6 @@
 import { CurrentSessionItems } from '@/components/sessions/CurrentSessionItems';
-import { useSessionsStore } from '@/stores/session-store';
-import { InputLocalSessionItem } from '@/types/session';
+import { createNewDraft } from '@/lib/utils/draft-session';
+import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { router } from 'expo-router';
 import { Play, Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
@@ -8,30 +8,19 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function MakeSessionPage() {
-  const { currentSession, initializeLocalSession, updateLocalSession } = useSessionsStore();
+  const { draftSession, setDraftSession, removeItemFromDraft } = useDraftSessionsStore();
   const insets = useSafeAreaInsets();
 
-  // Initialize session if not exists
+  // Initialize draft session if not exists
   useEffect(() => {
-    if (!currentSession) {
-      initializeLocalSession({
-        notes: '',
-        duration: 0,
-        session_items: [],
-      });
+    if (!draftSession) {
+      setDraftSession(createNewDraft());
     }
-  }, [currentSession, initializeLocalSession]);
+  }, [draftSession, setDraftSession]);
 
-  const handleRemoveItem = (itemId: string, type: 'song' | 'exercise') => {
-    if (!currentSession) return;
-
-    const newItems: InputLocalSessionItem[] = currentSession.session_items.filter((item) =>
-      type === 'song' ? item.song_id !== itemId : item.exercise_id !== itemId
-    );
-
-    updateLocalSession({
-      session_items: newItems,
-    });
+  const handleRemoveItem = (itemId: string) => {
+    if (!draftSession) return;
+    removeItemFromDraft(itemId);
   };
 
   return (
@@ -39,7 +28,7 @@ export default function MakeSessionPage() {
       <ScrollView className="flex-1 px-4 pt-6">
         {/* Selected Items */}
         <CurrentSessionItems
-          sessionItems={currentSession?.session_items || []}
+          sessionItems={draftSession?.items || []}
           onRemoveItem={handleRemoveItem}
         />
       </ScrollView>

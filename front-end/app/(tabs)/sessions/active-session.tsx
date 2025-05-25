@@ -1,7 +1,7 @@
 import { SessionItemCard } from '@/components/sessions/SessionItemCards';
+import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSessionsStore } from '@/stores/session-store';
 import { useSongsStore } from '@/stores/song-store';
-import { InputLocalSessionItem } from '@/types/session';
 import { router } from 'expo-router';
 import { Pause, Play, XCircle } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ActiveSessionPage() {
   const insets = useSafeAreaInsets();
-  const { currentSession, updateLocalSession, clearLocalSession } = useSessionsStore();
+  const { draftSession, updateDraftDetails } = useDraftSessionsStore();
+  const { insertSession } = useSessionsStore();
   const songs = useSongsStore((state) => state.songs);
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -18,31 +19,16 @@ export default function ActiveSessionPage() {
 
   // Initialize tempos from session items
   useEffect(() => {
-    if (currentSession?.session_items) {
-      // Log any duplicate IDs
-      const idCounts = new Map<string, number>();
-      currentSession.session_items.forEach((item) => {
-        const id = item.exercise_id || item.song_id || '';
-        idCounts.set(id, (idCounts.get(id) || 0) + 1);
-      });
-
-      const duplicates = Array.from(idCounts.entries())
-        .filter(([_, count]) => count > 1)
-        .map(([id]) => id);
-
-      if (duplicates.length > 0) {
-        console.warn('Found duplicate IDs in session items:', duplicates);
-      }
-
+    if (draftSession?.items) {
       const initialTempos = Object.fromEntries(
-        currentSession.session_items.map((item) => [
-          item.exercise_id || item.song_id || '',
-          (item.tempo || '120').toString(),
+        draftSession.items.map((item) => [
+          item.id,
+          (item.tempo || 120).toString(),
         ])
       );
       setTempos(initialTempos);
     }
-  }, [currentSession?.session_items]);
+  }, [draftSession?.items]);
 
   // Timer logic
   useEffect(() => {
@@ -72,21 +58,9 @@ export default function ActiveSessionPage() {
   const handleTempoChange = (id: string, text: string) => {
     setTempos((prev) => ({ ...prev, [id]: text }));
 
-    // Update the session items with new tempo
-    if (currentSession) {
-      // Check for duplicate IDs before updating
-      const matchingItems = currentSession.session_items.filter(item =>
-        (item.exercise_id || item.song_id || '') === id
-      );
-
-      if (matchingItems.length > 1) {
-        console.warn(`Skipping tempo update for ID ${id} - found ${matchingItems.length} matching items`);
-        return;
-      }
-
-      const updatedItems = currentSession.session_items.map((item): InputLocalSessionItem => {
-        const itemId = item.exercise_id || item.song_id || '';
-        if (itemId === id) {
+    if (draftSession) {
+      const updatedItems = draftSession.items.map((item) => {
+        if (item.id === id) {
           return {
             ...item,
             tempo: text ? parseInt(text, 10) || null : null,
@@ -95,49 +69,39 @@ export default function ActiveSessionPage() {
         return item;
       });
 
-      updateLocalSession({
-        session_items: updatedItems,
+      updateDraftDetails({
+        items: updatedItems,
       });
     }
   };
 
-  const handleEndSession = () => {
-    if (currentSession) {
-      // Check for duplicate IDs before final update
-      const idCounts = new Map<string, number>();
-      currentSession.session_items.forEach((item) => {
-        const id = item.exercise_id || item.song_id || '';
-        idCounts.set(id, (idCounts.get(id) || 0) + 1);
-      });
-
-      const duplicates = Array.from(idCounts.entries())
-        .filter(([_, count]) => count > 1)
-        .map(([id]) => id);
-
-      if (duplicates.length > 0) {
-        console.warn('Found duplicate IDs when ending session:', duplicates);
-      }
-
+  const handleEndSession = async () => {
+    if (draftSession) {
       // Update all tempos one final time before ending
-      const finalItems = currentSession.session_items.map((item): InputLocalSessionItem => {
-        const id = item.exercise_id || item.song_id || '';
-        const currentTempo = tempos[id];
+      const finalItems = draftSession.items.map((item) => {
+        const currentTempo = tempos[item.id];
         return {
           ...item,
           tempo: currentTempo ? parseInt(currentTempo, 10) || null : null,
         };
       });
 
-      updateLocalSession({
+      const finalDraft = {
+        ...draftSession,
         duration: elapsedTime,
-        session_items: finalItems,
-      });
+        items: finalItems,
+      };
+
+      try {
+        await insertSession(finalDraft);
+        router.push('/sessions');
+      } catch (error) {
+        console.error('Failed to save session:', error);
+      }
     }
-    router.push('/sessions');
-    clearLocalSession();
   };
 
-  if (!currentSession) {
+  if (!draftSession) {
     router.replace('/sessions/make-session');
     return null;
   }
@@ -153,7 +117,7 @@ export default function ActiveSessionPage() {
           <View>
             <Text className="text-xl font-bold">Practice Session</Text>
             <Text className="text-base text-slate-500">
-              {currentSession.session_items.length} items
+              {draftSession.items.length} items
             </Text>
           </View>
           <View className="flex-row items-center space-x-4">
@@ -170,31 +134,28 @@ export default function ActiveSessionPage() {
 
       {/* Session Items */}
       <ScrollView className="flex-1 px-4 py-4 space-y-4">
-        {currentSession.session_items.map((item, index) => {
-          const id = item.exercise_id || item.song_id || '';
+        {draftSession.items.map((item) => {
           let name = '';
           let source = '';
 
-          if (item.exercise_id && item.exercise) {
-            name = item.exercise.name;
-            source = `${item.exercise.section.book.name} / ${item.exercise.section.name}`;
-          } else if (item.song_id) {
-            const song = songs.find(s => s.id === item.song_id);
-            if (song) {
-              name = song.name;
-              source = 'Song'; // We could fetch artist details here too if needed
-            }
+          if (item.type === 'exercise' && item.exercise) {
+            name = item.exercise.name || 'Untitled Exercise';
+            source = item.exercise.section
+              ? `${item.exercise.section.book?.name || ''} / ${item.exercise.section.name}`
+              : 'Exercise';
+          } else if (item.type === 'song' && item.song) {
+            name = item.song.name || 'Untitled Song';
+            source = item.song.artist?.name || 'Song';
           }
 
-          // Use index as part of key to ensure uniqueness
           return (
             <SessionItemCard
-              key={`${id}-${index}`}
-              id={id}
+              key={item.id}
+              id={item.id}
               name={name}
               source={source}
-              tempo={tempos[id] || '120'}
-              onTempoChange={(text) => handleTempoChange(id, text)}
+              tempo={tempos[item.id] || '120'}
+              onTempoChange={(text) => handleTempoChange(item.id, text)}
             />
           );
         })}
@@ -202,15 +163,15 @@ export default function ActiveSessionPage() {
 
       {/* End Session Button */}
       <View
-        className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200"
+        className="bg-white border-t border-slate-200"
         style={{ paddingBottom: insets.bottom }}
       >
         <Pressable
-          className="mx-4 my-4 py-4 bg-red-500 rounded-xl active:opacity-80 flex-row justify-center items-center space-x-2"
+          className="mx-4 my-4 flex-row items-center justify-center bg-red-500 rounded-xl py-4 active:opacity-80"
           onPress={handleEndSession}
         >
-          <XCircle color="white" size={24} />
-          <Text className="text-white text-lg font-semibold">End Session</Text>
+          <XCircle size={20} color="white" className="mr-2" />
+          <Text className="text-white font-semibold text-lg">End Session</Text>
         </Pressable>
       </View>
     </View>
