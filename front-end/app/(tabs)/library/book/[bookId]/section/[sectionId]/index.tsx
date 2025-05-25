@@ -36,7 +36,7 @@ export default function SectionDetailPage() {
       <Text className="text-2xl font-bold mb-4">{book.name}</Text>
       <Text className="text-2xl font-bold mb-4">{section.name}</Text>
 
-      {exercises.map((exercise) => (
+      {exercises[sectionId].map((exercise) => (
         <Pressable
           key={exercise.id}
           onPress={() => handleExercisePress(exercise.id)}

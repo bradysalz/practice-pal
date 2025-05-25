@@ -10,18 +10,23 @@ type InputLocalExercise = Omit<ExerciseInsert, 'id' | 'created_at' | 'updated_at
 };
 
 type ExercisesState = {
-  exercises: ExerciseRow[];
+  exercises: Record<string, ExerciseRow[]>;
   addExerciseLocal: (exercise: InputLocalExercise) => string;
   syncAddExercise: (tempId: string) => Promise<void>;
   updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
   syncUpdateExercise: (id: string) => Promise<void>;
-  fetchExercisesBySection: (section_id: string) => Promise<void>;
+  fetchExercisesBySection: (section_id: string, force?: boolean) => Promise<void>;
 };
 
 export const useExercisesStore = create<ExercisesState>((set, get) => ({
-  exercises: [],
+  exercises: {},
 
-  fetchExercisesBySection: async (section_id) => {
+  fetchExercisesBySection: async (section_id, force = false) => {
+    // If not forced and we already have the data, return early
+    if (!force && get().exercises[section_id]?.length > 0) {
+      return;
+    }
+
     const { data, error } = await supabase
       .from('exercises')
       .select('*')
@@ -32,19 +37,42 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       return;
     }
 
-    set({ exercises: data as ExerciseRow[] });
-  },
-
-  updateExerciseLocal: (id, updates) => {
     set((state) => ({
-      exercises: state.exercises.map((e) =>
-        e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
-      ),
+      exercises: {
+        ...state.exercises,
+        [section_id]: data as ExerciseRow[],
+      },
     }));
   },
 
+  updateExerciseLocal: (id, updates) => {
+    set((state) => {
+      const newExercises = { ...state.exercises };
+
+      // Find the section containing this exercise
+      for (const [sectionId, exercises] of Object.entries(state.exercises)) {
+        const exerciseIndex = exercises.findIndex(e => e.id === id);
+        if (exerciseIndex !== -1) {
+          newExercises[sectionId] = exercises.map((e) =>
+            e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
+          );
+          break;
+        }
+      }
+
+      return { exercises: newExercises };
+    });
+  },
+
   syncUpdateExercise: async (id) => {
-    const exercise = get().exercises.find((e) => e.id === id);
+    let exercise: ExerciseRow | undefined;
+
+    // Find the exercise in any section
+    for (const exercises of Object.values(get().exercises)) {
+      exercise = exercises.find(e => e.id === id);
+      if (exercise) break;
+    }
+
     if (!exercise) return;
 
     const { id: _, created_at, ...updatePayload } = exercise;
@@ -55,6 +83,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       console.error('Failed to sync exercise update:', error);
     }
   },
+
   addExerciseLocal: (exercise) => {
     const id = uuidv4();
     const now = new Date().toISOString();
@@ -71,13 +100,32 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       updated_at: now,
     };
 
-    set((state) => ({ exercises: [...state.exercises, newExercise] }));
+    set((state) => ({
+      exercises: {
+        ...state.exercises,
+        [exercise.section_id]: [
+          ...(state.exercises[exercise.section_id] || []),
+          newExercise,
+        ],
+      },
+    }));
     return id;
   },
 
   syncAddExercise: async (id) => {
-    const localExercise = get().exercises.find((e) => e.id === id);
-    if (!localExercise) return;
+    let localExercise: ExerciseRow | undefined;
+    let sectionId: string | undefined;
+
+    // Find the exercise and its section
+    for (const [section, exercises] of Object.entries(get().exercises)) {
+      localExercise = exercises.find(e => e.id === id);
+      if (localExercise) {
+        sectionId = section;
+        break;
+      }
+    }
+
+    if (!localExercise || !sectionId) return;
 
     const { data, error } = await supabase
       .from('exercises')
@@ -89,7 +137,12 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       console.error('Sync failed', error);
     } else {
       set((state) => ({
-        exercises: state.exercises.map((e) => (e.id === id ? data : e)),
+        exercises: {
+          ...state.exercises,
+          [sectionId!]: state.exercises[sectionId!].map((e) =>
+            e.id === id ? data : e
+          ),
+        },
       }));
     }
   },

@@ -43,7 +43,7 @@ export default function ExerciseDetailPage() {
 
   const book = books.find((b) => b.id === bookId);
   const section = sections.find((s) => s.id === sectionId);
-  const exercise = exercises.find((e) => e.id === exerciseId);
+  const exercise = exercises[sectionId].find((e) => e.id === exerciseId);
 
   const sessionItems = sessionItemsByExercise[exerciseId || ''] || [];
   const sessionMap = new Map(allSessions.map((s) => [s.id, s]));
