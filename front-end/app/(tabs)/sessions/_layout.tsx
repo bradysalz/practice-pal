@@ -6,34 +6,40 @@ export default function SessionsStack() {
     <Stack>
       {/* The index file is usually the initial screen in the stack */}
       <Stack.Screen
-        name="index" // Corresponds to app/(tabs)/home/index.js (Your Sessions List)
+        name="index"
         options={{
           title: 'Recent Sessions', // Title for the header
           headerShown: true,
         }}
       />
       <Stack.Screen
-        name="[id]" // Corresponds to app/(tabs)/home/[id].js (Your Session Detail)
+        name="[id]"
         options={{
-          title: 'Session Details', // Title for the header when viewing details
+          title: 'Session Details',
           headerShown: true,
         }}
       />
       <Stack.Screen
         name="make-session"
         options={{
-          title: 'Create Session', // Title for the header when viewing details
-          headerShown: true,
+          title: 'Create Session',
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="add-item-to-session"
         options={{
           title: 'Add Item',
-          headerShown: true,
+          headerShown: false,
         }}
       />
-
+      <Stack.Screen
+        name="active-session"
+        options={{
+          title: 'Active Session',
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

@@ -25,7 +25,10 @@ export default function MakeSessionPage() {
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView className="flex-1 px-4 pt-6">
+      <ScrollView
+        className="flex-1 px-4"
+        style={{ paddingTop: insets.top + 16 }}
+      >
         {/* Selected Items */}
         <CurrentSessionItems
           sessionItems={draftSession?.items || []}

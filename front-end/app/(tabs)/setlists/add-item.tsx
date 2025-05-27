@@ -18,7 +18,7 @@ export default function AddItemScreen() {
         {/* Search */}
         <TextInput
           placeholder="Search..."
-          className="px-3 py-2 border border-slate-300 rounded-md bg-white mb-6"
+          className="px-3 py-2 border border-slate-300 rounded-xl bg-white mb-6"
         />
 
         {/* Tabs */}
@@ -26,18 +26,20 @@ export default function AddItemScreen() {
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as 'books' | 'songs')}
         >
-          <TabsList className="flex-row space-x-2 mb-6">
-            <TabsTrigger value="books" className="flex-1">
-              <View className="flex-row items-center justify-center">
-                <Text className="text-xl">Books</Text>
-              </View>
-            </TabsTrigger>
-            <TabsTrigger value="songs" className="flex-1">
-              <View className="flex-row items-center justify-center">
-                <Text className="text-xl">Songs</Text>
-              </View>
-            </TabsTrigger>
-          </TabsList>
+          <View className="p-2 bg-slate-100">
+            <TabsList className="flex-row ">
+              <TabsTrigger value="books" className="flex-1">
+                <View className="flex-row items-center justify-center">
+                  <Text className="text-xl">Books</Text>
+                </View>
+              </TabsTrigger>
+              <TabsTrigger value="songs" className="flex-1">
+                <View className="flex-row items-center justify-center">
+                  <Text className="text-xl">Songs</Text>
+                </View>
+              </TabsTrigger>
+            </TabsList>
+          </View>
 
           <TabsContent value="books">
             <BooksTab />

@@ -1,4 +1,3 @@
-import { AddRemoveButton } from '@/components/shared/AddRemoveButton';
 import { exerciseToDraftSessionItem } from '@/lib/utils/draft-session';
 import { BookWithCountsRow, useBooksStore } from '@/stores/book-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
@@ -6,9 +5,16 @@ import { useExercisesStore } from '@/stores/exercise-store';
 import { SectionWithCountsRow, useSectionsStore } from '@/stores/section-store';
 import { ExerciseRow } from '@/types/session';
 import { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { BackHandler, Pressable, Text, View } from 'react-native';
+import { ChevronButton } from '../shared/ChevronButton';
+import { SessionItemCard } from '../shared/SessionItemCard';
 
-export function BooksTab() {
+interface BooksTabProps {
+  searchQuery: string;
+  onNavigate?: () => void;
+}
+
+export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
   const [viewMode, setViewMode] = useState<'list' | 'book' | 'section'>('list');
   const [selectedBook, setSelectedBook] = useState<BookWithCountsRow | null>(null);
   const [selectedSection, setSelectedSection] = useState<SectionWithCountsRow | null>(null);
@@ -19,6 +25,28 @@ export function BooksTab() {
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
 
+  // Handle hardware back button
+  useEffect(() => {
+    const backAction = () => {
+      if (viewMode === 'section') {
+        setViewMode('book');
+        onNavigate?.();
+        return true;
+      }
+      if (viewMode === 'book') {
+        setViewMode('list');
+        setSelectedBook(null);
+        onNavigate?.();
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove();
+  }, [viewMode, onNavigate]);
+
   // Fetch exercises when section is selected
   useEffect(() => {
     if (selectedSection) {
@@ -26,64 +54,66 @@ export function BooksTab() {
     }
   }, [selectedSection, fetchExercisesBySection]);
 
-  const handleToggleExercise = (exercise: ExerciseRow) => {
+  const handleAddExercise = (exercise: ExerciseRow) => {
     if (!draftSession || !selectedSection || !selectedBook) return;
+    addItemToDraft(
+      exerciseToDraftSessionItem(
+        exercise,
+        selectedSection,
+        selectedBook
+      )
+    );
+  };
 
-    const isAdded = draftSession.items.some(
+  const handleRemoveExercise = (exercise: ExerciseRow) => {
+    if (!draftSession) return;
+    const itemToRemove = draftSession.items.find(
       (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
     );
-
-    if (isAdded) {
-      // Find the item ID to remove
-      const itemToRemove = draftSession.items.find(
-        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
-      );
-      if (itemToRemove) {
-        removeItemFromDraft(itemToRemove.id);
-      }
-    } else {
-      // Add the exercise with its book and section context
-      addItemToDraft(
-        exerciseToDraftSessionItem(
-          exercise,
-          selectedSection,
-          selectedBook
-        )
-      );
+    if (itemToRemove) {
+      removeItemFromDraft(itemToRemove.id);
     }
   };
 
-  if (viewMode === 'section' && selectedSection) {
+  const handleNavigateBack = (newMode: 'list' | 'book') => {
+    setViewMode(newMode);
+    if (newMode === 'list') {
+      setSelectedBook(null);
+    }
+    if (newMode === 'book') {
+      setSelectedSection(null);
+    }
+    onNavigate?.();
+  };
+
+  if (viewMode === 'section' && selectedSection && selectedBook) {
     const sectionExercises = exercises[selectedSection.id] || [];
+    const filteredExercises = sectionExercises.filter(exercise =>
+      exercise.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
-      <View className="space-y-2 mt-4">
-        <Pressable className="mb-2" onPress={() => setViewMode('book')}>
+      <View className="gap-y-4 mt-4">
+        <Pressable className="mb-2" onPress={() => handleNavigateBack('book')}>
           <Text className="text-primary">{'< Back'}</Text>
         </Pressable>
 
+        <Text className="text-2xl font-bold">{selectedBook.name}</Text>
         <Text className="text-xl font-bold">{selectedSection.name}</Text>
-        {sectionExercises.map((exercise) => {
+        {filteredExercises.map((exercise) => {
           const isAdded = draftSession?.items.some(
             (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
           );
 
           return (
-            <View
+            <SessionItemCard
               key={exercise.id}
-              className="flex-row items-center justify-between p-3 bg-slate-100 rounded-md"
-            >
-              <View>
-                <Text className="font-medium">{exercise.name}</Text>
-                {exercise.goal_tempo && (
-                  <Text className="text-sm text-slate-500">Goal: {exercise.goal_tempo} BPM</Text>
-                )}
-              </View>
-              <AddRemoveButton
-                isAdded={!!isAdded}
-                onPress={() => handleToggleExercise(exercise)}
-              />
-            </View>
+              title={exercise.name || 'Untitled Exercise'}
+              subtitle={exercise.goal_tempo ? `Goal: ${exercise.goal_tempo} BPM` : undefined}
+              isAdded={!!isAdded}
+              onAdd={() => handleAddExercise(exercise)}
+              onRemove={() => handleRemoveExercise(exercise)}
+            />
           );
         })}
       </View>
@@ -92,45 +122,52 @@ export function BooksTab() {
 
   if (viewMode === 'book' && selectedBook) {
     const bookSections = sections.filter(section => section.book_id === selectedBook.id);
+    const filteredSections = bookSections.filter(section =>
+      section.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
-      <View className="space-y-2 mt-4">
-        <Pressable className="mb-2" onPress={() => setViewMode('list')}>
+      <View className="gap-y-4 mt-4">
+        <Pressable className="mb-2" onPress={() => handleNavigateBack('list')}>
           <Text className="text-primary">{'< Back'}</Text>
         </Pressable>
 
-        <Text className="text-xl font-bold">{selectedBook.name}</Text>
-        {bookSections.map((section) => (
-          <Pressable
+        <Text className="text-2xl font-bold">{selectedBook.name}</Text>
+        {filteredSections.map((section) => (
+          <SessionItemCard
             key={section.id}
-            className="flex-row items-center justify-between p-4 bg-slate-100 rounded-md active:opacity-80"
-            onPress={() => {
+            title={section.name || 'Untitled Section'}
+            onToggle={() => {
               setSelectedSection(section);
               setViewMode('section');
+              onNavigate?.();
             }}
-          >
-            <Text className="font-medium">{section.name}</Text>
-          </Pressable>
+            isAdded={false}
+            rightElement={<ChevronButton onPress={() => { }} />}
+          />
         ))}
       </View>
     );
   }
 
+  const filteredBooks = books.filter(book =>
+    book.name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <View className="space-y-2 mt-4">
-      {books.map((book) => (
-        <Pressable
+    <View className="gap-y-4 mt-4">
+      {filteredBooks.map((book) => (
+        <SessionItemCard
           key={book.id}
-          className="flex-row items-center justify-between p-4 bg-slate-100 rounded-md active:opacity-80"
-          onPress={() => {
+          title={book.name || 'Untitled Book'}
+          onToggle={() => {
             setSelectedBook(book);
             setViewMode('book');
+            onNavigate?.();
           }}
-        >
-          <View>
-            <Text className="font-medium">{book.name}</Text>
-          </View>
-        </Pressable>
+          isAdded={false}
+          rightElement={<ChevronButton onPress={() => { }} />}
+        />
       ))}
     </View>
   );

@@ -6,8 +6,10 @@ import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
 import { getBookAndSongNamesFromSession } from '@/lib/utils/session';
 import { SessionWithItems } from '@/types/session';
 import { useRouter } from 'expo-router';
+import { ChevronDown } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { Separator } from '../ui/separator';
 
 type PracticeSessionSummaryCardProps = {
@@ -24,12 +26,15 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
 
   const { bookMap, songMap } = getBookAndSongNamesFromSession(session.session_items);
 
+  const chevronStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: withTiming(isExpanded ? '180deg' : '0deg', { duration: 300 }) }],
+    };
+  });
+
   return (
     <View
-      className={`rounded-xl my-3 border-l-4 overflow-hidden transition-all duration-300 ${
-        isExpanded ? 'border-l-slate-700' : 'border-l-slate-700'
-      }`}
-    >
+      className='rounded-xl my-3 border-l-4 overflow-hidden transition-all duration-300 border-l-slate-700' >
       <Card>
         <Pressable onPress={handleCardClick}>
           <CardHeader className="p-4 pb-2 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
@@ -38,11 +43,9 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
               <Text className="font-bold text-2xl pb-2">
                 {formatTimestampToDate(session.created_at)}
               </Text>
-              <View
-                className={`-mb-9 transition-transform ${isExpanded ? 'rotate-90' : 'rotate-0'}`}
-              >
-                <ThemedIcon name="ChevronRight" size={34} />
-              </View>
+              <Animated.View style={chevronStyle}>
+                <ChevronDown size={24} className="text-slate-600" />
+              </Animated.View>
             </View>
 
             {/* Clock / Dumbbell / Music */}
@@ -81,7 +84,11 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
                   ))}
                 </View>
               )}
-              <Separator className="mb-4" />
+
+              {/* Separator between books and songs, need both to be non-empty */}
+              {(bookMap.size > 0 && songMap.size > 0) &&
+                <Separator className="mb-4" />}
+
               {/* Songs Subheader */}
               {songMap.size > 0 && (
                 <View>
@@ -111,6 +118,6 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
           </CardContent>
         )}
       </Card>
-    </View>
+    </View >
   );
 }

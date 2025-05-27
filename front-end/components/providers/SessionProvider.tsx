@@ -11,12 +11,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session:', session);
       setSession(session);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('Auth state changed:', session);
       setSession(session);
     });
 

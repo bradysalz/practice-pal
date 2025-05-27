@@ -30,8 +30,8 @@ export default function SetlistsPage() {
   };
 
   return (
-    <View className="flex-1 bg-slate-100 p-4">
-      <ScrollView className="space-y-4">
+    <View className="flex-1 items-center">
+      <ScrollView className="w-full max-w-md px-2 mt-2 space-y-4">
         {Object.keys(setlistDetailMap).length > 0 ? (
           Object.entries(setlistDetailMap).map(([id, setlist]) => (
             <SetlistCard

@@ -3,7 +3,7 @@ import { useArtistsStore } from '@/stores/artist-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { SongRow, useSongsStore } from '@/stores/song-store';
 import { Text, View } from 'react-native';
-import { SongActionButtons } from '../shared/SongActionButtons';
+import { SongActionButtons } from '../shared/Checkbox';
 
 export function SongsTab() {
   const songs: SongRow[] = useSongsStore((state) => state.songs);

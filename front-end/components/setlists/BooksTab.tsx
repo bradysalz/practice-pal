@@ -6,7 +6,7 @@ import { useSectionsStore } from '@/stores/section-store';
 import { ExerciseRow } from '@/types/session';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { SongActionButtons } from '../shared/SongActionButtons';
+import { SongActionButtons } from '../shared/Checkbox';
 
 export function BooksTab() {
   const [viewMode, setViewMode] = useState<'list' | 'book' | 'section'>('list');

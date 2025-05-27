@@ -52,7 +52,7 @@ export function ExerciseDetailCard({ items }: { items: SessionItemWithNested[] }
             </View>
           ))}
 
-          {bookIndex < bookOrderedItems.length - 1 && <Separator className="mt-4" />}
+          {bookIndex < bookOrderedItems.length - 1 && <Separator className="my-4" />}
         </View>
       ))}
     </SessionDetailCardWrapper>

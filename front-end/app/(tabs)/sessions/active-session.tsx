@@ -1,9 +1,8 @@
 import { ThemedIcon } from '@/components/icons/themed-icon';
-import { SessionItemCard } from '@/components/sessions/SessionItemCards';
+import { ActiveSessionItemCard } from '@/components/sessions/ActiveSessionItemCard';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSessionsStore } from '@/stores/session-store';
 import { router } from 'expo-router';
-import { Pause, Play } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,7 +21,7 @@ export default function ActiveSessionPage() {
     const initialTempos = Object.fromEntries(
       draftSession.items.map((item) => [
         item.id,
-        (item.tempo || 120).toString(),
+        item.tempo?.toString() || ''
       ])
     );
     setTempos(initialTempos);
@@ -105,23 +104,27 @@ export default function ActiveSessionPage() {
     <View className="flex-1 bg-white">
       {/* Header Timer */}
       <View
-        className="w-full bg-slate-100 border-b border-slate-200"
+        className="w-full border-b border-slate-200"
         style={{ paddingTop: insets.top }}
       >
         <View className="px-4 py-4 flex-row justify-between items-center">
           <View>
-            <Text className="text-xl font-bold">Practice Session</Text>
+            <Text className="text-2xl font-bold">Let's Play!</Text>
             <Text className="text-base text-slate-500">
               {draftSession.items.length} items
             </Text>
           </View>
-          <View className="flex-row items-center space-x-4">
+          <View className="flex-row items-center gap-x-4">
             <Text className="text-3xl font-mono">{formatTime(elapsedTime)}</Text>
             <Pressable
               className="p-3 bg-slate-200 rounded-full active:opacity-80"
               onPress={() => setIsPaused(!isPaused)}
             >
-              {isPaused ? <Play size={24} /> : <Pause size={24} />}
+              {isPaused ? (
+                <ThemedIcon name="Play" size={24} />
+              ) : (
+                <ThemedIcon name="Pause" size={24} />
+              )}
             </Pressable>
           </View>
         </View>
@@ -144,7 +147,7 @@ export default function ActiveSessionPage() {
           }
 
           return (
-            <SessionItemCard
+            <ActiveSessionItemCard
               key={item.id}
               id={item.id}
               name={name}

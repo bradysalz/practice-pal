@@ -39,7 +39,7 @@ export function SongDetailCard({ items }: Props) {
             );
           })}
 
-          {artistIndex < artistOrderedItems.length - 1 && <Separator className="mt-4" />}
+          {artistIndex < artistOrderedItems.length - 1 && <Separator className="my-4" />}
         </View>
       ))}
     </SessionDetailCardWrapper>
