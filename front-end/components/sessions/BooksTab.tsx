@@ -24,7 +24,7 @@ export function BooksTab() {
     if (selectedSection) {
       fetchExercisesBySection(selectedSection.id);
     }
-  }, [selectedSection?.id, fetchExercisesBySection]);
+  }, [selectedSection, fetchExercisesBySection]);
 
   const handleToggleExercise = (exercise: ExerciseRow) => {
     if (!draftSession || !selectedSection || !selectedBook) return;

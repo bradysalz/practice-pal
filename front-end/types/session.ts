@@ -10,20 +10,14 @@ export type SectionRow = Database['public']['Tables']['sections']['Row'];
 export type BookRow = Database['public']['Tables']['books']['Row'];
 
 export type SessionItemWithNested = SessionItemRow & {
-  song:
-  | (SongRow & {
+  song: (SongRow & {
     artist: ArtistRow | null;
-  })
-  | null;
-  exercise:
-  | (ExerciseRow & {
-    section:
-    | (SectionRow & {
-      book: BookRow | null;
-    })
-    | null;
-  })
-  | null;
+  }) | null;
+  exercise: (ExerciseRow & {
+    section: SectionRow & {
+      book: BookRow;
+    }
+  }) | null;
 };
 
 // Local exercise details for display
@@ -56,8 +50,6 @@ export type SessionWithCountsRow = SessionRow & {
   song_count: number;
   exercise_count: number;
 };
-export type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
-
 
 export type SessionWithItems = SessionWithCountsRow & {
   session_items: SessionItemWithNested[];
@@ -100,3 +92,8 @@ export type DraftSession = {
   duration: number | null;
   items: DraftSessionItem[];
 };
+
+export type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
+export type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
+export type SessionUpdate = Database['public']['Tables']['sessions']['Update'];
+export type SessionItemUpdate = Database['public']['Tables']['session_items']['Update'];

@@ -43,7 +43,10 @@ export function songRowToDraftSetlistItem(song: SongRow, artist?: ArtistRow): Dr
     song: {
       id: song.id,
       name: song.name,
-      artist: artist
+      artist: artist ? {
+        id: artist.id,
+        name: artist.name,
+      } : undefined,
     }
   };
 }

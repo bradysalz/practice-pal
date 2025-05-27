@@ -1,5 +1,5 @@
 import { AddRemoveButton } from '@/components/shared/AddRemoveButton';
-import { setlistItemToDraftSetlistItem } from '@/lib/utils/draft-setlist';
+import { setlistItemToDraftSessionItem } from '@/lib/utils/draft-session';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { useEffect } from 'react';
@@ -21,7 +21,7 @@ export function SetlistsTab() {
 
     // Convert setlist items to draft session items
     const newItems = setlist.setlist_items.map((item) => {
-      return setlistItemToDraftSetlistItem(item);
+      return setlistItemToDraftSessionItem(item);
     })
 
     // Filter out any items that are already in the session
@@ -50,8 +50,8 @@ export function SetlistsTab() {
     const addedItems = setlist.setlist_items.filter((item) =>
       draftSession.items.some(
         (draftItem) =>
-          (item.song_id && draftItem.type === 'song' && draftItem.song?.id === item.song_id) ||
-          (item.exercise_id && draftItem.type === 'exercise' && draftItem.exercise?.id === item.exercise_id)
+          (item.type === 'song' && draftItem.type === 'song' && draftItem.song?.id === item.song?.id) ||
+          (item.type === 'exercise' && draftItem.type === 'exercise' && draftItem.exercise?.id === item.exercise?.id)
       )
     ).length;
 

@@ -42,16 +42,18 @@ export function SongsTab() {
         return (
           <View
             key={song.id}
-            className="flex-row items-center p-4 bg-slate-100 rounded-md"
+            className="flex-row items-center justify-start p-4 bg-slate-100 rounded-md"
           >
-            <SongActionButtons
-              isAdded={isAdded}
-              onAddPress={() => handleAddSong(song)}
-              onRemovePress={() => handleRemoveSong(song)}
-            />
-            <View className="ml-1">
-              <Text className="font-medium">{song.name}</Text>
-              {artist && <Text className="text-sm text-slate-500">{artist.name}</Text>}
+            <View className="flex-row items-center flex-1">
+              <SongActionButtons
+                isAdded={isAdded}
+                onAddPress={() => handleAddSong(song)}
+                onRemovePress={() => handleRemoveSong(song)}
+              />
+              <View className="ml-2 flex-1">
+                <Text className="font-medium">{song.name}</Text>
+                {artist && <Text className="text-sm text-slate-500">{artist.name}</Text>}
+              </View>
             </View>
           </View>
         );

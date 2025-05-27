@@ -1,4 +1,4 @@
-import { formatTimestampToDate, formatToMinutes } from './date-time';
+import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
 
 describe('formatToMinutes', () => {
   it('rounds up to nearest minute', () => {

@@ -1,9 +1,9 @@
+import { ThemedIcon } from '@/components/icons/themed-icon';
 import { SessionItemCard } from '@/components/sessions/SessionItemCards';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSessionsStore } from '@/stores/session-store';
-import { useSongsStore } from '@/stores/song-store';
 import { router } from 'expo-router';
-import { Pause, Play, XCircle } from 'lucide-react-native';
+import { Pause, Play } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,23 +12,21 @@ export default function ActiveSessionPage() {
   const insets = useSafeAreaInsets();
   const { draftSession, updateDraftDetails } = useDraftSessionsStore();
   const { insertSession } = useSessionsStore();
-  const songs = useSongsStore((state) => state.songs);
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [tempos, setTempos] = useState<Record<string, string>>({});
 
   // Initialize tempos from session items
   useEffect(() => {
-    if (draftSession?.items) {
-      const initialTempos = Object.fromEntries(
-        draftSession.items.map((item) => [
-          item.id,
-          (item.tempo || 120).toString(),
-        ])
-      );
-      setTempos(initialTempos);
-    }
-  }, [draftSession?.items]);
+    if (!draftSession) return;
+    const initialTempos = Object.fromEntries(
+      draftSession.items.map((item) => [
+        item.id,
+        (item.tempo || 120).toString(),
+      ])
+    );
+    setTempos(initialTempos);
+  }, [draftSession]);
 
   // Timer logic
   useEffect(() => {
@@ -47,6 +45,11 @@ export default function ActiveSessionPage() {
     };
   }, [isPaused]);
 
+  if (!draftSession) {
+    router.replace('/sessions/make-session');
+    return null;
+  }
+
   // Format time as mm:ss
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -58,53 +61,45 @@ export default function ActiveSessionPage() {
   const handleTempoChange = (id: string, text: string) => {
     setTempos((prev) => ({ ...prev, [id]: text }));
 
-    if (draftSession) {
-      const updatedItems = draftSession.items.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            tempo: text ? parseInt(text, 10) || null : null,
-          };
-        }
-        return item;
-      });
+    const updatedItems = draftSession.items.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          tempo: text ? parseInt(text, 10) || null : null,
+        };
+      }
+      return item;
+    });
 
-      updateDraftDetails({
-        items: updatedItems,
-      });
-    }
+    updateDraftDetails({
+      items: updatedItems,
+    });
   };
 
   const handleEndSession = async () => {
-    if (draftSession) {
-      // Update all tempos one final time before ending
-      const finalItems = draftSession.items.map((item) => {
-        const currentTempo = tempos[item.id];
-        return {
-          ...item,
-          tempo: currentTempo ? parseInt(currentTempo, 10) || null : null,
-        };
-      });
-
-      const finalDraft = {
-        ...draftSession,
-        duration: elapsedTime,
-        items: finalItems,
+    console.log('handleEndSession', draftSession);
+    // Update all tempos one final time before ending
+    const finalItems = draftSession.items.map((item) => {
+      const currentTempo = tempos[item.id];
+      return {
+        ...item,
+        tempo: currentTempo ? parseInt(currentTempo, 10) || null : null,
       };
+    });
 
-      try {
-        await insertSession(finalDraft);
-        router.push('/sessions');
-      } catch (error) {
-        console.error('Failed to save session:', error);
-      }
+    const finalDraft = {
+      ...draftSession,
+      duration: elapsedTime,
+      items: finalItems,
+    };
+
+    try {
+      await insertSession(finalDraft);
+      router.push('/sessions');
+    } catch (error) {
+      console.error('Failed to save session:', error);
     }
   };
-
-  if (!draftSession) {
-    router.replace('/sessions/make-session');
-    return null;
-  }
 
   return (
     <View className="flex-1 bg-white">
@@ -154,7 +149,7 @@ export default function ActiveSessionPage() {
               id={item.id}
               name={name}
               source={source}
-              tempo={tempos[item.id] || '120'}
+              tempo={tempos[item.id] || ''}
               onTempoChange={(text) => handleTempoChange(item.id, text)}
             />
           );
@@ -170,7 +165,7 @@ export default function ActiveSessionPage() {
           className="mx-4 my-4 flex-row items-center justify-center bg-red-500 rounded-xl py-4 active:opacity-80"
           onPress={handleEndSession}
         >
-          <XCircle size={20} color="white" className="mr-2" />
+          <ThemedIcon name="Check" size={20} color="white" className="mr-2" />
           <Text className="text-white font-semibold text-lg">End Session</Text>
         </Pressable>
       </View>

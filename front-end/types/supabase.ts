@@ -239,6 +239,7 @@ export type Database = {
           exercise_id: string | null
           id: string
           notes: string | null
+          position: number | null
           session_id: string | null
           song_id: string | null
           tempo: number | null
@@ -251,6 +252,7 @@ export type Database = {
           exercise_id?: string | null
           id: string
           notes?: string | null
+          position?: number | null
           session_id?: string | null
           song_id?: string | null
           tempo?: number | null
@@ -263,6 +265,7 @@ export type Database = {
           exercise_id?: string | null
           id?: string
           notes?: string | null
+          position?: number | null
           session_id?: string | null
           song_id?: string | null
           tempo?: number | null

@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import { DraftSetlist, SetlistInsert, SetlistItemInsert, SetlistWithItems } from '@/types/setlist';
+import { DraftSetlist, SetlistInsert, SetlistItemInsert, SetlistUpdate, SetlistWithItems } from '@/types/setlist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -50,15 +50,22 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
 
   updateSetlist: async (setlist: DraftSetlist) => {
     const now = new Date().toISOString();
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    console.log('userId', userId, 'supabase.user()', await supabase.auth.getUser());
+
+    if (!userId) throw new Error('User not authenticated');
+
+    const setlistUpdate: SetlistUpdate = {
+      name: setlist.name,
+      description: setlist.description,
+      updated_at: now,
+      created_by: userId,
+    };
 
     // Step 1: Update the setlist
     const { error: setlistError } = await supabase
       .from('setlists')
-      .update({
-        name: setlist.name,
-        description: setlist.description,
-        updated_at: now,
-      })
+      .update(setlistUpdate)
       .eq('id', setlist.id);
 
     if (setlistError) {
@@ -74,11 +81,12 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
 
     if (deleteError) {
       console.error('Failed to delete existing setlist items', deleteError);
-      throw new Error('Failed to update setlist items');
+      throw new Error('Failed to delete setlist items');
     }
 
     // Step 3: Insert updated items
-    const setlistItemInserts = setlist.items.map((item, index) => ({
+
+    const setlistItemInserts: SetlistItemInsert[] = setlist.items.map((item, index) => ({
       id: uuidv4(), // Generate new IDs for items
       setlist_id: setlist.id,
       type: item.type,
@@ -87,6 +95,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
       position: index,
       updated_at: now,
       created_at: now,
+      created_by: userId,
     }));
 
     const { error: insertError } = await supabase

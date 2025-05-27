@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import {
   DraftSession,
+  SessionInsert,
+  SessionItemInsert,
   SessionWithCountsRow,
   SessionWithItems
 } from '@/types/session';
@@ -118,19 +120,19 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
 
     const now = new Date().toISOString();
 
+    const sessionInsert: SessionInsert = {
+      id: draft.id,
+      created_by: userId,
+      created_at: now,
+      updated_at: now,
+      duration: draft.duration,
+      notes: draft.notes,
+    };
     // Insert the session
-    const { data: session, error: sessionError } = await supabase
+    const { error: sessionError } = await supabase
       .from('sessions')
-      .insert({
-        id: draft.id,
-        created_by: userId,
-        created_at: now,
-        updated_at: now,
-        duration: draft.duration,
-        notes: draft.notes,
-      })
-      .select()
-      .single();
+      .insert(sessionInsert)
+
 
     if (sessionError) {
       console.error('Failed to insert session', sessionError);
@@ -138,7 +140,7 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     }
 
     // Insert session items
-    const sessionItems = draft.items.map((item, index) => ({
+    const sessionItemInserts: SessionItemInsert[] = draft.items.map((item, index) => ({
       id: item.id,
       session_id: draft.id,
       created_by: userId,
@@ -149,11 +151,12 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
       tempo: item.tempo,
       song_id: item.type === 'song' ? item.song?.id : null,
       exercise_id: item.type === 'exercise' ? item.exercise?.id : null,
+      type: item.type,
     }));
 
     const { error: itemsError } = await supabase
       .from('session_items')
-      .insert(sessionItems);
+      .insert(sessionItemInserts);
 
     if (itemsError) {
       console.error('Failed to insert session items', itemsError);
