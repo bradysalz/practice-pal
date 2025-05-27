@@ -1,11 +1,9 @@
 import { supabase } from '@/lib/supabase';
-import { InputLocalSetlistItem, SetlistItemRow } from '@/types/setlist';
-import { v4 as uuidv4 } from 'uuid';
+import { SetlistItemRow } from '@/types/setlist';
 import { create } from 'zustand';
 
 type SetlistItemsState = {
   setlistItems: SetlistItemRow[];
-  addSetlistItemLocal: (item: InputLocalSetlistItem) => string;
   syncAddSetlistItem: (tempId: string) => Promise<void>;
   fetchSetlistItems: (setlistId: string) => Promise<void>;
 };
@@ -25,23 +23,6 @@ export const useSetlistItemsStore = create<SetlistItemsState>((set, get) => ({
       return;
     }
     set({ setlistItems: data as SetlistItemRow[] });
-  },
-
-  addSetlistItemLocal: (item) => {
-    const id = uuidv4();
-    const now = new Date().toISOString();
-
-    const newItem: SetlistItemRow = {
-      ...item,
-      id,
-      exercise_id: item.exercise_id ?? null,
-      song_id: item.song_id ?? null,
-      created_at: now,
-      updated_at: now,
-    };
-
-    set((state) => ({ setlistItems: [...state.setlistItems, newItem] }));
-    return id;
   },
 
   syncAddSetlistItem: async (id) => {

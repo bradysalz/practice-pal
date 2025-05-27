@@ -16,6 +16,7 @@ describe('getBookAndSongNamesFromSession', () => {
         song_id: null,
         tempo: null,
         notes: null,
+        position: 0,
         exercise: {
           id: 'ex1',
           name: 'Exercise 1',
@@ -56,6 +57,7 @@ describe('getBookAndSongNamesFromSession', () => {
         song_id: null,
         tempo: null,
         notes: null,
+        position: 1,
         song: {
           id: 'song1',
           name: 'So What',
@@ -85,6 +87,7 @@ describe('getBookAndSongNamesFromSession', () => {
         song_id: null,
         tempo: null,
         notes: null,
+        position: 2,
         song: {
           id: 'song1', // duplicate
           name: 'So What',

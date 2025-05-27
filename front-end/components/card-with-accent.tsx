@@ -6,12 +6,14 @@ interface CardWithAccentProps extends ViewProps {
 }
 
 export const CardWithAccent = ({
-  accentColor: accentColor = 'red-500',
+  accentColor: accentColor = 'slate-500',
   children,
   className,
   ...props
 }: CardWithAccentProps) => {
-  const borderClassName = `border-l-4 border-l-${accentColor} rounded-xl overflow-hidden ${className || ''}`;
+  const borderClassName = `border-l-4 border-l-orange-500 rounded-xl overflow-hidden ${
+    className || ''
+  }`;
 
   return (
     <View className={`mb-6 ${borderClassName}`} {...props}>

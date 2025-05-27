@@ -91,6 +91,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
       exercise_id: item.exercise_id ?? null,
       song_id: item.song_id ?? null,
       notes: item.notes ?? null,
+      position: item.position ?? null,
     };
 
     set((state) => ({

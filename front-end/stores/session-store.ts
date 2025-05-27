@@ -1,28 +1,23 @@
 import { supabase } from '@/lib/supabase';
 import {
-  InputLocalSession,
+  DraftSession,
   SessionInsert,
+  SessionItemInsert,
   SessionWithCountsRow,
-  SessionWithItems,
+  SessionWithItems
 } from '@/types/session';
-import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type SessionsState = {
   sessions: SessionWithCountsRow[];
   sessionsWithItems: SessionWithItems[];
   sessionDetailMap: Record<string, SessionWithItems>;
-  addSessionLocal: (session: InputLocalSession) => string;
-  syncAddSession: (tempId: string) => Promise<void>;
+  insertSession: (draft: DraftSession) => Promise<void>;
   fetchSessions: () => Promise<void>;
   fetchSessionDetail: (sessionId: string) => Promise<void>;
   fetchRecentSessionsWithItems: (limit: number) => Promise<void>;
 };
 
-function toSessionInsert(session: SessionWithCountsRow): SessionInsert {
-  const { song_count, exercise_count, ...sessionInsert } = session;
-  return sessionInsert;
-}
 
 export const useSessionsStore = create<SessionsState>((set, get) => ({
   sessions: [],
@@ -119,39 +114,58 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     }));
   },
 
-  addSessionLocal: (session) => {
-    const id = uuidv4();
+  insertSession: async (draft: DraftSession) => {
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    if (!userId) throw new Error('User not authenticated');
+
     const now = new Date().toISOString();
 
-    const newSession: SessionWithCountsRow = {
-      ...session,
-      id,
+    const sessionInsert: SessionInsert = {
+      id: draft.id,
+      created_by: userId,
       created_at: now,
       updated_at: now,
-      duration: session.duration ?? null,
-      notes: session.notes ?? null,
-      song_count: 0, // view field
-      exercise_count: 0, // view field
+      duration: draft.duration,
+      notes: draft.notes,
     };
+    // Insert the session
+    const { error: sessionError } = await supabase
+      .from('sessions')
+      .insert(sessionInsert)
 
-    set((state) => ({ sessions: [newSession, ...state.sessions] }));
-    return id;
-  },
 
-  syncAddSession: async (tempId) => {
-    const session = get().sessions.find((s) => s.id === tempId);
-    if (!session) return;
-
-    const sessionToUse = toSessionInsert(session);
-    const { data, error } = await supabase.from('sessions').insert(sessionToUse).select().single();
-
-    if (error) {
-      console.error('Sync failed', error);
-      return;
+    if (sessionError) {
+      console.error('Failed to insert session', sessionError);
+      throw new Error('Failed to insert session');
     }
 
-    set((state) => ({
-      sessions: state.sessions.map((s) => (s.id === tempId ? data : s)),
+    // Insert session items
+    const sessionItemInserts: SessionItemInsert[] = draft.items.map((item, index) => ({
+      id: item.id,
+      session_id: draft.id,
+      created_by: userId,
+      created_at: now,
+      updated_at: now,
+      position: index,
+      notes: item.notes,
+      tempo: item.tempo,
+      song_id: item.type === 'song' ? item.song?.id : null,
+      exercise_id: item.type === 'exercise' ? item.exercise?.id : null,
+      type: item.type,
     }));
+
+    const { error: itemsError } = await supabase
+      .from('session_items')
+      .insert(sessionItemInserts);
+
+    if (itemsError) {
+      console.error('Failed to insert session items', itemsError);
+      // Cleanup the session since items failed
+      await supabase.from('sessions').delete().eq('id', draft.id);
+      throw new Error('Failed to insert session items');
+    }
+
+    // Refresh the sessions list
+    await get().fetchSessions();
   },
 }));

@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   BarChart,
   BookOpen,
+  Check,
   ChevronRight,
   Clock,
   Drum,
@@ -32,6 +33,7 @@ const ICONS = {
   Clock,
   Edit,
   ListMusic,
+  Check,
   Save,
   Music,
   NotebookPen,
@@ -58,6 +60,8 @@ const DEFAULT_COLORS: Record<string, string> = {
   Plus: 'white',
   Trash2: 'red-500',
   NotebookPen: 'orange-500',
+  Save: 'white',
+  Check: 'white',
 };
 
 export const ThemedIcon = ({ name, size = 24, className, style }: ThemedIconProps) => {

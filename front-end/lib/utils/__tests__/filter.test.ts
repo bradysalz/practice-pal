@@ -14,6 +14,7 @@ describe('groupSessionItems', () => {
       exercise_id: 'e1',
       song_id: null,
       notes: null,
+      position: 0,
       exercise: {
         id: 'e1',
         name: 'Exercise 1',
@@ -54,6 +55,7 @@ describe('groupSessionItems', () => {
       song_id: 's1',
       exercise_id: null,
       notes: null,
+      position: 1,
       song: {
         id: 's1',
         name: 'So What',

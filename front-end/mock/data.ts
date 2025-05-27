@@ -237,40 +237,48 @@ export const bookData = [
     id: 'b1',
     name: 'Stick Control',
     author: 'George Lawrence Stone',
+    coverColor: '#FF6B6B',
     sections: [
-      { id: 1, name: 'Basic Stickings', exercises: 4 },
-      { id: 2, name: 'Accent Variations', exercises: 5 },
-      { id: 3, name: 'Roll Techniques', exercises: 3 },
+      {
+        id: 's1',
+        name: 'Single Strokes',
+        exercises: [
+          { id: 'ex1', name: 'Single Stroke Roll', goalTempo: 120 },
+          { id: 'ex2', name: 'Single Stroke Variations', goalTempo: 100 },
+        ],
+      },
+      {
+        id: 's2',
+        name: 'Double Strokes',
+        exercises: [
+          { id: 'ex3', name: 'Double Stroke Roll', goalTempo: 90 },
+          { id: 'ex4', name: 'Double Stroke Variations', goalTempo: 85 },
+        ],
+      },
     ],
-    coverColor: 'bg-red-100',
   },
   {
     id: 'b2',
     name: 'Syncopation',
     author: 'Ted Reed',
+    coverColor: '#4ECDC4',
     sections: [
-      { id: 4, name: 'Eighth Note Syncopation', exercises: 5 },
-      { id: 5, name: 'Triplet Figures', exercises: 3 },
+      {
+        id: 's3',
+        name: 'Quarter Note Variations',
+        exercises: [
+          { id: 'ex5', name: 'Quarter Note Syncopation', goalTempo: 85 },
+          { id: 'ex6', name: 'Quarter Note Patterns', goalTempo: 90 },
+        ],
+      },
+      {
+        id: 's4',
+        name: 'Eighth Note Variations',
+        exercises: [
+          { id: 'ex7', name: 'Eighth Note Syncopation', goalTempo: 80 },
+          { id: 'ex8', name: 'Eighth Note Patterns', goalTempo: 85 },
+        ],
+      },
     ],
-    coverColor: 'bg-blue-100',
-  },
-  {
-    id: 'b3',
-    name: 'Advanced Techniques for the Modern Drummer',
-    author: 'Jim Chapin',
-    sections: [{ id: 7, name: 'Jazz Independence Exercises', exercises: 6 }],
-    coverColor: 'bg-green-100',
-  },
-  {
-    id: 'b4',
-    name: 'The Art of Bop Drumming',
-    author: 'John Riley',
-    sections: [
-      { id: 1, name: 'Timekeeping Essentials', exercises: 6 },
-      { id: 2, name: 'Comping Variations', exercises: 4 },
-      { id: 3, name: 'Brush Technique', exercises: 3 },
-      { id: 4, name: 'Soloing Concepts', exercises: 2 },
-    ],
-    coverColor: 'bg-purple-100',
   },
 ];

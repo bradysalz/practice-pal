@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 // Not directly typing on the view because it null'd every field
-type BookRow = Database['public']['Tables']['books']['Row'];
-type BookWithCountsRow = BookRow & {
+export type BookRow = Database['public']['Tables']['books']['Row'];
+export type BookWithCountsRow = BookRow & {
   exercise_count: number;
 };
 

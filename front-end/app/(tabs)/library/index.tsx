@@ -1,13 +1,14 @@
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useRouter } from 'expo-router';
-import { BookOpen, ChevronRight, Music, Plus } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { BookOpen, ChevronRight, Music } from 'lucide-react-native';
+import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CardWithAccent } from '@/components/card-with-accent';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { FloatingActionButton } from '@/components/ui/floating-action-button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useBooksStore } from '@/stores/book-store';
@@ -19,20 +20,7 @@ export default function LibraryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<string>('books');
 
-  // Zustand blocks
-  const fetchBooks = useBooksStore((state) => state.fetchBooks);
-  const fetchSections = useSectionsStore((state) => state.fetchSections);
-  const fetchArtists = useArtistsStore((state) => state.fetchArtists);
-  const fetchSongs = useSongsStore((state) => state.fetchSongs);
-
-  // Always fetch all items on library load
-  useEffect(() => {
-    fetchBooks();
-    fetchSections();
-    fetchArtists();
-    fetchSongs();
-  }, [fetchBooks, fetchSections, fetchArtists, fetchSongs]);
-
+  // Get data from stores - no need to fetch since DataProvider handles it
   const books = useBooksStore((state) => state.books);
   const songs = useSongsStore((state) => state.songs);
   const artists = useArtistsStore((state) => state.artists);
@@ -63,8 +51,8 @@ export default function LibraryPage() {
   );
 
   const tabBarHeight = useBottomTabBarHeight();
-
   const insets = useSafeAreaInsets();
+
   return (
     <View className="flex-1 bg-slate-50/50 p-4">
       <View className="mb-6">
@@ -166,12 +154,7 @@ export default function LibraryPage() {
         </TabsContent>
       </Tabs>
 
-      <Pressable
-        onPress={() => router.push('/library/add-item')}
-        className="absolute bottom-6 right-6 bg-primary rounded-full w-16 h-16 items-center justify-center shadow-lg"
-      >
-        <Plus size={28} className="text-white" />
-      </Pressable>
+      <FloatingActionButton href="/library/add-item" />
     </View>
   );
 }

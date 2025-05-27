@@ -7,5 +7,6 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    '^uuid$': require.resolve('uuid'),
   },
 };

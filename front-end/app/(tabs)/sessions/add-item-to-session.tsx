@@ -1,5 +1,6 @@
-import { BooksTab } from '@/components/setlists/BooksTab';
-import { SongsTab } from '@/components/setlists/SongsTab';
+import { BooksTab } from '@/components/sessions/BooksTab';
+import { SetlistsTab } from '@/components/sessions/SetlistsTab';
+import { SongsTab } from '@/components/sessions/SongsTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
@@ -7,9 +8,8 @@ import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function AddItemScreen() {
-
-  const [activeTab, setActiveTab] = useState<string>('books');
+export default function AddItemToSessionScreen() {
+  const [activeTab, setActiveTab] = useState<string>('setlists');
   const insets = useSafeAreaInsets();
 
   return (
@@ -24,9 +24,14 @@ export default function AddItemScreen() {
         {/* Tabs */}
         <Tabs
           value={activeTab}
-          onValueChange={(v) => setActiveTab(v as 'books' | 'songs')}
+          onValueChange={(v) => setActiveTab(v as 'setlists' | 'books' | 'songs')}
         >
           <TabsList className="flex-row space-x-2 mb-6">
+            <TabsTrigger value="setlists" className="flex-1">
+              <View className="flex-row items-center justify-center">
+                <Text className="text-xl">Setlists</Text>
+              </View>
+            </TabsTrigger>
             <TabsTrigger value="books" className="flex-1">
               <View className="flex-row items-center justify-center">
                 <Text className="text-xl">Books</Text>
@@ -38,6 +43,10 @@ export default function AddItemScreen() {
               </View>
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="setlists">
+            <SetlistsTab />
+          </TabsContent>
 
           <TabsContent value="books">
             <BooksTab />
