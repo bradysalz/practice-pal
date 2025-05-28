@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
-import { BookOpen, ChevronRight, Music } from 'lucide-react-native';
+import { BookOpen, ChevronRight } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { CardWithAccent } from '@/components/card-with-accent';
+import { ThemedIcon } from '@/components/icons/themed-icon';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';
@@ -49,7 +50,7 @@ export default function LibraryPage() {
   );
 
   return (
-    <View className="flex-1 bg-slate-50/50">
+    <View className="flex-1 bg-slate-100">
       <ScrollView className="flex-1">
         <View className="p-4">
           <View className="mb-6">
@@ -58,24 +59,36 @@ export default function LibraryPage() {
                 placeholder="Search library..."
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900"
+                className="w-full pl-8 pr-3 py-2 text-lg rounded-xl border border-slate-300 bg-white text-slate-900"
               />
             </View>
           </View>
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <View className="p-4 bg-slate-100">
-              <TabsList className="flex-row">
-                <TabsTrigger value="books" className="flex-1">
-                  <View className="flex-row items-center justify-center gap-x-2">
-                    <BookOpen size={28} />
-                    <Text className="text-3xl">Books</Text>
+            <View className="bg-slate-300 py-1 rounded-xl">
+              <TabsList className="flex-row bg-slate-300 py-1 rounded-xl">
+                <TabsTrigger value="books" className="flex-1 rounded-xl">
+                  <View className="flex-row items-center justify-center gap-x-2 rounded-xl">
+                    <ThemedIcon
+                      name="BookOpen"
+                      size={31}
+                      color={activeTab === 'books' ? 'black' : '#6B7280'}
+                    />
+                    <Text className={`text-3xl ${activeTab === 'books' ? 'text-black' : 'text-gray-500'}`}>
+                      Books
+                    </Text>
                   </View>
                 </TabsTrigger>
-                <TabsTrigger value="songs" className="flex-1">
-                  <View className="flex-row items-center justify-center gap-x-2">
-                    <Music size={28} />
-                    <Text className="text-3xl">Songs</Text>
+                <TabsTrigger value="songs" className="flex-1 rounded-xl">
+                  <View className="flex-row items-center justify-center gap-x-2 rounded-xl">
+                    <ThemedIcon
+                      name="Music"
+                      size={31}
+                      color={activeTab === 'songs' ? 'black' : '#6B7280'}
+                    />
+                    <Text className={`text-3xl ${activeTab === 'songs' ? 'text-black' : 'text-gray-500'}`}>
+                      Songs
+                    </Text>
                   </View>
                 </TabsTrigger>
               </TabsList>

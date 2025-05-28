@@ -21,7 +21,7 @@ export function SessionDetailCardWrapper({
 }: Props) {
   return (
     <CardWithAccent accentColor={accentColor}>
-      <CardHeader className="mb-4 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+      <CardHeader className="mb-4 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
         <View className="flex-row items-center">
           <ThemedIcon
             name={iconName}
@@ -30,7 +30,7 @@ export function SessionDetailCardWrapper({
             className="mr-2"
             style={{ marginRight: 6 }}
           />
-          <Text className="text-3xl font-semibold">{title}</Text>
+          <Text className="text-2xl font-semibold">{title}</Text>
         </View>
       </CardHeader>
       <CardContent className="space-y-2">{children}</CardContent>

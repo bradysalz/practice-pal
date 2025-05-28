@@ -43,7 +43,7 @@ export default function BookDetailPage() {
           </View>
         </CardHeader>
         <CardContent>
-          <View className="mt-4 grid grid-cols-2 gap-4">
+          <View className="mt-4 grid grid-cols-2 gap-4 flex-row">
             <StatBox label="Sections" value={sections.length} />
             <StatBox label="Exercises" value={book.exercise_count} />
           </View>
@@ -67,9 +67,9 @@ export default function BookDetailPage() {
 
 function StatBox({ label, value }: { label: string; value: number }) {
   return (
-    <View className="p-3 bg-slate-100 rounded-md items-center">
+    <View className="p-3 bg-slate-100 rounded-md items-center flex-1">
       <Text className="text-2xl font-bold">{value}</Text>
-      <Text className="text-xs text-muted-foreground">{label}</Text>
+      <Text className="text-muted-foreground">{label}</Text>
     </View>
   );
 }

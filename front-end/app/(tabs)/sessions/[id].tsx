@@ -8,9 +8,11 @@ import { useSessionsStore } from '@/stores/session-store';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function PracticeSessionDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const insets = useSafeAreaInsets();
 
   const fetchSessionDetail = useSessionsStore((state) => state.fetchSessionDetail);
 
@@ -19,7 +21,6 @@ export default function PracticeSessionDetailPage() {
   }, [fetchSessionDetail, id]);
 
   const session = useSessionsStore((state) => state.sessionDetailMap)[id];
-  const { exercises, songs } = groupItems(session.session_items);
 
   if (!session) {
     return (
@@ -29,11 +30,13 @@ export default function PracticeSessionDetailPage() {
     );
   }
 
+  const { exercises, songs } = groupItems(session.session_items);
+
   return (
-    <View className="flex-1 px-4 py-6">
+    <View className="flex-1 px-4 bg-slate-100">
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         {/* Header */}
-        <View className="mb-6 flex-row items-center justify-between">
+        <View className="mb-6 flex-row items-center justify-between px-4">
           <Text className="text-2xl font-bold">{formatTimestampToDate(session.created_at)}</Text>
           <View className="flex-row items-center mt-1">
             <ThemedIcon name="Clock" className="mr-2" style={{ marginRight: 6 }} />

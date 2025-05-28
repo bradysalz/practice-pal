@@ -73,12 +73,12 @@ const DEFAULT_COLORS: Record<string, string> = {
   Pause: 'orange-500',
 };
 
-export const ThemedIcon = ({ name, size = 24, className, style }: ThemedIconProps) => {
+export const ThemedIcon = ({ name, size = 24, className, style, color }: ThemedIconProps) => {
   const IconComponent = ICONS[name];
-  const color = DEFAULT_COLORS[name] || 'slate-500';
+  const inputColor = color || DEFAULT_COLORS[name] || 'slate-500';
   // const scheme = useColorScheme(); // Optional if you want to react to dark mode tokens later
 
-  const resolvedColor = getTailwindColor(color);
+  const resolvedColor = getTailwindColor(inputColor);
   const shouldFill = FILLED_ICONS.includes(name);
 
   const iconProps = {

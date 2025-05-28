@@ -33,11 +33,10 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
   });
 
   return (
-    <View
-      className='rounded-xl my-3 border-l-4 overflow-hidden transition-all duration-300 border-l-slate-700' >
-      <Card>
+    <View className='my-3 border-l-4 border-l-slate-700 rounded-xl' >
+      <Card className="rounded-xl overflow-hidden shadow">
         <Pressable onPress={handleCardClick}>
-          <CardHeader className="p-4 pb-2 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+          <CardHeader className="p-4 pb-2 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
             {/* Title + Chevron */}
             <View className="flex-row items-center justify-between mb-2">
               <Text className="font-bold text-2xl pb-2">

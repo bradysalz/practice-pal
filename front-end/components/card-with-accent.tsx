@@ -11,9 +11,7 @@ export const CardWithAccent = ({
   className,
   ...props
 }: CardWithAccentProps) => {
-  const borderClassName = `border-l-4 border-l-orange-500 rounded-xl overflow-hidden ${
-    className || ''
-  }`;
+  const borderClassName = `border-l-4 border-l-orange-500 rounded-xl overflow-hidden ${className || ''}`;
 
   return (
     <View className={`mb-6 ${borderClassName}`} {...props}>
