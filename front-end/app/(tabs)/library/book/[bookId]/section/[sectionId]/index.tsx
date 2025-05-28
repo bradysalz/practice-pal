@@ -28,7 +28,7 @@ export default function SectionDetailPage() {
   if (!section) return <Text>Section not found</Text>;
 
   const handleExercisePress = (exerciseId: string) => {
-    router.push(`library/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
+    router.push(`/library/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
   };
 
   return (

@@ -33,7 +33,11 @@ export function SessionItemCard({
     <Pressable
       onPress={() => {
         if (showCheckbox) {
-          isAdded ? onRemove?.() : onAdd?.();
+          if (isAdded) {
+            onRemove?.();
+          } else {
+            onAdd?.();
+          }
         } else {
           onToggle?.();
         }

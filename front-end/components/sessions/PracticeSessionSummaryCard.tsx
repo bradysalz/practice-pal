@@ -49,7 +49,7 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
             </View>
 
             {/* Clock / Dumbbell / Music */}
-            <View className="flex-row items-center justify-start">
+            <View className="flex-row items-center justify-start gap-x-2">
               <View className="flex-row items-center text-muted-foreground mr-2">
                 <ThemedIcon name="Clock" size={20} style={{ marginRight: 1 }} />
                 <Text className="ml-1 text-lg">{formatToMinutes(session.duration || 0)} mins</Text>

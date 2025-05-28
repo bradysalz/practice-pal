@@ -1,9 +1,9 @@
-import { useRouter } from 'expo-router';
+import { Href, useRouter } from 'expo-router';
 import { Pressable } from 'react-native';
 import { ThemedIcon } from '../icons/themed-icon';
 
 interface FloatingActionButtonProps {
-  href?: string;
+  href?: Href;
   onPress?: () => void;
 }
 

@@ -29,7 +29,7 @@ export default function ActiveSessionPage() {
 
   // Timer logic
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
+    let intervalId: ReturnType<typeof setInterval>;
 
     if (!isPaused) {
       intervalId = setInterval(() => {
@@ -109,7 +109,7 @@ export default function ActiveSessionPage() {
       >
         <View className="px-4 py-4 flex-row justify-between items-center">
           <View>
-            <Text className="text-2xl font-bold">Let's Play!</Text>
+            <Text className="text-2xl font-bold">Let&apos;s Play!</Text>
             <Text className="text-base text-slate-500">
               {draftSession.items.length} items
             </Text>

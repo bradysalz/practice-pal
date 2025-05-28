@@ -6,7 +6,7 @@ import { useSectionsStore } from '@/stores/section-store';
 import { ExerciseRow } from '@/types/session';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { SongActionButtons } from '../shared/Checkbox';
+import { Checkbox } from '../shared/Checkbox';
 
 export function BooksTab() {
   const [viewMode, setViewMode] = useState<'list' | 'book' | 'section'>('list');
@@ -85,10 +85,10 @@ export function BooksTab() {
                   <Text className="text-sm text-slate-500">{exercise.goal_tempo} BPM</Text>
                 )}
               </View>
-              <SongActionButtons
-                isAdded={isAdded}
-                onAddPress={() => handleAddExercise(exercise)}
-                onRemovePress={() => handleRemoveExercise(exercise)}
+              <Checkbox
+                isChecked={isAdded}
+                onCheck={() => handleAddExercise(exercise)}
+                onUncheck={() => handleRemoveExercise(exercise)}
               />
             </View>
           );
