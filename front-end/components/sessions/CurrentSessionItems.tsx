@@ -15,7 +15,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
   return (
     <View>
-      <Text className="text-xl font-bold mb-2">Selected Items</Text>
+      <Text className="text-xl font-heading-bold mb-2">Selected Items</Text>
       <View>
         {!sessionItems.length ? (
           <View className="p-4 bg-slate-100 rounded-md">

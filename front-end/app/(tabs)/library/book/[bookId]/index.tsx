@@ -56,7 +56,7 @@ export default function BookDetailPage() {
               key={section.id}
               sectionName={section.name}
               exercises={section.exercise_count}
-              onPress={() => router.push(`library/book/${bookId}/section/${section.id}`)}
+              onPress={() => router.push(`/library/book/${bookId}/section/${section.id}`)}
             />
           );
         })}

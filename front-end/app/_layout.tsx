@@ -2,13 +2,16 @@ import '@/global.css';
 import 'react-native-get-random-values'; // For UUIDs
 
 import { DataProvider } from '@/components/providers/DataProvider';
-import { SessionProvider } from '@/components/SessionProvider';
+import { SessionProvider } from '@/components/providers/SessionProvider';
 import { NAV_THEME } from '@/lib/constants';
 import { useColorScheme } from '@/lib/useColorScheme';
+import { Inter_400Regular, Inter_700Bold, useFonts as useInter } from '@expo-google-fonts/inter';
+import { SpaceGrotesk_400Regular, SpaceGrotesk_700Bold, useFonts as useSpaceGrotesk } from '@expo-google-fonts/space-grotesk';
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
-import { Stack } from 'expo-router';
+import { SplashScreen, Stack } from 'expo-router';
 import * as React from 'react';
+import { useCallback } from 'react';
 import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -30,6 +33,9 @@ export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+  const [interLoaded] = useInter({ Inter_400Regular, Inter_700Bold });
+  const [groteskLoaded] = useSpaceGrotesk({ SpaceGrotesk_400Regular, SpaceGrotesk_700Bold });
+  const fontsLoaded = interLoaded && groteskLoaded;
 
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {
@@ -44,7 +50,13 @@ export default function RootLayout() {
     hasMounted.current = true;
   }, []);
 
-  if (!isColorSchemeLoaded) {
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded && isColorSchemeLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, isColorSchemeLoaded]);
+
+  if (!fontsLoaded || !isColorSchemeLoaded) {
     return null;
   }
 
@@ -52,7 +64,7 @@ export default function RootLayout() {
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <SessionProvider>
         <DataProvider>
-          <GestureHandlerRootView>
+          <GestureHandlerRootView onLayout={onLayoutRootView}>
             {/* <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} /> */}
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

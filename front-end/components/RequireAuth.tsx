@@ -1,5 +1,5 @@
 // components/RequireAuth.tsx
-import { useSession } from '@/components/SessionProvider';
+import { useSession } from '@/components/providers/SessionProvider';
 import { Redirect } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 

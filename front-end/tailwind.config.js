@@ -36,6 +36,12 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter_400Regular', 'System'],
+        'sans-bold': ['Inter_700Bold', 'System'],
+        heading: ['SpaceGrotesk_400Regular', 'System'],
+        'heading-bold': ['SpaceGrotesk_700Bold', 'System'],
+      },
       colors: {
         ...colors, // re-include tailwind colors
         border: 'hsl(var(--border))',

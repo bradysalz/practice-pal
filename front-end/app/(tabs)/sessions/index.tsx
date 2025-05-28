@@ -18,7 +18,7 @@ export default function RecentSessionsPage() {
 
   return (
     <View className="flex-1 bg-white items-center">
-      <ScrollView className="w-full max-w-md px-4 mt-6 space-y-4 mb-24">
+      <ScrollView className="w-full max-w-md px-4 mt-2 space-y-4 mb-24">
         {sessionsWithItems.map((session) => (
           <PracticeSessionSummaryCard key={session.id} session={session} />
         ))}

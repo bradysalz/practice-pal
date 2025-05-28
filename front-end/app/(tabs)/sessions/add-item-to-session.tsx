@@ -10,15 +10,25 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function AddItemToSessionScreen() {
   const [activeTab, setActiveTab] = useState<string>('setlists');
+  const [searchQuery, setSearchQuery] = useState('');
   const insets = useSafeAreaInsets();
+
+  const handleResetSearch = () => {
+    setSearchQuery('');
+  };
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView className="flex-1 px-4 pt-6">
+      <ScrollView
+        className="flex-1 px-4"
+        style={{ paddingTop: insets.top + 16 }}
+      >
         {/* Search */}
         <TextInput
           placeholder="Search..."
-          className="px-3 py-2 border border-slate-300 rounded-md bg-white mb-6"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          className="px-3 py-2 border border-slate-300 rounded-xl bg-white mb-6"
         />
 
         {/* Tabs */}
@@ -26,34 +36,36 @@ export default function AddItemToSessionScreen() {
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as 'setlists' | 'books' | 'songs')}
         >
-          <TabsList className="flex-row space-x-2 mb-6">
-            <TabsTrigger value="setlists" className="flex-1">
-              <View className="flex-row items-center justify-center">
-                <Text className="text-xl">Setlists</Text>
-              </View>
-            </TabsTrigger>
-            <TabsTrigger value="books" className="flex-1">
-              <View className="flex-row items-center justify-center">
-                <Text className="text-xl">Books</Text>
-              </View>
-            </TabsTrigger>
-            <TabsTrigger value="songs" className="flex-1">
-              <View className="flex-row items-center justify-center">
-                <Text className="text-xl">Songs</Text>
-              </View>
-            </TabsTrigger>
-          </TabsList>
+          <View className="p-2 bg-slate-100">
+            <TabsList className="flex-row">
+              <TabsTrigger value="setlists" className="flex-1">
+                <View className="flex-row items-center justify-center">
+                  <Text className="text-xl">Setlists</Text>
+                </View>
+              </TabsTrigger>
+              <TabsTrigger value="books" className="flex-1">
+                <View className="flex-row items-center justify-center">
+                  <Text className="text-xl">Books</Text>
+                </View>
+              </TabsTrigger>
+              <TabsTrigger value="songs" className="flex-1">
+                <View className="flex-row items-center justify-center">
+                  <Text className="text-xl">Songs</Text>
+                </View>
+              </TabsTrigger>
+            </TabsList>
+          </View>
 
           <TabsContent value="setlists">
-            <SetlistsTab />
+            <SetlistsTab searchQuery={searchQuery} />
           </TabsContent>
 
           <TabsContent value="books">
-            <BooksTab />
+            <BooksTab searchQuery={searchQuery} onNavigate={handleResetSearch} />
           </TabsContent>
 
           <TabsContent value="songs">
-            <SongsTab />
+            <SongsTab searchQuery={searchQuery} />
           </TabsContent>
         </Tabs>
       </ScrollView>

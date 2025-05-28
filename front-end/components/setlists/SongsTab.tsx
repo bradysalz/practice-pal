@@ -3,7 +3,7 @@ import { useArtistsStore } from '@/stores/artist-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { SongRow, useSongsStore } from '@/stores/song-store';
 import { Text, View } from 'react-native';
-import { SongActionButtons } from '../shared/SongActionButtons';
+import { Checkbox } from '../shared/Checkbox';
 
 export function SongsTab() {
   const songs: SongRow[] = useSongsStore((state) => state.songs);
@@ -45,10 +45,10 @@ export function SongsTab() {
             className="flex-row items-center justify-start p-4 bg-slate-100 rounded-md"
           >
             <View className="flex-row items-center flex-1">
-              <SongActionButtons
-                isAdded={isAdded}
-                onAddPress={() => handleAddSong(song)}
-                onRemovePress={() => handleRemoveSong(song)}
+              <Checkbox
+                isChecked={isAdded}
+                onCheck={() => handleAddSong(song)}
+                onUncheck={() => handleRemoveSong(song)}
               />
               <View className="ml-2 flex-1">
                 <Text className="font-medium">{song.name}</Text>

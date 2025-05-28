@@ -1,4 +1,4 @@
-import { useSession } from '@/components/SessionProvider';
+import { useSession } from '@/components/providers/SessionProvider';
 import { Redirect, Tabs } from 'expo-router';
 import { BarChart, BookOpen, Home, ListMusic } from 'lucide-react-native';
 import { JSX } from 'react';

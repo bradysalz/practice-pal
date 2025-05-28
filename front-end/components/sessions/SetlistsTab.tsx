@@ -1,12 +1,16 @@
-import { AddRemoveButton } from '@/components/shared/AddRemoveButton';
 import { setlistItemToDraftSessionItem } from '@/lib/utils/draft-session';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { SessionItemCard } from '../shared/SessionItemCard';
 
-export function SetlistsTab() {
-  const { draftSession, addItemToDraft } = useDraftSessionsStore();
+interface SetlistsTabProps {
+  searchQuery: string;
+}
+
+export function SetlistsTab({ searchQuery }: SetlistsTabProps) {
+  const { draftSession, addItemToDraft, removeItemFromDraft } = useDraftSessionsStore();
   const { setlistDetailMap, fetchSetlists } = useSetlistsStore();
 
   useEffect(() => {
@@ -19,25 +23,47 @@ export function SetlistsTab() {
     const setlist = setlistDetailMap[setlistId];
     if (!setlist) return;
 
+    const { isAdded } = getSetlistStatus(setlistId);
+
+    // If all items are already added, don't do anything
+    if (isAdded) return;
+
     // Convert setlist items to draft session items
     const newItems = setlist.setlist_items.map((item) => {
       return setlistItemToDraftSessionItem(item);
-    })
+    }).filter(item => item !== null);
 
-    // Filter out any items that are already in the session
-    const itemsToAdd = newItems.filter((newItem) => {
-      if (!newItem) return false;
-      return !draftSession.items.some(
+    // Only add items that aren't already in the session
+    newItems.forEach((item) => {
+      if (!item) return;
+
+      const isItemAlreadyInSession = draftSession.items.some(
         (existingItem) =>
-          (newItem.type === 'song' && existingItem.type === 'song' && existingItem.song?.id === newItem.song?.id) ||
-          (newItem.type === 'exercise' && existingItem.type === 'exercise' && existingItem.exercise?.id === newItem.exercise?.id)
+          (item.type === 'song' && existingItem.type === 'song' && existingItem.song?.id === item.song?.id) ||
+          (item.type === 'exercise' && existingItem.type === 'exercise' && existingItem.exercise?.id === item.exercise?.id)
       );
-    });
 
-    // Add each item individually to the draft session
-    itemsToAdd.forEach((item) => {
-      if (item) {
+      if (!isItemAlreadyInSession) {
         addItemToDraft(item);
+      }
+    });
+  };
+
+  const handleRemoveSetlist = (setlistId: string) => {
+    if (!draftSession) return;
+
+    const setlist = setlistDetailMap[setlistId];
+    if (!setlist) return;
+
+    // Find all items from this setlist that are in the session and remove them
+    setlist.setlist_items.forEach((setlistItem) => {
+      const itemToRemove = draftSession.items.find(
+        (item) =>
+          (setlistItem.type === 'song' && item.type === 'song' && item.song?.id === setlistItem.song?.id) ||
+          (setlistItem.type === 'exercise' && item.type === 'exercise' && item.exercise?.id === setlistItem.exercise?.id)
+      );
+      if (itemToRemove) {
+        removeItemFromDraft(itemToRemove.id);
       }
     });
   };
@@ -64,28 +90,29 @@ export function SetlistsTab() {
 
   if (!draftSession) return null;
 
+  const filteredSetlists = Object.entries(setlistDetailMap).filter(([_, setlist]) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      setlist.name?.toLowerCase().includes(query) ||
+      setlist.description?.toLowerCase().includes(query)
+    );
+  });
+
   return (
-    <View className="space-y-2 mt-4">
-      {Object.entries(setlistDetailMap).map(([id, setlist]) => {
+    <View className="gap-y-4 mt-4">
+      {filteredSetlists.map(([id, setlist]) => {
         const { isAdded, totalItems, addedItems } = getSetlistStatus(id);
 
         return (
-          <View
+          <SessionItemCard
             key={id}
-            className="flex-row items-center justify-between p-4 bg-slate-100 rounded-md"
-          >
-            <View className="flex-1 mr-4">
-              <Text className="font-medium">{setlist.name}</Text>
-              <Text className="text-sm text-slate-500">{setlist.description}</Text>
-              <Text className="text-xs text-slate-400 mt-1">
-                {addedItems}/{totalItems} items added
-              </Text>
-            </View>
-            <AddRemoveButton
-              isAdded={isAdded}
-              onPress={() => handleAddSetlist(id)}
-            />
-          </View>
+            title={setlist.name || 'Untitled Setlist'}
+            description={setlist.description || undefined}
+            stats={`${addedItems}/${totalItems} items added`}
+            isAdded={isAdded}
+            onAdd={() => handleAddSetlist(id)}
+            onRemove={() => handleRemoveSetlist(id)}
+          />
         );
       })}
     </View>

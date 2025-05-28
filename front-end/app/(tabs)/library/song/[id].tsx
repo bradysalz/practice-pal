@@ -28,7 +28,7 @@ export default function SongDetailPage() {
 
   // Handlers
   const handleBackToArtist = (artistId: string) => {
-    router.push(`library/artist/${artistId}`);
+    router.push(`/library/artist/${artistId}`);
   };
 
   const handleUpdateGoal = () => {
