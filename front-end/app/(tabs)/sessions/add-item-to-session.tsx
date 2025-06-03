@@ -1,6 +1,6 @@
-import { BooksTab } from '@/components/sessions/BooksTab';
 import { SetlistsTab } from '@/components/sessions/SetlistsTab';
-import { SongsTab } from '@/components/sessions/SongsTab';
+import { BooksTab } from '@/components/shared/BooksTab';
+import { SongsTab } from '@/components/shared/SongsTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
@@ -61,11 +61,11 @@ export default function AddItemToSessionScreen() {
           </TabsContent>
 
           <TabsContent value="books">
-            <BooksTab searchQuery={searchQuery} onNavigate={handleResetSearch} />
+            <BooksTab mode="session" searchQuery={searchQuery} onNavigate={handleResetSearch} />
           </TabsContent>
 
           <TabsContent value="songs">
-            <SongsTab searchQuery={searchQuery} />
+            <SongsTab mode="session" searchQuery={searchQuery} />
           </TabsContent>
         </Tabs>
       </ScrollView>

@@ -24,7 +24,7 @@ export default function RecentSessionsPage() {
   const sessionsWithItems = useSessionsStore((state) => state.sessionsWithItems);
 
   return (
-    <View className="flex-1 bg-slate-100 items-center" style={{ paddingTop: insets.top }}>
+    <View className="flex-1  items-center" style={{ paddingTop: insets.top }}>
       <ScrollView className="w-full max-w-md px-4 mt-2 space-y-4 mb-24">
         {sessionsWithItems.map((session) => (
           <PracticeSessionSummaryCard key={session.id} session={session} />

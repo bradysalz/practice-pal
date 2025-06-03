@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { DraftSetlistItem } from '@/types/setlist';
-import { Dumbbell, GripVertical, Music, Trash2 } from 'lucide-react-native';
+import { GripVertical } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { ThemedIcon } from '../icons/themed-icon';
 
 interface ItemContentProps {
   item: DraftSetlistItem;
@@ -31,11 +32,10 @@ const ItemContent = ({ item }: ItemContentProps) => {
   };
 
   return (
-    <View className="ml-2 flex-row items-center">
-      {item.type === 'exercise' ? <Dumbbell size={20} /> : <Music size={20} />}
-      <View className="justify-center items-center">
-        <Text className="font-medium">{displayItem(item)}</Text>
-        {/* {item.artist && <Text className="text-xs text-gray-500">{item.artist}</Text>} */}
+    <View className="flex-row items-center flex-1 min-w-0">
+      {item.type === 'exercise' ? <ThemedIcon name="Dumbbell" size={20} /> : <ThemedIcon name="Music" size={20} />}
+      <View className="flex-1 min-w-0 ml-2">
+        <Text className="font-normal text-lg" numberOfLines={3}>{displayItem(item)}</Text>
       </View>
     </View>
   );
@@ -48,19 +48,19 @@ export const ItemRow = ({ item, index, onRemove, drag, isActive }: ItemRowProps)
     <TouchableOpacity
       onLongPress={drag}
       disabled={isActive} // Disable other interactions while dragging
-      style={{ backgroundColor: isActive ? 'lightblue' : 'white', marginBottom: 20 }} // Example styling
+      style={{ backgroundColor: isActive ? 'lightblue' : 'white', marginBottom: 10 }}
     >
       <Card className="rounded-xl">
         <CardContent className="flex-row justify-between items-center py-3">
           {/* Left Section */}
-          <View className="-ml-4 flex-row items-center space-x-2">
+          <View className="-ml-4 flex-row items-center flex-1 min-w-0">
             <GripVertical size={20} />
             <ItemContent item={item} />
           </View>
           {/* Right Section */}
-          <View className="flex-row place-items-end space-x-1">
+          <View className="flex-row items-center ml-2">
             <Button size="icon" variant="ghost" onPress={() => onRemove(index)}>
-              <Trash2 size={20} className="red-500" />
+              <ThemedIcon name="Trash2" size={20} />
             </Button>
           </View>
         </CardContent>

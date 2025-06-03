@@ -71,6 +71,7 @@ const DEFAULT_COLORS: Record<string, string> = {
   Check: 'white',
   Play: 'orange-500',
   Pause: 'orange-500',
+  Edit: 'black',
 };
 
 export const ThemedIcon = ({ name, size = 24, className, style, color }: ThemedIconProps) => {

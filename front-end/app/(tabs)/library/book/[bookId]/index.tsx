@@ -44,7 +44,7 @@ export default function BookDetailPage() {
         </CardHeader>
         <CardContent>
           <View className="mt-4 grid grid-cols-2 gap-4 flex-row">
-            <StatBox label="Sections" value={sections.length} />
+            <StatBox label="Sections" value={usefulSections.length} />
             <StatBox label="Exercises" value={book.exercise_count} />
           </View>
         </CardContent>

@@ -1,29 +1,40 @@
 import { exerciseToDraftSessionItem } from '@/lib/utils/draft-session';
+import { exerciseToDraftSetlistItem } from '@/lib/utils/draft-setlist';
 import { BookWithCountsRow, useBooksStore } from '@/stores/book-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
+import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { SectionWithCountsRow, useSectionsStore } from '@/stores/section-store';
 import { ExerciseRow } from '@/types/session';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
-import { ChevronButton } from '../shared/ChevronButton';
-import { SessionItemCard } from '../shared/SessionItemCard';
+import { ChevronButton } from './ChevronButton';
+import { SessionItemCard } from './SessionItemCard';
 
 interface BooksTabProps {
-  searchQuery: string;
+  mode: 'session' | 'setlist';
+  searchQuery?: string;
   onNavigate?: () => void;
 }
 
-export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
+export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) {
   const [viewMode, setViewMode] = useState<'list' | 'book' | 'section'>('list');
   const [selectedBook, setSelectedBook] = useState<BookWithCountsRow | null>(null);
   const [selectedSection, setSelectedSection] = useState<SectionWithCountsRow | null>(null);
 
   // Store hooks
-  const { draftSession, addItemToDraft, removeItemFromDraft } = useDraftSessionsStore();
   const { exercises, fetchExercisesBySection } = useExercisesStore();
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
+
+  // Session/Setlist store hooks
+  const draftSession = useDraftSessionsStore((state) => state.draftSession);
+  const addSessionItem = useDraftSessionsStore((state) => state.addItemToDraft);
+  const removeSessionItem = useDraftSessionsStore((state) => state.removeItemFromDraft);
+
+  const draftSetlist = useDraftSetlistsStore((state) => state.draftSetlist);
+  const addSetlistItem = useDraftSetlistsStore((state) => state.addItemToDraft);
+  const removeSetlistItem = useDraftSetlistsStore((state) => state.removeItemFromDraft);
 
   // Handle hardware back button
   useEffect(() => {
@@ -43,7 +54,6 @@ export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
     };
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
     return () => backHandler.remove();
   }, [viewMode, onNavigate]);
 
@@ -55,23 +65,42 @@ export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
   }, [selectedSection, fetchExercisesBySection]);
 
   const handleAddExercise = (exercise: ExerciseRow) => {
-    if (!draftSession || !selectedSection || !selectedBook) return;
-    addItemToDraft(
-      exerciseToDraftSessionItem(
-        exercise,
-        selectedSection,
-        selectedBook
-      )
-    );
+    if (!selectedSection || !selectedBook) return;
+
+    if (mode === 'session' && draftSession) {
+      addSessionItem(
+        exerciseToDraftSessionItem(
+          exercise,
+          selectedSection,
+          selectedBook
+        )
+      );
+    } else if (mode === 'setlist' && draftSetlist) {
+      addSetlistItem(
+        exerciseToDraftSetlistItem(
+          exercise,
+          selectedSection,
+          selectedBook
+        )
+      );
+    }
   };
 
   const handleRemoveExercise = (exercise: ExerciseRow) => {
-    if (!draftSession) return;
-    const itemToRemove = draftSession.items.find(
-      (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
-    );
-    if (itemToRemove) {
-      removeItemFromDraft(itemToRemove.id);
+    if (mode === 'session' && draftSession) {
+      const itemToRemove = draftSession.items.find(
+        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
+      );
+      if (itemToRemove) {
+        removeSessionItem(itemToRemove.id);
+      }
+    } else if (mode === 'setlist' && draftSetlist) {
+      const itemToRemove = draftSetlist.items.find(
+        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
+      );
+      if (itemToRemove) {
+        removeSetlistItem(itemToRemove.id);
+      }
     }
   };
 
@@ -84,6 +113,19 @@ export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
       setSelectedSection(null);
     }
     onNavigate?.();
+  };
+
+  const isExerciseAdded = (exercise: ExerciseRow) => {
+    if (mode === 'session' && draftSession) {
+      return draftSession.items.some(
+        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
+      );
+    } else if (mode === 'setlist' && draftSetlist) {
+      return draftSetlist.items.some(
+        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
+      );
+    }
+    return false;
   };
 
   if (viewMode === 'section' && selectedSection && selectedBook) {
@@ -100,22 +142,16 @@ export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
 
         <Text className="text-2xl font-bold">{selectedBook.name}</Text>
         <Text className="text-xl font-bold">{selectedSection.name}</Text>
-        {filteredExercises.map((exercise) => {
-          const isAdded = draftSession?.items.some(
-            (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
-          );
-
-          return (
-            <SessionItemCard
-              key={exercise.id}
-              title={exercise.name || 'Untitled Exercise'}
-              subtitle={exercise.goal_tempo ? `Goal: ${exercise.goal_tempo} BPM` : undefined}
-              isAdded={!!isAdded}
-              onAdd={() => handleAddExercise(exercise)}
-              onRemove={() => handleRemoveExercise(exercise)}
-            />
-          );
-        })}
+        {filteredExercises.map((exercise) => (
+          <SessionItemCard
+            key={exercise.id}
+            title={exercise.name || 'Untitled Exercise'}
+            subtitle={exercise.goal_tempo ? `Goal: ${exercise.goal_tempo} BPM` : undefined}
+            isAdded={isExerciseAdded(exercise)}
+            onAdd={() => handleAddExercise(exercise)}
+            onRemove={() => handleRemoveExercise(exercise)}
+          />
+        ))}
       </View>
     );
   }
@@ -137,6 +173,7 @@ export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
           <SessionItemCard
             key={section.id}
             title={section.name || 'Untitled Section'}
+            subtitle={`${section.exercise_count} exercises`}
             onToggle={() => {
               setSelectedSection(section);
               setViewMode('section');
@@ -160,6 +197,7 @@ export function BooksTab({ searchQuery, onNavigate }: BooksTabProps) {
         <SessionItemCard
           key={book.id}
           title={book.name || 'Untitled Book'}
+          subtitle={`${book.exercise_count} exercises`}
           onToggle={() => {
             setSelectedBook(book);
             setViewMode('book');

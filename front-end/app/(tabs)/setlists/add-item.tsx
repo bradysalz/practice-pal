@@ -1,5 +1,6 @@
-import { BooksTab } from '@/components/setlists/BooksTab';
-import { SongsTab } from '@/components/setlists/SongsTab';
+import { ThemedIcon } from '@/components/icons/themed-icon';
+import { BooksTab } from '@/components/shared/BooksTab';
+import { SongsTab } from '@/components/shared/SongsTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
@@ -29,12 +30,14 @@ export default function AddItemScreen() {
           <View className="p-2 bg-slate-100">
             <TabsList className="flex-row ">
               <TabsTrigger value="books" className="flex-1">
-                <View className="flex-row items-center justify-center">
+                <View className="flex-row items-center justify-center gap-x-2">
+                  <ThemedIcon name="BookOpen" size={24} color="slate-900" />
                   <Text className="text-xl">Books</Text>
                 </View>
               </TabsTrigger>
               <TabsTrigger value="songs" className="flex-1">
-                <View className="flex-row items-center justify-center">
+                <View className="flex-row items-center justify-center gap-x-2 ">
+                  <ThemedIcon name="Music" size={24} color="slate-900" />
                   <Text className="text-xl">Songs</Text>
                 </View>
               </TabsTrigger>
@@ -42,11 +45,11 @@ export default function AddItemScreen() {
           </View>
 
           <TabsContent value="books">
-            <BooksTab />
+            <BooksTab mode="setlist" />
           </TabsContent>
 
           <TabsContent value="songs">
-            <SongsTab />
+            <SongsTab mode="setlist" />
           </TabsContent>
         </Tabs>
       </ScrollView>

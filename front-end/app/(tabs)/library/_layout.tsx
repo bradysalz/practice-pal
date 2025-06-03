@@ -14,6 +14,7 @@ export default function LibraryStackLayout() {
         name="index" // Corresponds to app/(tabs)/library/index.tsx
         options={{
           title: 'My Library',
+          headerShown: false,
         }}
       />
       <Stack.Screen
