@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { Database } from '@/types/supabase';
+import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -12,9 +13,9 @@ type InputLocalExercise = Omit<ExerciseInsert, 'id' | 'created_at' | 'updated_at
 type ExercisesState = {
   exercises: Record<string, ExerciseRow[]>;
   addExerciseLocal: (exercise: InputLocalExercise) => string;
-  syncAddExercise: (tempId: string) => Promise<void>;
+  syncAddExercise: (tempId: string) => Promise<{ error: PostgrestError | null }>;
   updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
-  syncUpdateExercise: (id: string) => Promise<void>;
+  syncUpdateExercise: (id: string) => Promise<{ error: PostgrestError | null }>;
   fetchExercisesBySection: (section_id: string, force?: boolean) => Promise<void>;
 };
 
@@ -73,7 +74,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       if (exercise) break;
     }
 
-    if (!exercise) return;
+    if (!exercise) return { error: null };
 
     const { id: _, created_at, ...updatePayload } = exercise;
 
@@ -81,7 +82,10 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     if (error) {
       console.error('Failed to sync exercise update:', error);
+      return { error };
     }
+
+    return { error: null };
   },
 
   addExerciseLocal: (exercise) => {
@@ -125,7 +129,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       }
     }
 
-    if (!localExercise || !sectionId) return;
+    if (!localExercise || !sectionId) return { error: null };
 
     const { data, error } = await supabase
       .from('exercises')
@@ -135,15 +139,18 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     if (error) {
       console.error('Sync failed', error);
-    } else {
-      set((state) => ({
-        exercises: {
-          ...state.exercises,
-          [sectionId!]: state.exercises[sectionId!].map((e) =>
-            e.id === id ? data : e
-          ),
-        },
-      }));
+      return { error: error as PostgrestError };
     }
+
+    set((state) => ({
+      exercises: {
+        ...state.exercises,
+        [sectionId!]: state.exercises[sectionId!].map((e) =>
+          e.id === id ? data : e
+        ),
+      },
+    }));
+
+    return { error: null } as { error: null };
   },
 }));

@@ -174,7 +174,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
             key={section.id}
             title={section.name || 'Untitled Section'}
             subtitle={`${section.exercise_count} exercises`}
-            onToggle={() => {
+            onPress={() => {
               setSelectedSection(section);
               setViewMode('section');
               onNavigate?.();
@@ -198,7 +198,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
           key={book.id}
           title={book.name || 'Untitled Book'}
           subtitle={`${book.exercise_count} exercises`}
-          onToggle={() => {
+          onPress={() => {
             setSelectedBook(book);
             setViewMode('book');
             onNavigate?.();
