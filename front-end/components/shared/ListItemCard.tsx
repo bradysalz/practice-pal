@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Pressable, Text, View, ViewProps } from 'react-native';
 import { Checkbox } from './Checkbox';
 
-interface SessionItemCardProps extends ViewProps {
+interface ListIemCardProps extends ViewProps {
   title: string;
   subtitle?: string;
   description?: string;
@@ -14,7 +14,7 @@ interface SessionItemCardProps extends ViewProps {
   stats?: string;
 }
 
-export function SessionItemCard({
+export function ListItemCard({
   title,
   subtitle,
   description,
@@ -25,7 +25,7 @@ export function SessionItemCard({
   rightElement,
   stats,
   ...viewProps
-}: SessionItemCardProps) {
+}: ListIemCardProps) {
   const showCheckbox = onAdd && onRemove;
   const isClickable = onToggle || showCheckbox;
 
@@ -47,10 +47,10 @@ export function SessionItemCard({
     >
       <View className="flex-row items-center justify-between p-4 bg-slate-100 rounded-xl">
         <View className="flex-1 mr-4">
-          <Text className="font-medium text-lg">{title}</Text>
-          {subtitle && <Text className="text-slate-500">{subtitle}</Text>}
-          {description && <Text className="text-slate-500">{description}</Text>}
-          {stats && <Text className="text-sm text-slate-400 mt-1">{stats}</Text>}
+          <Text className="font-medium text-xl">{title}</Text>
+          {subtitle && <Text className="text-slate-500 text-lg">{subtitle}</Text>}
+          {description && <Text className="text-slate-500 text-lg ">{description}</Text>}
+          {stats && <Text className="text-sm text-slate-400 mt-1 text-lg">{stats}</Text>}
         </View>
         {rightElement || (showCheckbox && (
           <Checkbox

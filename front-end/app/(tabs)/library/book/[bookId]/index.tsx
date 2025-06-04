@@ -1,14 +1,13 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ArrowLeft, BookOpen } from 'lucide-react-native';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { ArrowLeft, ChevronRight } from 'lucide-react-native';
+import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-import { SectionCard } from '@/components/library/SectionCard';
+import { ListItemCard } from '@/components/shared/ListItemCard';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
-import { useEffect } from 'react';
 
 export default function BookDetailPage() {
   const router = useRouter();
@@ -29,47 +28,42 @@ export default function BookDetailPage() {
   if (!book) return <NotFound />;
 
   return (
-    <View className="flex-1 bg-slate-50 p-4">
-      <Card className="mb-4">
-        <CardHeader className="pb-2">
-          <View className="flex-row">
-            <View className={`bg-${book.cover_color}-100 w-16 items-center justify-center mr-4`}>
-              <BookOpen size={32} className="text-slate-700" />
-            </View>
-            <View className="">
-              <Text className="text-2xl font-bold">{book.name}</Text>
-              {/* <Text className="text-sm text-muted-foreground">by {book.author}</Text> */}
-            </View>
-          </View>
-        </CardHeader>
-        <CardContent>
-          <View className="mt-4 grid grid-cols-2 gap-4">
-            <StatBox label="Sections" value={sections.length} />
-            <StatBox label="Exercises" value={book.exercise_count} />
-          </View>
-        </CardContent>
-      </Card>
-      <View className="space-y-4">
-        {usefulSections.map((section) => {
-          return (
-            <SectionCard
-              key={section.id}
-              sectionName={section.name}
-              exercises={section.exercise_count}
-              onPress={() => router.push(`/library/book/${bookId}/section/${section.id}`)}
-            />
-          );
-        })}
+    <>
+      <Stack.Screen
+        options={{
+          title: book.name,
+        }}
+      />
+      <View className="flex-1 p-4">
+        <View className="mt-4 flex-row gap-x-4 mb-4">
+          <StatBox label="Sections" value={usefulSections.length} />
+          <StatBox label="Exercises" value={book.exercise_count} />
+        </View>
+        <View className="rounded-lg">
+          {usefulSections.map((section) => {
+            return (
+              <ListItemCard
+                key={section.id}
+                title={section.name || 'Untitled Section'}
+                subtitle={`${section.exercise_count} exercises`}
+                isAdded={false}
+                onToggle={() => router.push(`/library/book/${bookId}/section/${section.id}`)}
+                className="mb-4"
+                rightElement={<ChevronRight size={20} className="text-slate-500" />}
+              />
+            );
+          })}
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
 function StatBox({ label, value }: { label: string; value: number }) {
   return (
-    <View className="p-3 bg-slate-100 rounded-md items-center">
+    <View className="p-4 bg-orange-100 rounded-md items-center flex-1">
       <Text className="text-2xl font-bold">{value}</Text>
-      <Text className="text-xs text-muted-foreground">{label}</Text>
+      <Text className="">{label}</Text>
     </View>
   );
 }

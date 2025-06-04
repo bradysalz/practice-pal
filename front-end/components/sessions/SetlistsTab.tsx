@@ -3,7 +3,7 @@ import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import { SessionItemCard } from '../shared/SessionItemCard';
+import { ListItemCard } from '../shared/ListItemCard';
 
 interface SetlistsTabProps {
   searchQuery: string;
@@ -104,7 +104,7 @@ export function SetlistsTab({ searchQuery }: SetlistsTabProps) {
         const { isAdded, totalItems, addedItems } = getSetlistStatus(id);
 
         return (
-          <SessionItemCard
+          <ListItemCard
             key={id}
             title={setlist.name || 'Untitled Setlist'}
             description={setlist.description || undefined}

@@ -6,10 +6,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { createDraftFromSetlist, createNewDraft } from '@/lib/utils/draft-setlist';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
+import { DraftSetlistItem } from '@/types/setlist';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
-import { Alert, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, Text, TextInput, View } from 'react-native';
 import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
@@ -34,6 +34,7 @@ export default function EditSetlistPage() {
 
   // Initialize draft on mount
   useEffect(() => {
+
     clearDraftSetlist();
 
     if (setlistId === 'new') {
@@ -105,7 +106,7 @@ export default function EditSetlistPage() {
     );
   }
 
-  const renderItem = ({ item, getIndex, drag, isActive }: RenderItemParams<any>) => {
+  const renderItem = ({ item, getIndex, drag, isActive }: RenderItemParams<DraftSetlistItem>) => {
     const index = getIndex() ?? 0;
 
     return (
@@ -123,63 +124,65 @@ export default function EditSetlistPage() {
 
   return (
     <View className="flex-1 bg-slate-50 p-4">
-      <View className="space-y-3 mb-6">
-        <View>
-          <Label className="text-2xl mb-2">Setlist Name</Label>
-          <TextInput
-            value={draftSetlist.name || ''}
-            onChangeText={(text) => setDraftSetlist({ ...draftSetlist, name: text })}
-            placeholder="e.g., Warm-up Routine"
-            className="border border-slate-300 p-2 rounded-xl bg-white mb-4"
-          />
-        </View>
-        <View>
-          <Label className="text-2xl mb-2">Description</Label>
-          <Textarea
-            value={draftSetlist.description || ''}
-            onChangeText={(text) => setDraftSetlist({ ...draftSetlist, description: text })}
-            placeholder="Describe your setlist..."
-            className="mb-2 border border-slate-300 rounded-xl"
-          />
-        </View>
-      </View>
 
-      <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-2xl font-semibold">Items</Text>
-        <Button size="sm" variant="outline" onPress={handleOpenAddItemModal}>
-          <View className="flex-row items-center justify-center px-2 py-2 ">
-            <Plus size={16} className="mr-1" />
-            <Text className="font-medium">Add Item</Text>
-          </View>
-        </Button>
-      </View>
-
-      <View style={{ flex: 1 }}>
+      <View className="flex-1 mb-20">
         <DraggableFlatList
           data={draftSetlist.items}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           onDragEnd={({ data }) => reorderDraftItems(data)}
+          ListHeaderComponent={
+            <View className="pt-4 pb-6">
+              <Label className="text-2xl mb-2">Setlist Name</Label>
+              <TextInput
+                value={draftSetlist.name || ''}
+                onChangeText={(text) => setDraftSetlist({ ...draftSetlist, name: text })}
+                placeholder="e.g., Warm-up Routine"
+                className="border border-slate-300 p-2 rounded-xl bg-white mb-4"
+              />
+
+              <Label className="text-2xl mb-2">Description</Label>
+              <Textarea
+                value={draftSetlist.description || ''}
+                onChangeText={(text) => setDraftSetlist({ ...draftSetlist, description: text })}
+                placeholder="Describe your setlist..."
+                className="mb-4 border border-slate-300 rounded-xl"
+              />
+
+              <Text className="text-2xl font-semibold mb-4">Items</Text>
+
+            </View>
+          }
+
         />
       </View>
 
-      <View className="mt-4">
-        <Button
-          variant="default"
-          onPress={handleSaveSetlist}
-          disabled={!draftSetlist.name}
-        >
-          <View className="flex-row items-center gap-1 justify-center px-2 py-2 ">
-            <ThemedIcon
-              name="Save"
-              size={24}
-              color="white"
-              className="text-white"
-            />
-            <Text className="text-2xl text-white font-medium">Save Setlist</Text>
-          </View>
-        </Button>
+
+      {/* Bottom Buttons */}
+      <View
+        className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200"
+      >
+        <View className="flex-row gap-x-4 m-4">
+          {/* Add Items Button */}
+          <Pressable
+            className="flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80 gap-x-1"
+            onPress={handleOpenAddItemModal}
+          >
+            <ThemedIcon name="Plus" size={20} color="slate-900" />
+            <Text className="text-slate-900 font-semibold text-lg">Add Item</Text>
+          </Pressable>
+
+          {/* Save Setlist Button */}
+          <Pressable
+            className="flex-1 flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80 gap-x-1"
+            onPress={handleSaveSetlist}
+            disabled={!draftSetlist.name}
+          >
+            <ThemedIcon name="Save" size={20} color="white" />
+            <Text className="text-white font-semibold text-lg">Save</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </View >
   );
 }

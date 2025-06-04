@@ -1,15 +1,16 @@
-import { Card, CardHeader } from '@/components/ui/card';
+import { ListItemCard } from '@/components/shared/ListItemCard';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronRight, Dumbbell } from 'lucide-react-native';
-import { useEffect } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { ChevronRight } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 
 export default function SectionDetailPage() {
   const router = useRouter();
   const { bookId, sectionId } = useLocalSearchParams<{ bookId: string; sectionId: string }>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
@@ -18,7 +19,15 @@ export default function SectionDetailPage() {
 
   // only really need to fetch exercises since we already fetched the rest to get here
   useEffect(() => {
-    fetchExercisesBySection(sectionId);
+    const loadExercises = async () => {
+      setIsLoading(true);
+      try {
+        await fetchExercisesBySection(sectionId);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadExercises();
   }, [fetchExercisesBySection, sectionId]);
 
   const book = books.find((b) => b.id === bookId);
@@ -32,28 +41,46 @@ export default function SectionDetailPage() {
   };
 
   return (
-    <View className="flex-1 bg-white p-4 space-y-4">
-      <Text className="text-2xl font-bold mb-4">{book.name}</Text>
-      <Text className="text-2xl font-bold mb-4">{section.name}</Text>
+    <>
+      <Stack.Screen
+        options={{
+          title: section.name,
+        }}
+      />
+      <View className="flex-1 p-4">
+        <View className="mt-4 flex-row gap-x-4 mb-4">
+          <StatBox label="Exercises" value={exercises[sectionId]?.length || 0} />
+        </View>
 
-      {exercises[sectionId].map((exercise) => (
-        <Pressable
-          key={exercise.id}
-          onPress={() => handleExercisePress(exercise.id)}
-          className="active:opacity-70"
-        >
-          <Card className="hover:shadow-sm">
-            <CardHeader className="flex-row justify-between items-center">
-              <View className="flex-row items-center space-x-2">
-                <Dumbbell size={20} />
-                <Text className="text-lg font-medium">({exercise.sort_position})</Text>
-                <Text className="text-lg font-medium">Exercise {exercise.name}</Text>
-              </View>
-              <ChevronRight size={20} className="text-muted-foreground" />
-            </CardHeader>
-          </Card>
-        </Pressable>
-      ))}
+        {isLoading ? (
+          <View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="large" />
+          </View>
+        ) : (
+          <View className="rounded-lg">
+            {exercises[sectionId]?.map((exercise) => (
+              <ListItemCard
+                key={exercise.id}
+                title={`Exercise ${exercise.name}`}
+                subtitle={exercise.sort_position ? `Position: ${exercise.sort_position}` : undefined}
+                isAdded={false}
+                onToggle={() => handleExercisePress(exercise.id)}
+                className="mb-4"
+                rightElement={<ChevronRight size={20} className="text-slate-500" />}
+              />
+            ))}
+          </View>
+        )}
+      </View>
+    </>
+  );
+}
+
+function StatBox({ label, value }: { label: string; value: number }) {
+  return (
+    <View className="p-3 bg-orange-100 rounded-md items-center flex-1">
+      <Text className="text-2xl font-bold">{value}</Text>
+      <Text className="">{label}</Text>
     </View>
   );
 }

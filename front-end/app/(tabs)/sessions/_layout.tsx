@@ -17,6 +17,7 @@ export default function SessionsStack() {
         options={{
           title: 'Session Details',
           headerShown: true,
+          headerShadowVisible: false,
         }}
       />
       <Stack.Screen

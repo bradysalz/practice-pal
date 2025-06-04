@@ -1,15 +1,17 @@
-import { BooksTab } from '@/components/setlists/BooksTab';
-import { SongsTab } from '@/components/setlists/SongsTab';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BooksTab } from '@/components/shared/BooksTab';
+import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
+import { SongsTab } from '@/components/shared/SongsTab';
+import { TabsContent } from '@/components/ui/tabs';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function AddItemScreen() {
+const ADD_ITEM_TABS: readonly TabValue[] = ['books', 'songs'] as const;
 
-  const [activeTab, setActiveTab] = useState<string>('books');
+export default function AddItemScreen() {
+  const [activeTab, setActiveTab] = useState<TabValue>('books');
   const insets = useSafeAreaInsets();
 
   return (
@@ -21,34 +23,19 @@ export default function AddItemScreen() {
           className="px-3 py-2 border border-slate-300 rounded-xl bg-white mb-6"
         />
 
-        {/* Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as 'books' | 'songs')}
+        <ReusableTabView
+          tabs={ADD_ITEM_TABS}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         >
-          <View className="p-2 bg-slate-100">
-            <TabsList className="flex-row ">
-              <TabsTrigger value="books" className="flex-1">
-                <View className="flex-row items-center justify-center">
-                  <Text className="text-xl">Books</Text>
-                </View>
-              </TabsTrigger>
-              <TabsTrigger value="songs" className="flex-1">
-                <View className="flex-row items-center justify-center">
-                  <Text className="text-xl">Songs</Text>
-                </View>
-              </TabsTrigger>
-            </TabsList>
-          </View>
-
           <TabsContent value="books">
-            <BooksTab />
+            <BooksTab mode="setlist" />
           </TabsContent>
 
           <TabsContent value="songs">
-            <SongsTab />
+            <SongsTab mode="setlist" />
           </TabsContent>
-        </Tabs>
+        </ReusableTabView>
       </ScrollView>
 
       {/* Done Button */}

@@ -1,22 +1,26 @@
 import { useRouter } from 'expo-router';
-import { BookOpen, ChevronRight, Music } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 
-import { CardWithAccent } from '@/components/card-with-accent';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ListItemCard } from '@/components/shared/ListItemCard';
+import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TabsContent } from '@/components/ui/tabs';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useSongsStore } from '@/stores/song-store';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const LIBRARY_TABS: readonly TabValue[] = ['books', 'songs'] as const;
 
 export default function LibraryPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<string>('books');
+  const [activeTab, setActiveTab] = useState<TabValue>('books');
+
+  const insets = useSafeAreaInsets();
 
   // Get data from stores - no need to fetch since DataProvider handles it
   const books = useBooksStore((state) => state.books);
@@ -49,8 +53,8 @@ export default function LibraryPage() {
   );
 
   return (
-    <View className="flex-1 bg-slate-50/50">
-      <ScrollView className="flex-1">
+    <View className="flex-1 bg-white">
+      <ScrollView className="flex-1" style={{ paddingTop: insets.top }}>
         <View className="p-4">
           <View className="mb-6">
             <View className="relative w-full">
@@ -58,96 +62,56 @@ export default function LibraryPage() {
                 placeholder="Search library..."
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900"
+                className="w-full pl-8 pr-3 py-2 text-lg rounded-xl border border-slate-300 bg-white text-slate-900"
               />
             </View>
           </View>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <View className="p-4 bg-slate-100">
-              <TabsList className="flex-row">
-                <TabsTrigger value="books" className="flex-1">
-                  <View className="flex-row items-center justify-center gap-x-2">
-                    <BookOpen size={28} />
-                    <Text className="text-3xl">Books</Text>
-                  </View>
-                </TabsTrigger>
-                <TabsTrigger value="songs" className="flex-1">
-                  <View className="flex-row items-center justify-center gap-x-2">
-                    <Music size={28} />
-                    <Text className="text-3xl">Songs</Text>
-                  </View>
-                </TabsTrigger>
-              </TabsList>
-            </View>
+          <ReusableTabView
+            tabs={LIBRARY_TABS}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          >
+            <TabsContent value="books">
+              {filteredBooks.length > 0 ? (
+                filteredBooks.map((book) => (
+                  <ListItemCard
+                    key={book.id}
+                    title={book.name}
+                    description={`${bookSections(book.id).length} sections • ${book.exercise_count} exercises`}
+                    isAdded={false}
+                    onToggle={() => router.push(`/library/book/${book.id}`)}
+                    className="mb-4"
+                    rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
+                  />
+                ))
+              ) : (
+                <Text className="text-center text-slate-500 py-8">
+                  No books found matching your search.
+                </Text>
+              )}
+            </TabsContent>
 
-            <View className="mt-6 space-y-4 mb-24">
-              <TabsContent value="books">
-                {filteredBooks.length > 0 ? (
-                  filteredBooks.map((book) => (
-                    <Pressable key={book.id} onPress={() => router.push(`/library/book/${book.id}`)}>
-                      <Card className="mb-4">
-                        <CardContent className="flex-row p-0">
-                          <View
-                            className={`bg-${book.cover_color}-100 w-24 items-center justify-center`}
-                          >
-                            <BookOpen size={32} className="text-slate-700" />
-                          </View>
-                          <View className="flex-1 p-4">
-                            <Text className="font-medium text-lg">{book.name}</Text>
-                            <View className="flex-row mt-2">
-                              <Badge variant="secondary" className="text-sm mr-5">
-                                <Text>{bookSections(book.id).length} sections</Text>
-                              </Badge>
-                              <Badge variant="secondary" className="text-sm">
-                                <Text>{book.exercise_count} exercises</Text>
-                              </Badge>
-                            </View>
-                          </View>
-                          <View className="justify-center pr-3">
-                            <ChevronRight size={20} className="text-slate-400" />
-                          </View>
-                        </CardContent>
-                      </Card>
-                    </Pressable>
-                  ))
-                ) : (
-                  <Text className="text-center text-slate-500 py-8">
-                    No books found matching your search.
-                  </Text>
-                )}
-              </TabsContent>
-
-              <TabsContent value="songs">
-                {filteredSongs.length > 0 ? (
-                  filteredSongs.map((song) => (
-                    <Pressable key={song.id} onPress={() => router.push(`/library/song/${song.id}`)}>
-                      <CardWithAccent className="mb-4">
-                        <CardHeader className="flex-row justify-between items-center p-4 pb-2">
-                          <View>
-                            <Text className="font-medium">{song.name}</Text>
-                            {song.artist && (
-                              <Text className="text-slate-500 italic">{song.artist}</Text>
-                            )}
-                          </View>
-                        </CardHeader>
-                        <CardContent className="flex-row justify-between items-center px-4 pt-0 pb-4">
-                          <Text className="text-sm text-slate-500">
-                            Goal: {/* song.goalTempo */} BPM
-                          </Text>
-                          <Text className="text-xs">Last practiced: {/* song.lastPracticed */}</Text>
-                        </CardContent>
-                      </CardWithAccent>
-                    </Pressable>
-                  ))
-                ) : (
-                  <Text className="text-center text-slate-500 py-8">
-                    No songs found matching your search.
-                  </Text>
-                )}
-              </TabsContent>
-            </View>
-          </Tabs>
+            <TabsContent value="songs">
+              {filteredSongs.length > 0 ? (
+                filteredSongs.map((song) => (
+                  <ListItemCard
+                    key={song.id}
+                    title={song.name}
+                    subtitle={song.artist}
+                    isAdded={false}
+                    onToggle={() => router.push(`/library/song/${song.id}`)}
+                    className="mb-4"
+                    rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
+                  />
+                ))
+              ) : (
+                <Text className="text-center text-slate-500 py-8">
+                  No songs found matching your search.
+                </Text>
+              )}
+            </TabsContent>
+          </ReusableTabView>
         </View>
       </ScrollView>
 
