@@ -1,8 +1,8 @@
-import { XButton } from '@/components/shared/XButton';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { DraftSessionItem } from '@/types/session';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { ThemedIcon } from '../icons/themed-icon';
 
 interface CurrentSessionItemsProps {
   sessionItems: DraftSessionItem[];
@@ -38,7 +38,9 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
             <Text className="font-medium">{song.name}</Text>
             {artist && <Text className="text-sm text-slate-500">{artist.name}</Text>}
           </View>
-          <XButton onPress={() => onRemoveItem(item.id)} />
+          <Pressable onPress={() => onRemoveItem(item.id)}>
+            <ThemedIcon name="X" size={20} />
+          </Pressable>
         </View>
       );
     }
@@ -62,7 +64,9 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
               <Text className="text-sm text-slate-500">Goal: {item.tempo} BPM</Text>
             )}
           </View>
-          <XButton onPress={() => onRemoveItem(item.id)} />
+          <Pressable onPress={() => onRemoveItem(item.id)}>
+            <ThemedIcon name="X" size={20} />
+          </Pressable>
         </View>
       );
     }

@@ -1,6 +1,6 @@
+import { Checkbox } from '@/components/icons/Checkbox';
 import { ReactNode } from 'react';
 import { Pressable, Text, View, ViewProps } from 'react-native';
-import { Checkbox } from './Checkbox';
 
 interface ListIemCardProps extends ViewProps {
   title: string;
