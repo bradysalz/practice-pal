@@ -24,6 +24,7 @@ import {
   Plus,
   Save,
   Trash2,
+  X,
 } from 'lucide-react-native';
 
 // Map icon names to components
@@ -47,6 +48,7 @@ const ICONS = {
   Trash2,
   Play,
   Pause,
+  X,
 } as const;
 
 // Icons that should be filled
@@ -74,6 +76,7 @@ const DEFAULT_COLORS: Record<string, string> = {
   Play: 'orange-500',
   Pause: 'orange-500',
   Edit: 'black',
+  X: 'red-500',
 };
 
 export const ThemedIcon = ({ name, size = 24, className, style, color }: ThemedIconProps) => {

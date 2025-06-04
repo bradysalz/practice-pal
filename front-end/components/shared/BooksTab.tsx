@@ -8,7 +8,7 @@ import { SectionWithCountsRow, useSectionsStore } from '@/stores/section-store';
 import { ExerciseRow } from '@/types/session';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
-import { ChevronButton } from './ChevronButton';
+import { ThemedIcon } from '../icons/themed-icon';
 import { ListItemCard } from './ListItemCard';
 
 interface BooksTabProps {
@@ -180,7 +180,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
               onNavigate?.();
             }}
             isAdded={false}
-            rightElement={<ChevronButton onPress={() => { }} />}
+            rightElement={<ThemedIcon name="ChevronRight" size={20} />}
           />
         ))}
       </View>
@@ -204,7 +204,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
             onNavigate?.();
           }}
           isAdded={false}
-          rightElement={<ChevronButton onPress={() => { }} />}
+          rightElement={<ThemedIcon name="ChevronRight" size={20} />}
         />
       ))}
     </View>
