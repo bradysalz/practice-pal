@@ -5,7 +5,7 @@ import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { SongRow, useSongsStore } from '@/stores/song-store';
 import { View } from 'react-native';
-import { SessionItemCard } from './SessionItemCard';
+import { ListItemCard } from './ListItemCard';
 
 interface SongsTabProps {
   mode: 'session' | 'setlist';
@@ -88,7 +88,7 @@ export function SongsTab({ mode, searchQuery = '' }: SongsTabProps) {
         const artist = artists.find((a) => a.id === song.artist_id);
 
         return (
-          <SessionItemCard
+          <ListItemCard
             key={song.id}
             title={song.name || 'Untitled Song'}
             subtitle={artist?.name}

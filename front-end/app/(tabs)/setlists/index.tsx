@@ -1,7 +1,7 @@
 import { SetlistCard } from '@/components/setlists/SetlistCard';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';
 import { useSetlistsStore } from '@/stores/setlist-store';
-import { useNavigation, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ListMusic } from 'lucide-react-native';
 import { useEffect } from 'react';
 import { Alert, ScrollView, Text, View } from 'react-native';
@@ -9,12 +9,11 @@ import { Alert, ScrollView, Text, View } from 'react-native';
 export default function SetlistsPage() {
   const router = useRouter();
   const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
-  const navigation = useNavigation();
 
   useEffect(() => {
     // Reset navigation state to prevent back button
     router.setParams({ index: 0 });
-  }, [navigation]);
+  }, [router]);
 
   const handleFabPress = () => {
     router.push(`/setlists/edit/new`);

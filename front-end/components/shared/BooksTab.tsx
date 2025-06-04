@@ -9,7 +9,7 @@ import { ExerciseRow } from '@/types/session';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
 import { ChevronButton } from './ChevronButton';
-import { SessionItemCard } from './SessionItemCard';
+import { ListItemCard } from './ListItemCard';
 
 interface BooksTabProps {
   mode: 'session' | 'setlist';
@@ -143,7 +143,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
         <Text className="text-2xl font-bold">{selectedBook.name}</Text>
         <Text className="text-xl font-bold">{selectedSection.name}</Text>
         {filteredExercises.map((exercise) => (
-          <SessionItemCard
+          <ListItemCard
             key={exercise.id}
             title={exercise.name || 'Untitled Exercise'}
             subtitle={exercise.goal_tempo ? `Goal: ${exercise.goal_tempo} BPM` : undefined}
@@ -170,7 +170,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
 
         <Text className="text-2xl font-bold">{selectedBook.name}</Text>
         {filteredSections.map((section) => (
-          <SessionItemCard
+          <ListItemCard
             key={section.id}
             title={section.name || 'Untitled Section'}
             subtitle={`${section.exercise_count} exercises`}
@@ -194,7 +194,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
   return (
     <View className="gap-y-4 mt-4">
       {filteredBooks.map((book) => (
-        <SessionItemCard
+        <ListItemCard
           key={book.id}
           title={book.name || 'Untitled Book'}
           subtitle={`${book.exercise_count} exercises`}

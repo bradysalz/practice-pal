@@ -4,7 +4,7 @@ import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { router } from 'expo-router';
 import { Play, Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function MakeSessionPage() {
@@ -24,7 +24,7 @@ export default function MakeSessionPage() {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <ScrollView
         className="flex-1 px-4"
         style={{ paddingTop: insets.top + 16 }}
@@ -41,7 +41,7 @@ export default function MakeSessionPage() {
         className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200"
         style={{ paddingBottom: insets.bottom }}
       >
-        <View className="flex-row gap-x-4 m-4">
+        <View className="flex-row gap-x-4 mt-4 mx-4">
           {/* Add Items Button */}
           <Pressable
             className="flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80"
@@ -61,6 +61,6 @@ export default function MakeSessionPage() {
           </Pressable>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

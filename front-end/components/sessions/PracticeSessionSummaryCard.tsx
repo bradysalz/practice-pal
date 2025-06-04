@@ -1,5 +1,4 @@
 import { ThemedIcon } from '@/components/icons/themed-icon';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
@@ -33,10 +32,10 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
   });
 
   return (
-    <View className='my-3 border-l-4 border-l-slate-700 rounded-xl' >
+    <View className='my-3 border-l-4 border-l-orange-500 rounded-xl' >
       <Card className="rounded-xl overflow-hidden shadow">
         <Pressable onPress={handleCardClick}>
-          <CardHeader className="p-4 pb-2 bg-slate-100 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
+          <CardHeader className="p-4 pb-2 bg-slate-50 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
             {/* Title + Chevron */}
             <View className="flex-row items-center justify-between mb-2">
               <Text className="font-bold text-2xl pb-2">
@@ -53,14 +52,6 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
                 <ThemedIcon name="Clock" size={20} style={{ marginRight: 1 }} />
                 <Text className="ml-1 text-lg">{formatToMinutes(session.duration || 0)} mins</Text>
               </View>
-              <Badge className="flex-row items-center gap-1 bg-orange-100 border-orange-200 mr-2">
-                <ThemedIcon name="Dumbbell" size={20} />
-                <Text className="text-lg">{session.exercise_count}</Text>
-              </Badge>
-              <Badge className="flex-row items-center gap-1 bg-orange-100 border-orange-200">
-                <ThemedIcon name="Music" size={20} />
-                <Text className="text-lg">{session.song_count}</Text>
-              </Badge>
             </View>
           </CardHeader>
         </Pressable>

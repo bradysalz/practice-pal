@@ -21,6 +21,7 @@ export default function LibraryStackLayout() {
         name="add-item"
         options={{
           title: 'Add Item',
+          headerShown: false,
         }}
       />
       {/* Book Detail screen */}

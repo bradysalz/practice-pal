@@ -14,13 +14,11 @@ import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function EditSetlistPage() {
   const { id } = useLocalSearchParams();
   const setlistId = id as string;
   const router = useRouter();
-  const insets = useSafeAreaInsets();
 
   // Get stores
   const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
