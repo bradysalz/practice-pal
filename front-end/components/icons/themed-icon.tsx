@@ -7,6 +7,7 @@ import { getTailwindColor } from '@/lib/utils/tailwind-utils';
 import {
   ArrowLeft,
   BarChart,
+  Bookmark,
   BookOpen,
   Check,
   ChevronRight,
@@ -31,6 +32,7 @@ const ICONS = {
   Drum,
   BookOpen,
   BarChart,
+  Bookmark,
   Dumbbell,
   Clock,
   Edit,

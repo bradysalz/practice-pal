@@ -1,8 +1,9 @@
+import { ThemedIcon } from '@/components/icons/themed-icon';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
@@ -41,38 +42,39 @@ export default function SectionDetailPage() {
   };
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: section.name,
-        }}
-      />
-      <View className="flex-1 p-4">
-        <View className="mt-4 flex-row gap-x-4 mb-4">
-          <StatBox label="Exercises" value={exercises[sectionId]?.length || 0} />
+    <View className="flex-1 p-4">
+      <View className="gap-y-4 mb-4">
+        <View className="flex-row items-center justify-left bg-orange-100 p-2">
+          <ThemedIcon name="BookOpen" size={28} color="black" />
+          <Text className="text-2xl font-bold ml-2">{book.name}</Text>
         </View>
 
-        {isLoading ? (
-          <View className="flex-1 justify-center items-center">
-            <ActivityIndicator size="large" />
-          </View>
-        ) : (
-          <View className="rounded-lg">
-            {exercises[sectionId]?.map((exercise) => (
-              <ListItemCard
-                key={exercise.id}
-                title={`Exercise ${exercise.name}`}
-                subtitle={exercise.sort_position ? `Position: ${exercise.sort_position}` : undefined}
-                isAdded={false}
-                onToggle={() => handleExercisePress(exercise.id)}
-                className="mb-4"
-                rightElement={<ChevronRight size={20} className="text-slate-500" />}
-              />
-            ))}
-          </View>
-        )}
+        <View className="flex-row items-center justify-left bg-orange-100 p-2">
+          <ThemedIcon name="Bookmark" size={28} color="black" />
+          <Text className="text-2xl font-bold ml-2">{section.name}</Text>
+        </View>
       </View>
-    </>
+
+      {isLoading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <View className="rounded-lg">
+          {exercises[sectionId]?.map((exercise) => (
+            <ListItemCard
+              key={exercise.id}
+              title={`${exercise.name}`}
+              isAdded={false}
+              onPress={() => handleExercisePress(exercise.id)}
+              className="mb-4"
+              rightElement={<ChevronRight size={20} className="text-slate-500" />}
+            />
+          ))}
+        </View>
+      )}
+    </View>
+
   );
 }
 

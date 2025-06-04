@@ -9,7 +9,7 @@ interface ListIemCardProps extends ViewProps {
   isAdded: boolean;
   onAdd?: () => void;
   onRemove?: () => void;
-  onToggle?: () => void;
+  onPress?: () => void;
   rightElement?: ReactNode;
   stats?: string;
 }
@@ -21,13 +21,13 @@ export function ListItemCard({
   isAdded,
   onAdd,
   onRemove,
-  onToggle,
+  onPress: onPress,
   rightElement,
   stats,
   ...viewProps
 }: ListIemCardProps) {
   const showCheckbox = onAdd && onRemove;
-  const isClickable = onToggle || showCheckbox;
+  const isClickable = onPress || showCheckbox;
 
   return (
     <Pressable
@@ -39,7 +39,7 @@ export function ListItemCard({
             onAdd?.();
           }
         } else {
-          onToggle?.();
+          onPress?.();
         }
       }}
       className={isClickable ? "active:opacity-80" : undefined}
