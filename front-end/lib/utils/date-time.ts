@@ -5,5 +5,5 @@ export function formatToMinutes(seconds: number): number {
 }
 
 export function formatTimestampToDate(timestamp: string): string {
-  return format(timestamp, 'EEEE, MMMM d');
+  return format(new Date(timestamp), 'EEEE, MMMM d');
 }
