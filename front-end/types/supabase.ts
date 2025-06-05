@@ -240,7 +240,7 @@ export type Database = {
           id: string
           notes: string | null
           position: number | null
-          session_id: string | null
+          session_id: string
           song_id: string | null
           tempo: number | null
           type: string
@@ -253,7 +253,7 @@ export type Database = {
           id: string
           notes?: string | null
           position?: number | null
-          session_id?: string | null
+          session_id: string
           song_id?: string | null
           tempo?: number | null
           type: string
@@ -266,7 +266,7 @@ export type Database = {
           id?: string
           notes?: string | null
           position?: number | null
-          session_id?: string | null
+          session_id?: string
           song_id?: string | null
           tempo?: number | null
           type?: string

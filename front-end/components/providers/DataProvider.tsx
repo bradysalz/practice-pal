@@ -17,6 +17,7 @@ export function DataProvider({ children }: PropsWithChildren) {
   const fetchArtists = useArtistsStore((state) => state.fetchArtists);
   const fetchSongs = useSongsStore((state) => state.fetchSongs);
   const fetchSetlists = useSetlistsStore((state) => state.fetchSetlists);
+  const fetchSessions = useSessionsStore((state) => state.fetchSessions);
   const fetchRecentSessions = useSessionsStore((state) => state.fetchRecentSessionsWithItems);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export function DataProvider({ children }: PropsWithChildren) {
           fetchArtists(),
           fetchSongs(),
           fetchSetlists(),
+          fetchSessions(),
           fetchRecentSessions(10), // Load last 10 sessions
         ]);
       } catch (error) {

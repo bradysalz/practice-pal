@@ -1,13 +1,10 @@
 import { ThemedIcon } from '@/components/icons/themed-icon';
-import { ListItemCard } from '@/components/shared/ListItemCard';
-import ItemTempoGraph from '@/components/stats/ItemTempoGraph';
+import ItemDetailPage from '@/components/shared/ItemDetailPage';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
-import { useSessionsStore } from '@/stores/session-store';
-import { formatTimestampToDate } from '@/utils/date-time';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -25,11 +22,9 @@ export default function ExerciseDetailPage() {
   const sections = useSectionsStore((state) => state.sections);
   const exercises = useExercisesStore((state) => state.exercises);
   const sessionItemsByExercise = useSessionItemsStore((state) => state.sessionItemsByExercise);
-  const allSessions = useSessionsStore((state) => state.sessions);
 
   // Fetch
   const fetchExercisesBySection = useExercisesStore((state) => state.fetchExercisesBySection);
-  const fetchSessions = useSessionsStore((state) => state.fetchSessions);
   const fetchSessionItemByExerciseId = useSessionItemsStore(
     (state) => state.fetchSessionItemByExerciseId
   );
@@ -39,17 +34,15 @@ export default function ExerciseDetailPage() {
   const syncUpdateExercise = useExercisesStore((state) => state.syncUpdateExercise);
 
   useEffect(() => {
-    fetchSessions();
     fetchExercisesBySection(sectionId);
     fetchSessionItemByExerciseId(exerciseId);
-  }, [fetchSessions, fetchExercisesBySection, sectionId, fetchSessionItemByExerciseId, exerciseId]);
+  }, [fetchExercisesBySection, sectionId, fetchSessionItemByExerciseId, exerciseId]);
 
   const book = books.find((b) => b.id === bookId);
   const section = sections.find((s) => s.id === sectionId);
   const exercise = exercises[sectionId].find((e) => e.id === exerciseId);
 
   const sessionItems = sessionItemsByExercise[exerciseId || ''] || [];
-  const sessionMap = new Map(allSessions.map((s) => [s.id, s]));
 
   const [goalTempo, setGoalTempo] = useState<string>(String(exercise?.goal_tempo) || '');
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error' | 'bad'>('idle');
@@ -71,10 +64,6 @@ export default function ExerciseDetailPage() {
       setStatus('saved');
       setTimeout(() => setStatus('idle'), 1500); // Reset after brief display
     }
-  };
-
-  const handleSessionPress = (sessionId: string) => {
-    router.navigate(`/sessions/${sessionId}`);
   };
 
   if (!book) return <Text>Book not found</Text>;
@@ -114,51 +103,8 @@ export default function ExerciseDetailPage() {
         {status === 'error' && <Text className="text-sm text-red-600">Save failed</Text>}
       </View>
 
+      <ItemDetailPage sessionItems={sessionItems} />
 
-
-      {sessionItems.length > 0 ? (
-        <View>
-          {/* Separator */}
-          <View className="h-2 bg-red-200 my-3 w-full rounded-xl" />
-
-          {/* Graph */}
-          <ItemTempoGraph data={sessionItems
-            .filter(item => item.tempo !== null)
-            .map((item) => ({
-              timestamp: item.created_at,
-              tempo: item.tempo!, // already filtered out nulls
-            }))} />
-
-          {/* Separator */}
-          <View className="h-2 bg-red-200 my-3 w-full rounded-xl" />
-          <Text className="text-2xl font-semibold my-4">Sessions</Text>
-          {sessionItems.map((item) => {
-            const sessionId = item.session_id;
-            if (!sessionId) return null;
-
-            const session = sessionMap.get(sessionId);
-            if (!session) return null;
-
-            return (
-              <ListItemCard
-                key={item.id}
-                title={`${item.tempo} BPM`}
-                subtitle={formatTimestampToDate(item.created_at)}
-                onPress={() => handleSessionPress(sessionId)}
-                className="mb-4"
-                isAdded={false}
-                rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
-              />
-            );
-          })}
-        </View>
-
-      ) : (
-        <View>
-          <Text className="text-2xl font-semibold my-4">Sessions</Text>
-          <Text className="text-gray-500 italic">No sessions logged yet.</Text>
-        </View>
-      )}
     </ScrollView >
   );
 }

@@ -16,7 +16,7 @@ type SessionItemsState = {
   sessionItemsBySong: { [songId: string]: SessionItemRow[] };
 
   fetchSessionItemBySessionId: (sessionId: string) => Promise<void>;
-  fetchSessionItemByExerciseId: (exerciseId: string) => Promise<void>;
+  fetchSessionItemByExerciseId: (exerciseId: string, force?: boolean) => Promise<void>;
   fetchSessionItemBySongId: (songId: string) => Promise<void>;
 
   addSessionItemLocal: (item: InputLocalSessionItem) => string;
@@ -47,7 +47,12 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
   },
 
-  fetchSessionItemByExerciseId: async (exerciseId) => {
+  fetchSessionItemByExerciseId: async (exerciseId: string, force: boolean = false) => {
+    // Return early if data exists and not forcing refresh
+    if (!force && get().sessionItemsByExercise[exerciseId]?.length > 0) {
+      return;
+    }
+
     const { data, error } = await supabase
       .from('session_items')
       .select('*')
