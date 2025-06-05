@@ -5,11 +5,11 @@ import { create } from 'zustand';
 
 export type ArtistRow = Database['public']['Tables']['artists']['Row'];
 type ArtistInsert = Database['public']['Tables']['artists']['Insert'];
-type InputArist = Omit<ArtistInsert, 'id' | 'created_at' | 'updated_at'>;
+type InputArtist = Omit<ArtistInsert, 'id' | 'created_at' | 'updated_at'>;
 
 type ArtistsState = {
   artists: ArtistRow[];
-  addArtistLocal: (artist: InputArist) => string;
+  addArtistLocal: (artist: InputArtist) => string;
   syncAddArtist: (tempId: string) => Promise<void>;
   fetchArtists: () => Promise<void>;
 };
