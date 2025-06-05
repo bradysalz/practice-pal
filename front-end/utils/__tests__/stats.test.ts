@@ -38,7 +38,7 @@ describe('formatDateByRange', () => {
       const data = createTestData('2023-01-01T00:00:00Z', '2024-12-31T00:00:00Z');
       const date = '2024-05-01T12:00:00Z';
       const result = formatDateByRange(date, 'all', data);
-      expect(result).toBe('May \'24');
+      expect(result).toBe('May 24');
     });
 
     it('should show only month when range is 1-12 months', () => {
