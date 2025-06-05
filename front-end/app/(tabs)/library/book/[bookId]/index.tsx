@@ -1,14 +1,13 @@
+import { HighlightBar } from '@/components/shared/HighlightBar';
+import { ListItemCard } from '@/components/shared/ListItemCard';
+import { StatBox } from '@/components/shared/StatBox';
+import { Button } from '@/components/ui/button';
+import { useBooksStore } from '@/stores/book-store';
+import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import React, { useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-
-import { Button } from '@/components/ui/button';
-
-import { ThemedIcon } from '@/components/icons/themed-icon';
-import { ListItemCard } from '@/components/shared/ListItemCard';
-import { useBooksStore } from '@/stores/book-store';
-import { useSectionsStore } from '@/stores/section-store';
 
 export default function BookDetailPage() {
   const router = useRouter();
@@ -30,10 +29,7 @@ export default function BookDetailPage() {
 
   return (
     <View className="flex-1 p-4">
-      <View className="flex-row items-center justify-left bg-orange-100 p-2">
-        <ThemedIcon name="BookOpen" size={28} color="black" />
-        <Text className="text-2xl font-bold ml-2">{book.name}</Text>
-      </View>
+      <HighlightBar type="book" name={book.name} />
       <View className="mt-4 flex-row gap-x-4 mb-4">
 
         <StatBox label="Sections" value={usefulSections.length} />
@@ -54,15 +50,6 @@ export default function BookDetailPage() {
           );
         })}
       </ScrollView>
-    </View>
-  );
-}
-
-function StatBox({ label, value }: { label: string; value: number }) {
-  return (
-    <View className="p-4 bg-orange-100 rounded-md items-center flex-1">
-      <Text className="text-2xl font-bold">{value}</Text>
-      <Text className="">{label}</Text>
     </View>
   );
 }

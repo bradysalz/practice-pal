@@ -9,6 +9,7 @@ import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
 import { ThemedIcon } from '../icons/themed-icon';
+import { HighlightBar } from './HighlightBar';
 import { ListItemCard } from './ListItemCard';
 
 interface BooksTabProps {
@@ -140,8 +141,8 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
           <Text className="text-primary">{'< Back'}</Text>
         </Pressable>
 
-        <Text className="text-2xl font-bold">{selectedBook.name}</Text>
-        <Text className="text-xl font-bold">{selectedSection.name}</Text>
+        <HighlightBar type="book" name={selectedBook.name} />
+        <HighlightBar type="section" name={selectedSection.name} />
         {filteredExercises.map((exercise) => (
           <ListItemCard
             key={exercise.id}
@@ -168,7 +169,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
           <Text className="text-primary">{'< Back'}</Text>
         </Pressable>
 
-        <Text className="text-2xl font-bold">{selectedBook.name}</Text>
+        <HighlightBar type="book" name={selectedBook.name} />
         {filteredSections.map((section) => (
           <ListItemCard
             key={section.id}

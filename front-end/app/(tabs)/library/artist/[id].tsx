@@ -1,9 +1,11 @@
-import { Card, CardHeader } from '@/components/ui/card';
+import { HighlightBar } from '@/components/shared/HighlightBar';
+import { ListItemCard } from '@/components/shared/ListItemCard';
+import { StatBox } from '@/components/shared/StatBox';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronRight, Music } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 export default function ArtistDetailPage() {
   const router = useRouter();
@@ -23,26 +25,25 @@ export default function ArtistDetailPage() {
 
   if (!artist) return <Text>Artist not found!</Text>;
   return (
-    <View className="flex-1 bg-white p-4 space-y-6">
-      <Text className="text-2xl font-bold">{artist.name}</Text>
-
-      {filteredSongs.map((song) => (
-        <Pressable
-          key={song.id}
-          onPress={() => handleSongPress(song.id)}
-          className="active:opacity-70"
-        >
-          <Card className="hover:shadow-sm">
-            <CardHeader className="flex-row justify-between items-center">
-              <View className="flex-row items-center space-x-2">
-                <Music size={20} />
-                <Text className="text-lg font-medium">{song.name}</Text>
-              </View>
-              <ChevronRight size={20} className="text-muted-foreground" />
-            </CardHeader>
-          </Card>
-        </Pressable>
-      ))}
+    <View className="flex-1 p-4">
+      <View className="gap-y-4 mb-4">
+        <HighlightBar type="artist" name={artist.name} />
+      </View>
+      <View className="flex-row gap-x-4 mb-4">
+        <StatBox label="Songs" value={filteredSongs.length} />
+      </View>
+      <ScrollView className="rounded-lg">
+        {filteredSongs.map((song) => (
+          <ListItemCard
+            key={song.id}
+            title={`${song.name}`}
+            isAdded={false}
+            onPress={() => handleSongPress(song.id)}
+            className="mb-4"
+            rightElement={<ChevronRight size={20} className="text-slate-500" />}
+          />
+        ))}
+      </ScrollView>
     </View>
   );
 }
