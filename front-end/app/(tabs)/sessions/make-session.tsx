@@ -1,6 +1,6 @@
 import { CurrentSessionItems } from '@/components/sessions/CurrentSessionItems';
-import { createNewDraft } from '@/lib/utils/draft-session';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
+import { createNewDraft } from '@/utils/draft-session';
 import { router } from 'expo-router';
 import { Play, Plus } from 'lucide-react-native';
 import { useEffect } from 'react';

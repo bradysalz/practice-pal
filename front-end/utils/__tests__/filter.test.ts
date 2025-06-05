@@ -1,5 +1,5 @@
-import { groupItems } from '@/lib/utils/filter';
 import { SessionItemWithNested } from '@/types/session';
+import { groupItems } from '@/utils/filter';
 
 describe('groupSessionItems', () => {
   const mockItems: SessionItemWithNested[] = [

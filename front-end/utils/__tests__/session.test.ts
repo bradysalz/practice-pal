@@ -1,5 +1,5 @@
-import { getBookAndSongNamesFromSession } from '@/lib/utils/session';
 import { SessionItemWithNested } from '@/types/session';
+import { getBookAndSongNamesFromSession } from '@/utils/session';
 
 describe('getBookAndSongNamesFromSession', () => {
   it('extracts unique book and song ids with names', () => {

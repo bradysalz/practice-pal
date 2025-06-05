@@ -33,6 +33,7 @@
     "@rn-primitives/slot": "^1.1.0",
     "@rn-primitives/tabs": "^1.1.0",
     "@rn-primitives/types": "^1.1.0",
+    "@shopify/react-native-skia": "v2.0.0-next.4",
     "@supabase/supabase-js": "^2.49.5-next.1",
     "@types/jest": "^29.5.14",
     "babel-jest": "^29.7.0",
@@ -79,6 +80,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-jest": "^29.3.4",
     "uuid": "^11.1.0",
+    "victory-native": "^41.17.3",
     "zustand": "^5.0.4"
   },
   "devDependencies": {
@@ -91,6 +93,9 @@
   "overrides": {
     "lucide-react-native": {
       "react": "19.0.0"
+    },
+    "victory-native": {
+      "@shopify/react-native-skia": "v2.0.0-next.4"
     }
   },
   "private": true

@@ -1,7 +1,7 @@
 import { SessionDetailCardWrapper } from '@/components/sessions/SessionDetailCardWrapper';
 import { Separator } from '@/components/ui/separator';
-import { groupSongsByArtistWithSession } from '@/lib/utils/session';
 import { SessionItemWithNested } from '@/types/session';
+import { groupSongsByArtistWithSession } from '@/utils/session';
 
 import { Text, View } from 'react-native';
 

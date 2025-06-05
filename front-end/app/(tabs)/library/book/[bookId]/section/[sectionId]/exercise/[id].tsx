@@ -1,11 +1,12 @@
 import { ThemedIcon } from '@/components/icons/themed-icon';
 import { ListItemCard } from '@/components/shared/ListItemCard';
-import { formatTimestampToDate } from '@/lib/utils/date-time';
+import ItemTempoGraph from '@/components/stats/ItemTempoGraph';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
 import { useSessionsStore } from '@/stores/session-store';
+import { formatTimestampToDate } from '@/utils/date-time';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
@@ -81,7 +82,6 @@ export default function ExerciseDetailPage() {
   if (!exercise) return <Text>Exercise not found</Text>;
 
   return (
-
     <ScrollView className="flex-1 bg-white p-4 space-y-6">
       <View className="gap-y-4 mb-4">
         <View className="flex-row items-center justify-left bg-orange-100 p-2">
@@ -114,39 +114,51 @@ export default function ExerciseDetailPage() {
         {status === 'error' && <Text className="text-sm text-red-600">Save failed</Text>}
       </View>
 
-      {/* Separator */}
-      <View className="h-2 bg-red-200 my-3 w-full rounded-xl" />
 
-      {/* Sessions */}
-      <View className="">
-        <Text className="text-2xl font-semibold my-4">Sessions</Text>
 
-        {sessionItems.length === 0 ? (
+      {sessionItems.length > 0 ? (
+        <View>
+          {/* Separator */}
+          <View className="h-2 bg-red-200 my-3 w-full rounded-xl" />
+
+          {/* Graph */}
+          <ItemTempoGraph data={sessionItems
+            .filter(item => item.tempo !== null)
+            .map((item) => ({
+              timestamp: item.created_at,
+              tempo: item.tempo!, // already filtered out nulls
+            }))} />
+
+          {/* Separator */}
+          <View className="h-2 bg-red-200 my-3 w-full rounded-xl" />
+          <Text className="text-2xl font-semibold my-4">Sessions</Text>
+          {sessionItems.map((item) => {
+            const sessionId = item.session_id;
+            if (!sessionId) return null;
+
+            const session = sessionMap.get(sessionId);
+            if (!session) return null;
+
+            return (
+              <ListItemCard
+                key={item.id}
+                title={`${item.tempo} BPM`}
+                subtitle={formatTimestampToDate(item.created_at)}
+                onPress={() => handleSessionPress(sessionId)}
+                className="mb-4"
+                isAdded={false}
+                rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
+              />
+            );
+          })}
+        </View>
+
+      ) : (
+        <View>
+          <Text className="text-2xl font-semibold my-4">Sessions</Text>
           <Text className="text-gray-500 italic">No sessions logged yet.</Text>
-        ) : (
-          <View className="rounded-lg">
-            {sessionItems.map((item) => {
-              const sessionId = item.session_id;
-              if (!sessionId) return null;
-
-              const session = sessionMap.get(sessionId);
-              if (!session) return null;
-
-              return (
-                <ListItemCard
-                  key={item.id}
-                  title={`${item.tempo} BPM`}
-                  subtitle={formatTimestampToDate(item.created_at)}
-                  onPress={() => handleSessionPress(sessionId)}
-                  className="mb-4"
-                  isAdded={false}
-                  rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
-                />
-              );
-            })}
-          </View>
-        )}
-      </View>
-    </ScrollView>
+        </View>
+      )}
+    </ScrollView >
   );
 }

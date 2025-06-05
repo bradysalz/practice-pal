@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/tailwind-utils';
+import { cn } from '@/utils/tailwind-utils';
 import * as SeparatorPrimitive from '@rn-primitives/separator';
 import * as React from 'react';
 

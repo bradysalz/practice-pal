@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { formatTimestampToDate } from '@/lib/utils/date-time';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
 import { useSongsStore } from '@/stores/song-store';
+import { formatTimestampToDate } from '@/utils/date-time';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, Text, TextInput, View } from 'react-native';

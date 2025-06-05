@@ -1,5 +1,5 @@
 import { TextClassContext } from '@/components/ui/text';
-import { cn } from '@/lib/utils/tailwind-utils';
+import { cn } from '@/utils/tailwind-utils';
 import * as Slot from '@rn-primitives/slot';
 import type { SlottableViewProps } from '@rn-primitives/types';
 import { cva, type VariantProps } from 'class-variance-authority';

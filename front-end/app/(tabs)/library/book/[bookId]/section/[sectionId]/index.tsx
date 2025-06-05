@@ -6,7 +6,7 @@ import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 
 export default function SectionDetailPage() {
   const router = useRouter();
@@ -60,7 +60,7 @@ export default function SectionDetailPage() {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <View className="rounded-lg">
+        <ScrollView className="rounded-lg">
           {exercises[sectionId]?.map((exercise) => (
             <ListItemCard
               key={exercise.id}
@@ -71,7 +71,7 @@ export default function SectionDetailPage() {
               rightElement={<ChevronRight size={20} className="text-slate-500" />}
             />
           ))}
-        </View>
+        </ScrollView>
       )}
     </View>
 

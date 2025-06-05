@@ -1,11 +1,11 @@
-import { exerciseToDraftSessionItem } from '@/lib/utils/draft-session';
-import { exerciseToDraftSetlistItem } from '@/lib/utils/draft-setlist';
 import { BookWithCountsRow, useBooksStore } from '@/stores/book-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { SectionWithCountsRow, useSectionsStore } from '@/stores/section-store';
 import { ExerciseRow } from '@/types/session';
+import { exerciseToDraftSessionItem } from '@/utils/draft-session';
+import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
 import { ThemedIcon } from '../icons/themed-icon';

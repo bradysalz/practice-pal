@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, StyleProp, ViewStyle } from 'react-native';
 // import { useColorScheme } from 'nativewind';
-import { getTailwindColor } from '@/lib/utils/tailwind-utils';
+import { getTailwindColor } from '@/utils/tailwind-utils';
 
 // Import icons explicitly
 import {

@@ -1,4 +1,4 @@
-import { getTailwindColor } from '@/lib/utils/tailwind-utils';
+import { getTailwindColor } from '@/utils/tailwind-utils';
 import { Platform } from 'react-native';
 import colors from 'tailwindcss/colors';
 
