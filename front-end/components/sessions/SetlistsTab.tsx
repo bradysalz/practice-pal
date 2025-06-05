@@ -1,6 +1,6 @@
-import { setlistItemToDraftSessionItem } from '@/lib/utils/draft-session';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
+import { setlistItemToDraftSessionItem } from '@/utils/draft-session';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import { ListItemCard } from '../shared/ListItemCard';

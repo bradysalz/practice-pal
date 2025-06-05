@@ -1,9 +1,9 @@
 import { ThemedIcon } from '@/components/icons/themed-icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { formatTimestampToDate, formatToMinutes } from '@/lib/utils/date-time';
-import { getBookAndSongNamesFromSession } from '@/lib/utils/session';
 import { SessionWithItems } from '@/types/session';
+import { formatTimestampToDate, formatToMinutes } from '@/utils/date-time';
+import { getBookAndSongNamesFromSession } from '@/utils/session';
 import { useRouter } from 'expo-router';
 import { ChevronDown } from 'lucide-react-native';
 import { useState } from 'react';

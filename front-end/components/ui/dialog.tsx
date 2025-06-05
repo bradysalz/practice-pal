@@ -1,5 +1,5 @@
 import { X } from '@/lib/icons/X';
-import { cn } from '@/lib/utils/tailwind-utils';
+import { cn } from '@/utils/tailwind-utils';
 import * as DialogPrimitive from '@rn-primitives/dialog';
 import * as React from 'react';
 import { Platform, StyleSheet, View, type ViewProps } from 'react-native';
@@ -143,5 +143,5 @@ export {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 };

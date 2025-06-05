@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/tailwind-utils';
+import { cn } from '@/utils/tailwind-utils';
 import * as Slot from '@rn-primitives/slot';
 import type { SlottableTextProps, TextRef } from '@rn-primitives/types';
 import * as React from 'react';

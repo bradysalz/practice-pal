@@ -8,6 +8,7 @@ export default function SetlistStack() {
         name="index"
         options={{
           title: 'Setlists',
+          headerShown: false,
         }}
       />
       <Stack.Screen

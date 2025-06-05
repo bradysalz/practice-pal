@@ -1,9 +1,9 @@
-import { songRowToDraftSessionItem } from '@/lib/utils/draft-session';
-import { songRowToDraftSetlistItem } from '@/lib/utils/draft-setlist';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { SongRow, useSongsStore } from '@/stores/song-store';
+import { songRowToDraftSessionItem } from '@/utils/draft-session';
+import { songRowToDraftSetlistItem } from '@/utils/draft-setlist';
 import { View } from 'react-native';
 import { ListItemCard } from './ListItemCard';
 

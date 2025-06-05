@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { Button } from '@/components/ui/button';
 
@@ -39,7 +39,7 @@ export default function BookDetailPage() {
         <StatBox label="Sections" value={usefulSections.length} />
         <StatBox label="Exercises" value={book.exercise_count} />
       </View>
-      <View className="rounded-lg">
+      <ScrollView className="rounded-lg">
         {usefulSections.map((section) => {
           return (
             <ListItemCard
@@ -53,7 +53,7 @@ export default function BookDetailPage() {
             />
           );
         })}
-      </View>
+      </ScrollView>
     </View>
   );
 }

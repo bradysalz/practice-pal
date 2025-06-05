@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/tailwind-utils';
+import { cn } from '@/utils/tailwind-utils';
 import * as LabelPrimitive from '@rn-primitives/label';
 import * as React from 'react';
 
