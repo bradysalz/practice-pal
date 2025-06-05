@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { HighlightBar } from '@/components/shared/HighlightBar';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
@@ -44,15 +44,8 @@ export default function SectionDetailPage() {
   return (
     <View className="flex-1 p-4">
       <View className="gap-y-4 mb-4">
-        <View className="flex-row items-center justify-left bg-orange-100 p-2">
-          <ThemedIcon name="BookOpen" size={28} color="black" />
-          <Text className="text-2xl font-bold ml-2">{book.name}</Text>
-        </View>
-
-        <View className="flex-row items-center justify-left bg-orange-100 p-2">
-          <ThemedIcon name="Bookmark" size={28} color="black" />
-          <Text className="text-2xl font-bold ml-2">{section.name}</Text>
-        </View>
+        <HighlightBar type="book" name={book.name} />
+        <HighlightBar type="section" name={section.name} />
       </View>
 
       {isLoading ? (

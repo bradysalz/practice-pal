@@ -50,7 +50,7 @@ export function ListItemCard({
           <Text className="font-medium text-xl">{title}</Text>
           {subtitle && <Text className="text-slate-500 text-lg">{subtitle}</Text>}
           {description && <Text className="text-slate-500 text-lg ">{description}</Text>}
-          {stats && <Text className="text-sm text-slate-400 mt-1 text-lg">{stats}</Text>}
+          {stats && <Text className="text-slate-400 mt-1 text-lg">{stats}</Text>}
         </View>
         {rightElement || (showCheckbox && (
           <Checkbox

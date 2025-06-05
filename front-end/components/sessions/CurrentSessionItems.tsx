@@ -36,7 +36,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
         >
           <View className="flex-1 mr-2">
             <Text className="font-medium">{song.name}</Text>
-            {artist && <Text className="text-sm text-slate-500">{artist.name}</Text>}
+            {artist && <Text className=" text-slate-500">{artist.name}</Text>}
           </View>
           <Pressable onPress={() => onRemoveItem(item.id)}>
             <ThemedIcon name="X" size={20} />
@@ -50,18 +50,18 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
       return (
         <View
           key={item.id}
-          className="flex-row items-start justify-between p-4 bg-slate-50 rounded-md mb-3"
+          className="flex-row items-start justify-between p-4 bg-slate-200 rounded-md mb-3"
         >
           <View className="flex-1 mr-2">
-            <Text className="font-medium">{item.exercise.name}</Text>
+            <Text className="font-bold text-lg">{item.exercise.name}</Text>
             {item.exercise.section?.book && (
-              <Text className="text-sm text-slate-500">{item.exercise.section.book.name}</Text>
+              <Text className="">{item.exercise.section.book.name}</Text>
             )}
             {item.exercise.section && (
-              <Text className="text-sm text-slate-500">{item.exercise.section.name}</Text>
+              <Text className="">{item.exercise.section.name}</Text>
             )}
             {item.tempo && (
-              <Text className="text-sm text-slate-500">Goal: {item.tempo} BPM</Text>
+              <Text className="">Goal: {item.tempo} BPM</Text>
             )}
           </View>
           <Pressable onPress={() => onRemoveItem(item.id)}>
@@ -76,7 +76,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
   return (
     <View>
-      <Text className="text-xl font-heading-bold mb-2">Selected Items</Text>
+      <Text className="text-2xl font-heading-bold mb-2">Session Items</Text>
       <View className="flex-1 px-4 mb-60">
         {sessionItems.length === 0 ? renderEmptyState() : sessionItems.map(renderSessionItem)}
       </View>

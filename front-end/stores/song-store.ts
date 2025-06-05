@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { Database } from '@/types/supabase';
+import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
@@ -12,6 +13,8 @@ type SongsState = {
   addSongLocal: (song: InputLocalSong) => string;
   syncAddSong: (tempId: string) => Promise<void>;
   fetchSongs: () => Promise<void>;
+  updateSongLocal: (id: string, updates: Partial<SongRow>) => void;
+  syncUpdateSong: (id: string) => Promise<{ error: PostgrestError | null }>;
 };
 
 export const useSongsStore = create<SongsState>((set, get) => ({
@@ -57,5 +60,29 @@ export const useSongsStore = create<SongsState>((set, get) => ({
         songs: state.songs.map((s) => (s.id === id ? data : s)),
       }));
     }
+  },
+
+  updateSongLocal: (id, updates) => {
+    set((state) => ({
+      songs: state.songs.map((song) =>
+        song.id === id ? { ...song, ...updates, updated_at: new Date().toISOString() } : song
+      ),
+    }));
+  },
+
+  syncUpdateSong: async (id) => {
+    const song = get().songs.find(s => s.id === id);
+    if (!song) return { error: null };
+
+    const { id: _, created_at, ...updatePayload } = song;
+
+    const { error } = await supabase.from('songs').update(updatePayload).eq('id', id);
+
+    if (error) {
+      console.error('Failed to sync song update:', error);
+      return { error };
+    }
+
+    return { error: null };
   },
 }));
