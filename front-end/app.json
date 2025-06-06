@@ -42,8 +42,6 @@
       "typedRoutes": true
     },
     "extra": {
-      "supabaseUrl": "https://aagnzucltojcvfimnjdl.supabase.co",
-      "supabaseKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhZ256dWNsdG9qY3ZmaW1uamRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY1Njc2NzcsImV4cCI6MjA2MjE0MzY3N30.HY00-lpsctJO5T-Gim5BA8jIda95uniGC6Hov7Bra1U",
       "router": {},
       "eas": {
         "projectId": "1d2b2f30-1119-49a5-80d8-2eee63d8f252"
