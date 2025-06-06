@@ -131,7 +131,10 @@ export default function ActiveSessionPage() {
       </View>
 
       {/* Session Items */}
-      <ScrollView className="flex-1 px-4 py-4 space-y-4">
+
+      <ScrollView
+        className="flex-1 px-4 pt-4 pb-60 space-y-4"
+      >
         {draftSession.items.map((item) => {
           let name = '';
           let source = '';

@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "front-end",
-    "slug": "front-end",
+    "name": "PracticePal",
+    "owner": "bradysalz",
+    "slug": "practicepal",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontend",
+    "scheme": "practicepal",
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "newArchEnabled": true,
@@ -39,6 +40,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "1d2b2f30-1119-49a5-80d8-2eee63d8f252"
+      }
     }
   }
 }
