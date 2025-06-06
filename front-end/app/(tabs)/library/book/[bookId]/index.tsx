@@ -33,8 +33,8 @@ export default function BookDetailPage() {
     played_exercises: 0,
     total_exercises: 1,
   };
-  const playedProgress = Math.floor(bookStat.played_exercises / bookStat.total_exercises * 100);
-  const goalProgress = Math.floor(bookStat.goal_reached_exercises / bookStat.total_exercises * 100);
+  const playedProgress = Math.floor((bookStat.played_exercises || 0) / (bookStat.total_exercises || 1) * 100);
+  const goalProgress = Math.floor((bookStat.goal_reached_exercises || 0) / (bookStat.total_exercises || 1) * 100);
 
 
   if (!book) return <NotFound />;

@@ -1,8 +1,9 @@
 import NotFound from "@/app/+not-found";
 import { HighlightBar } from "@/components/shared/HighlightBar";
-import ItemProgressGraph, { ItemProgressPoint } from "@/components/stats/ItemProgressGraph";
+import ItemProgressGraph from "@/components/stats/ItemProgressGraph";
 import { useBooksStore } from "@/stores/book-store";
 import { useStatStore } from "@/stores/stat-store";
+import { ItemProgressPoint } from "@/types/stats";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Switch, Text, View } from "react-native";
@@ -24,8 +25,8 @@ export default function BookStatsPage() {
   }, [fetchBookStatsOverTime, bookId, setIsLoading]);
 
   const data = bookStatsOverTime[bookId]?.map(item => ({
-    timestamp: item.date || '',
-    percent_at_goal: item.at_goal || 0,
+    timestamp: item.date ? new Date(item.date).getTime() : 0,
+    percent_at_goal: item.percent_at_goal || 0,
     percent_played: item.percent_played || 0,
     played: item.played || 0,
     at_goal: item.at_goal || 0,

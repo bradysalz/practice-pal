@@ -1,7 +1,7 @@
 import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TimeRange } from "@/types/stats";
-import { calculateCutoffDate, isValidDate } from "@/utils/date-time";
+import { ItemProgressPoint, TimeRange } from "@/types/stats";
+import { calculateCutoffDate } from "@/utils/date-time";
 import { formatDateByRange } from "@/utils/stats";
 import { useFont } from "@shopify/react-native-skia";
 import React, { useMemo, useState } from "react";
@@ -9,14 +9,7 @@ import { Text, View } from "react-native";
 import { CartesianChart, Line, Scatter, useChartPressState } from "victory-native";
 
 
-export type ItemProgressPoint = {
-  timestamp: string;
-  percent_at_goal: number;
-  percent_played: number;
-  played: number;
-  at_goal: number;
-  total: number;
-};
+
 
 interface ItemProgressGraphProps {
   data: ItemProgressPoint[];
@@ -38,20 +31,23 @@ export default function ItemProgressGraph({
   });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
-  const filteredData = useMemo(() => {
-    const now = new Date();
-    const cutoffDate = calculateCutoffDate(timeRange);
+  const now = Date.now();
 
+  const cutoffDate =
+    timeRange === 'all' && data.length > 0
+      ? Math.min(...data.map(point => point.timestamp))
+      : calculateCutoffDate(timeRange).getTime();
+
+  const filteredData = useMemo(() => {
     return data
-      .filter(point => isValidDate(point.timestamp))
-      .filter(point => new Date(point.timestamp) >= cutoffDate)
-      .filter(point => new Date(point.timestamp) <= now)
-      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
-      .map((point) => ({
+      .filter(point => point.timestamp >= cutoffDate)
+      .filter(point => point.timestamp <= now)
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(point => ({
         ...point,
-        timestamp: new Date(point.timestamp).getTime()
-      }))
-  }, [data, timeRange]);
+        timestamp: point.timestamp, // optional, if no transformation needed
+      }));
+  }, [data, cutoffDate, now]);
 
 
   if (!font) {
@@ -107,17 +103,25 @@ export default function ItemProgressGraph({
           data={filteredData}
           xKey="timestamp"
           yKeys={[playedKey, atGoalKey]}
+          domain={{
+            x: [cutoffDate, now],
+            y: use_percent ? [0, 100] : undefined
+          }}
           domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
           xAxis={{
             font,
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
-            tickCount: filteredData.length <= 2 ? 1 : 4
+            tickCount: filteredData.length <= 2 ? 1 : 4,
           }}
           yAxis={[{
             tickCount: 5,
             font,
-            formatYLabel: (value: number) => `${Math.round(value)}`,
-            domain: use_percent ? [0, 100] : undefined
+            formatYLabel: (value: number) => {
+              if (use_percent) {
+                return `${Math.round(value)}%`;
+              }
+              return Math.round(value).toString();
+            },
           }]}
           chartPressState={state as any}
           renderOutside={({ chartBounds }) => {
