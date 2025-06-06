@@ -15,6 +15,8 @@ interface SessionItemCardProps {
 export function ActiveSessionItemCard({ id, name, source, tempo, onTempoChange }: SessionItemCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [notes, setNotes] = useState('');
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [tempoFocused, setTempoFocused] = useState(false);
 
   const chevronStyle = useAnimatedStyle(() => {
     return {
@@ -23,13 +25,25 @@ export function ActiveSessionItemCard({ id, name, source, tempo, onTempoChange }
   });
 
   const cardStyle = useAnimatedStyle(() => {
+    const shouldBeFullOpacity = isExpanded || tempoFocused;
     return {
-      opacity: withTiming(tempo ? 0.4 : 1, { duration: 300 }),
+      opacity: withTiming(isCompleted && !shouldBeFullOpacity ? 0.4 : 1, { duration: 300 }),
+      borderLeftColor: withTiming(
+        isCompleted && !shouldBeFullOpacity ? '#64748b' : '#ef4444',
+        { duration: 300 }
+      ),
     };
   });
 
+  const handleTempoBlur = () => {
+    setTempoFocused(false);
+    if (tempo) {
+      setIsCompleted(true);
+    }
+  };
+
   return (
-    <Animated.View style={cardStyle} className="rounded-xl my-3 border-l-4 border-l-slate-700 overflow-hidden">
+    <Animated.View style={cardStyle} className="rounded-xl my-3 border-l-4 overflow-hidden">
       <Pressable onPress={() => setIsExpanded(!isExpanded)} className="active:opacity-80">
         <Card>
           <CardHeader className="p-4 pb-3 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
@@ -43,7 +57,12 @@ export function ActiveSessionItemCard({ id, name, source, tempo, onTempoChange }
                 <View className="flex-row items-center">
                   <TextInput
                     value={tempo}
-                    onChangeText={onTempoChange}
+                    onChangeText={(value) => {
+                      setIsCompleted(false);
+                      onTempoChange(value);
+                    }}
+                    onBlur={handleTempoBlur}
+                    onFocus={() => setTempoFocused(true)}
                     keyboardType="numeric"
                     className="w-16 text-center border border-slate-300 rounded-xl bg-white py-2 text-lg"
                   />
