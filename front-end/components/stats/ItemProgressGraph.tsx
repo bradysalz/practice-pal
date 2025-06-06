@@ -26,13 +26,12 @@ export default function ItemProgressGraph({
   const atGoalKey = use_percent ? 'percent_at_goal' : 'at_goal';
 
   const { state, isActive } = useChartPressState({
-    x: '',
+    x: 0,
     y: { [playedKey]: 0, [atGoalKey]: 0 }
   });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const now = Date.now();
-
   const cutoffDate =
     timeRange === 'all' && data.length > 0
       ? Math.min(...data.map(point => point.timestamp))
@@ -132,12 +131,16 @@ export default function ItemProgressGraph({
                   yPosition={state.y[playedKey].position}
                   xValue={state.x.value}
                   yValue={state.y[playedKey].value}
+                  y2Position={state.y[atGoalKey].position}
+                  y2Value={state.y[atGoalKey].value}
                   textColor={"black"}
                   lineColor={"black"}
-                  indicatorColor={"black"}
+                  indicatorColor={"#ef4444"}
+                  indicatorColor2={"#3b82f6"}
                   bottom={chartBounds.bottom}
                   top={chartBounds.top}
                   label="Played"
+                  label2="At Goal"
                 />)
             }
           }}

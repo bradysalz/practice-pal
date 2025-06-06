@@ -17,7 +17,7 @@ interface ItemTempoGraphProps {
 
 export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
   const font = useFont(require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"), 14);
-  const { state, isActive } = useChartPressState({ x: '', y: { tempo: 0 } });
+  const { state, isActive } = useChartPressState({ x: 0, y: { tempo: 0 } });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const now = Date.now();
@@ -95,7 +95,7 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           xAxis={{
             font,
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
-            tickCount: filteredData.length <= 2 ? 1 : 4
+            tickCount: filteredData.length <= 2 ? 2 : 4
           }}
           yAxis={[{
             tickCount: 5,
@@ -116,7 +116,7 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
                   yValue={state.y.tempo.value}
                   textColor={"black"}
                   lineColor={"black"}
-                  indicatorColor={"black"}
+                  indicatorColor={"#ef4444"}
                   bottom={chartBounds.bottom}
                   top={chartBounds.top}
                   label="Tempo"
