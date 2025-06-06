@@ -24,7 +24,6 @@ export default function ExerciseDetailPage() {
   const sessionItemsByExercise = useSessionItemsStore((state) => state.sessionItemsByExercise);
 
   // Fetch
-  const fetchExercisesBySection = useExercisesStore((state) => state.fetchExercisesBySection);
   const fetchSessionItemByExerciseId = useSessionItemsStore(
     (state) => state.fetchSessionItemByExerciseId
   );
@@ -34,9 +33,8 @@ export default function ExerciseDetailPage() {
   const syncUpdateExercise = useExercisesStore((state) => state.syncUpdateExercise);
 
   useEffect(() => {
-    fetchExercisesBySection(sectionId);
     fetchSessionItemByExerciseId(exerciseId);
-  }, [fetchExercisesBySection, sectionId, fetchSessionItemByExerciseId, exerciseId]);
+  }, [sectionId, fetchSessionItemByExerciseId, exerciseId]);
 
   const book = books.find((b) => b.id === bookId);
   const section = sections.find((s) => s.id === sectionId);
