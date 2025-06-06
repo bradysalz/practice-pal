@@ -13,14 +13,6 @@ export default function SessionsStack() {
         }}
       />
       <Stack.Screen
-        name="[id]"
-        options={{
-          title: 'Session Details',
-          headerShown: true,
-          headerShadowVisible: false,
-        }}
-      />
-      <Stack.Screen
         name="make-session"
         options={{
           title: 'Create Session',

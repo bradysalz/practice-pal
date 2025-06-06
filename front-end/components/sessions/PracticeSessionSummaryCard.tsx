@@ -99,7 +99,7 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
                 className="mt-4 bg-orange-500 "
                 onPress={(e) => {
                   e.stopPropagation?.(); // Only on web
-                  router.push(`/sessions/${session.id}`);
+                  router.push(`/session-detail/${session.id}`);
                 }}
               >
                 <Text className="text-white font-medium">View Full Session</Text>
