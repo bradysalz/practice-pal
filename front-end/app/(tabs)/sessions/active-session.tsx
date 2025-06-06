@@ -2,11 +2,9 @@ import { ThemedIcon } from '@/components/icons/themed-icon';
 import { ActiveSessionItemCard } from '@/components/sessions/ActiveSessionItemCard';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSessionsStore } from '@/stores/session-store';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ActiveSessionPage() {
@@ -16,7 +14,7 @@ export default function ActiveSessionPage() {
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [tempos, setTempos] = useState<Record<string, string>>({});
-  const headerHeight = useHeaderHeight();
+
   // Initialize tempos from session items
   useEffect(() => {
     if (!draftSession) return;
@@ -133,38 +131,36 @@ export default function ActiveSessionPage() {
       </View>
 
       {/* Session Items */}
-      <KeyboardAwareScrollView
+
+      <ScrollView
+        className="flex-1 px-4 pt-4 pb-60 space-y-4"
       >
-        <ScrollView
-          className="flex-1 px-4 pt-4 pb-60 space-y-4"
-        >
-          {draftSession.items.map((item) => {
-            let name = '';
-            let source = '';
+        {draftSession.items.map((item) => {
+          let name = '';
+          let source = '';
 
-            if (item.type === 'exercise' && item.exercise) {
-              name = item.exercise.name || 'Untitled Exercise';
-              source = item.exercise.section
-                ? `${item.exercise.section.book?.name || ''} / ${item.exercise.section.name}`
-                : 'Exercise';
-            } else if (item.type === 'song' && item.song) {
-              name = item.song.name || 'Untitled Song';
-              source = item.song.artist?.name || 'Song';
-            }
+          if (item.type === 'exercise' && item.exercise) {
+            name = item.exercise.name || 'Untitled Exercise';
+            source = item.exercise.section
+              ? `${item.exercise.section.book?.name || ''} / ${item.exercise.section.name}`
+              : 'Exercise';
+          } else if (item.type === 'song' && item.song) {
+            name = item.song.name || 'Untitled Song';
+            source = item.song.artist?.name || 'Song';
+          }
 
-            return (
-              <ActiveSessionItemCard
-                key={item.id}
-                id={item.id}
-                name={name}
-                source={source}
-                tempo={tempos[item.id] || ''}
-                onTempoChange={(text) => handleTempoChange(item.id, text)}
-              />
-            );
-          })}
-        </ScrollView>
-      </KeyboardAwareScrollView>
+          return (
+            <ActiveSessionItemCard
+              key={item.id}
+              id={item.id}
+              name={name}
+              source={source}
+              tempo={tempos[item.id] || ''}
+              onTempoChange={(text) => handleTempoChange(item.id, text)}
+            />
+          );
+        })}
+      </ScrollView>
 
       {/* End Session Button */}
       <View
