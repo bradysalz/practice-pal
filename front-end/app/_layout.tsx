@@ -68,21 +68,8 @@ export default function RootLayout() {
             {/* <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} /> */}
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="stat-detail"
-                options={{
-                  headerShown: false,
-                  presentation: 'modal', // Or 'card' for standard push animation
-                }}
-              />
-              {/* NEW: Stack for detailed session view */}
-              <Stack.Screen
-                name="session-detail"
-                options={{
-                  headerShown: false, // Manage headers within session-detail/_layout.tsx
-                  presentation: 'modal', // Or 'card'
-                }}
-              />
+              <Stack.Screen name="stat-detail" />
+              <Stack.Screen name="session-detail/[id]" />
               <Stack.Screen name="+not-found" />
             </Stack>
             <PortalHost />

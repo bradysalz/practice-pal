@@ -7,7 +7,7 @@ import { formatTimestampToDate, formatToMinutes } from '@/utils/date-time';
 import { groupItems } from '@/utils/filter';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 export default function PracticeSessionDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -47,13 +47,13 @@ export default function PracticeSessionDetailPage() {
         }}
       />
       {/* Content */}
-      <View className="flex-1 px-4">
+      <SafeAreaView className="flex-1 p-4">
         <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
           <ExerciseDetailCard items={exercises} />
           <SongDetailCard items={songs} />
           <NotesDetailCard notes={session.notes} />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </>
   );
 }

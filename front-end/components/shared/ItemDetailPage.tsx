@@ -32,7 +32,7 @@ export default function ItemDetailPage({
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error' | 'bad'>('idle');
 
   const handleSessionPress = (sessionId: string) => {
-    router.navigate(`/sessions/${sessionId}`);
+    router.navigate(`/session-detail/${sessionId}`);
   };
 
   const handleUpdateGoal = async () => {
@@ -70,7 +70,7 @@ export default function ItemDetailPage({
       </View>
 
       {sessionItems.length > 0 ? (
-        <View>
+        <View className="mb-4">
           <Separator color="red" />
 
           {/* Graph */}
@@ -84,7 +84,7 @@ export default function ItemDetailPage({
           <Separator color="red" />
 
           {/* Session List */}
-          <Text className="text-2xl font-semibold my-4">Sessions</Text>
+          <Text className="text-2xl font-semibold y-4">Sessions</Text>
           {sessionItems.map((item) => {
             const session = sessionMap.get(item.session_id);
             if (!session) {
@@ -110,7 +110,8 @@ export default function ItemDetailPage({
           <Text className="text-2xl font-semibold my-4">Sessions</Text>
           <Text className="text-gray-500 italic">No sessions logged yet.</Text>
         </View>
-      )}
-    </View>
+      )
+      }
+    </View >
   );
 }

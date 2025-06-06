@@ -4,12 +4,21 @@ import { useArtistsStore } from '@/stores/artist-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
 import { useSongsStore } from '@/stores/song-store';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function SongDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const songId = id;
+
+  const fetchSessionItemBySongId = useSessionItemsStore(
+    (state) => state.fetchSessionItemBySongId
+  );
+
+  useEffect(() => {
+    fetchSessionItemBySongId(songId);
+  }, [songId, fetchSessionItemBySongId]);
 
   // Stores
   const songs = useSongsStore((state) => state.songs);
