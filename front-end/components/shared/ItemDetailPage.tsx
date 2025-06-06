@@ -1,5 +1,6 @@
 import { ThemedIcon } from "@/components/icons/themed-icon";
 import { ListItemCard } from "@/components/shared/ListItemCard";
+import { Separator } from "@/components/shared/Separator";
 import ItemTempoGraph from "@/components/stats/ItemTempoGraph";
 import { useSessionsStore } from "@/stores/session-store";
 import { SessionItemRow } from "@/types/session";
@@ -70,19 +71,17 @@ export default function ItemDetailPage({
 
       {sessionItems.length > 0 ? (
         <View>
-          {/* Separator */}
-          <View className="h-2 bg-red-200 my-3 w-full rounded-xl" />
+          <Separator color="red" />
 
           {/* Graph */}
           <ItemTempoGraph data={sessionItems
             .filter(item => item.tempo !== null)
             .map((item) => ({
-              timestamp: item.created_at,
+              timestamp: item.created_at ? new Date(item.created_at).getTime() : 0,
               tempo: item.tempo!, // already filtered out nulls
             }))} />
 
-          {/* Separator */}
-          <View className="h-2 bg-red-200 my-3 w-full rounded-xl" />
+          <Separator color="red" />
 
           {/* Session List */}
           <Text className="text-2xl font-semibold my-4">Sessions</Text>

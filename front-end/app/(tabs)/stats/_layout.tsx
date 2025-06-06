@@ -11,14 +11,6 @@ export default function HomeStack() {
           title: 'Stats', // Title for the header
         }}
       />
-      {/* <Stack.Screen
-                name="[id]" // Corresponds to app/(tabs)/home/[id].js (Your Session Detail)
-                options={{
-                    title: 'Session Details', // Title for the header when viewing details
-                    // Add options like headerRight buttons here
-                }}
-            /> */}
-      {/* If you had other screens specifically part of the Home stack, list them here */}
     </Stack>
   );
 }

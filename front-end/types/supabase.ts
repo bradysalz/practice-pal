@@ -147,6 +147,20 @@ export type Database = {
             foreignKeyName: "exercises_section_id_fkey"
             columns: ["section_id"]
             isOneToOne: false
+            referencedRelation: "section_progress_history"
+            referencedColumns: ["section_id"]
+          },
+          {
+            foreignKeyName: "exercises_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "section_stats_view"
+            referencedColumns: ["section_id"]
+          },
+          {
+            foreignKeyName: "exercises_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
             referencedRelation: "section_with_counts"
             referencedColumns: ["id"]
           },
@@ -209,6 +223,20 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_progress_history"
+            referencedColumns: ["book_id"]
+          },
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_stats_view"
+            referencedColumns: ["book_id"]
+          },
           {
             foreignKeyName: "sections_book_id_fkey"
             columns: ["book_id"]
@@ -499,6 +527,27 @@ export type Database = {
       }
     }
     Views: {
+      book_progress_history: {
+        Row: {
+          at_goal: number | null
+          book_id: string | null
+          date: string | null
+          percent_at_goal: number | null
+          percent_played: number | null
+          played: number | null
+          total: number | null
+        }
+        Relationships: []
+      }
+      book_stats_view: {
+        Row: {
+          book_id: string | null
+          goal_reached_exercises: number | null
+          played_exercises: number | null
+          total_exercises: number | null
+        }
+        Relationships: []
+      }
       book_with_counts: {
         Row: {
           cover_color: string | null
@@ -519,6 +568,27 @@ export type Database = {
           },
         ]
       }
+      section_progress_history: {
+        Row: {
+          at_goal: number | null
+          date: string | null
+          percent_at_goal: number | null
+          percent_played: number | null
+          played: number | null
+          section_id: string | null
+          total: number | null
+        }
+        Relationships: []
+      }
+      section_stats_view: {
+        Row: {
+          goal_reached_exercises: number | null
+          played_exercises: number | null
+          section_id: string | null
+          total_exercises: number | null
+        }
+        Relationships: []
+      }
       section_with_counts: {
         Row: {
           book_id: string | null
@@ -530,6 +600,20 @@ export type Database = {
           updated_at: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_progress_history"
+            referencedColumns: ["book_id"]
+          },
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_stats_view"
+            referencedColumns: ["book_id"]
+          },
           {
             foreignKeyName: "sections_book_id_fkey"
             columns: ["book_id"]

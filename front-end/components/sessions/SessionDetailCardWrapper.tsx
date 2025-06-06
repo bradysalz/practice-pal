@@ -21,7 +21,7 @@ export function SessionDetailCardWrapper({
 }: Props) {
   return (
     <CardWithAccent accentColor={accentColor}>
-      <CardHeader className="mb-4 bg-slate-50 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
+      <CardHeader className="mb-4 bg-slate-100 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
         <View className="flex-row items-center">
           <ThemedIcon
             name={iconName}

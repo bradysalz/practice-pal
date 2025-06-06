@@ -42,7 +42,7 @@ export function DataProvider({ children }: PropsWithChildren) {
     }
 
     loadInitialData();
-  }, [fetchBooks, fetchSections, fetchArtists, fetchSongs, fetchSetlists, fetchRecentSessions]);
+  }, [fetchBooks, fetchSections, fetchArtists, fetchSongs, fetchSessions, fetchSetlists, fetchRecentSessions]);
 
   if (isLoading) {
     return (

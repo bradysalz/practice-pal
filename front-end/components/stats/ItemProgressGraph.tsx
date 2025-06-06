@@ -1,6 +1,6 @@
 import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ItemTempoPoint, TimeRange } from "@/types/stats";
+import { ItemProgressPoint, TimeRange } from "@/types/stats";
 import { calculateCutoffDate } from "@/utils/date-time";
 import { formatDateByRange } from "@/utils/stats";
 import { useFont } from "@shopify/react-native-skia";
@@ -9,15 +9,26 @@ import { Text, View } from "react-native";
 import { CartesianChart, Line, Scatter, useChartPressState } from "victory-native";
 
 
-interface ItemTempoGraphProps {
-  data: ItemTempoPoint[];
+
+
+interface ItemProgressGraphProps {
+  data: ItemProgressPoint[];
+  use_percent: boolean;
 }
 
-
-
-export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
+export default function ItemProgressGraph({
+  data,
+  use_percent
+}: ItemProgressGraphProps) {
   const font = useFont(require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"), 14);
-  const { state, isActive } = useChartPressState({ x: 0, y: { tempo: 0 } });
+
+  const playedKey = use_percent ? 'percent_played' : 'played';
+  const atGoalKey = use_percent ? 'percent_at_goal' : 'at_goal';
+
+  const { state, isActive } = useChartPressState({
+    x: 0,
+    y: { [playedKey]: 0, [atGoalKey]: 0 }
+  });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const now = Date.now();
@@ -86,40 +97,50 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
         </TabsList>
       </Tabs>
 
-      <View style={{ height: 300 }}>
+      <View style={{ height: 300 }} className="gap-y-4">
         <CartesianChart
           data={filteredData}
           xKey="timestamp"
-          yKeys={["tempo"]}
+          yKeys={[playedKey, atGoalKey]}
+          domain={{
+            x: [cutoffDate, now],
+            y: use_percent ? [0, 100] : undefined
+          }}
           domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
           xAxis={{
             font,
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
-            tickCount: filteredData.length <= 2 ? 2 : 4
+            tickCount: filteredData.length <= 2 ? 1 : 4,
           }}
           yAxis={[{
             tickCount: 5,
             font,
-            formatYLabel: (value: number) => `${Math.round(value)}`
+            formatYLabel: (value: number) => {
+              if (use_percent) {
+                return `${Math.round(value)}%`;
+              }
+              return Math.round(value).toString();
+            },
           }]}
-          domain={{
-            x: [cutoffDate, now],
-          }}
           chartPressState={state as any}
           renderOutside={({ chartBounds }) => {
             if (isActive) {
               return (
                 <ActiveValueIndicator
                   xPosition={state.x.position}
-                  yPosition={state.y.tempo.position}
+                  yPosition={state.y[playedKey].position}
                   xValue={state.x.value}
-                  yValue={state.y.tempo.value}
+                  yValue={state.y[playedKey].value}
+                  y2Position={state.y[atGoalKey].position}
+                  y2Value={state.y[atGoalKey].value}
                   textColor={"black"}
                   lineColor={"black"}
                   indicatorColor={"#ef4444"}
+                  indicatorColor2={"#3b82f6"}
                   bottom={chartBounds.bottom}
                   top={chartBounds.top}
-                  label="Tempo"
+                  label="Played"
+                  label2="At Goal"
                 />)
             }
           }}
@@ -127,13 +148,23 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           {({ points }) => (
             <View>
               <Line
-                points={points.tempo}
+                points={points[playedKey]}
                 color="#ef4444"
                 strokeWidth={3}
               />
               <Scatter
-                points={points.tempo}
+                points={points[playedKey]}
                 color="#ef4444"
+                radius={5}
+              />
+              <Line
+                points={points[atGoalKey]}
+                color="#3b82f6"
+                strokeWidth={3}
+              />
+              <Scatter
+                points={points[atGoalKey]}
+                color="#3b82f6"
                 radius={5}
               />
             </View>
