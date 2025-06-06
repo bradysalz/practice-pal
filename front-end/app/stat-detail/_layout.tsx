@@ -9,6 +9,12 @@ export default function SessionDetailLayout() {
           title: 'Book Stats'
         }}
       />
+      <Stack.Screen
+        name="section/[sectionId]"
+        options={{
+          title: 'Section Stats'
+        }}
+      />
     </Stack>
   );
 }
