@@ -8,20 +8,34 @@ import React, { useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import { CartesianChart, Line, Scatter, useChartPressState } from "victory-native";
 
-export type ItemTempoPoint = {
+
+export type ItemProgressPoint = {
   timestamp: string;
-  tempo: number;
+  percent_at_goal: number;
+  percent_played: number;
+  played: number;
+  at_goal: number;
+  total: number;
 };
 
-interface ItemTempoGraphProps {
-  data: ItemTempoPoint[];
+interface ItemProgressGraphProps {
+  data: ItemProgressPoint[];
+  use_percent: boolean;
 }
 
-
-
-export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
+export default function ItemProgressGraph({
+  data,
+  use_percent
+}: ItemProgressGraphProps) {
   const font = useFont(require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"), 14);
-  const { state, isActive } = useChartPressState({ x: '', y: { tempo: 0 } });
+
+  const playedKey = use_percent ? 'percent_played' : 'played';
+  const atGoalKey = use_percent ? 'percent_at_goal' : 'at_goal';
+
+  const { state, isActive } = useChartPressState({
+    x: '',
+    y: { [playedKey]: 0, [atGoalKey]: 0 }
+  });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const filteredData = useMemo(() => {
@@ -88,11 +102,11 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
         </TabsList>
       </Tabs>
 
-      <View style={{ height: 300 }}>
+      <View style={{ height: 300 }} className="gap-y-4">
         <CartesianChart
           data={filteredData}
           xKey="timestamp"
-          yKeys={["tempo"]}
+          yKeys={[playedKey, atGoalKey]}
           domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
           xAxis={{
             font,
@@ -102,7 +116,8 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           yAxis={[{
             tickCount: 5,
             font,
-            formatYLabel: (value: number) => `${Math.round(value)}`
+            formatYLabel: (value: number) => `${Math.round(value)}`,
+            domain: use_percent ? [0, 100] : undefined
           }]}
           chartPressState={state as any}
           renderOutside={({ chartBounds }) => {
@@ -110,15 +125,15 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
               return (
                 <ActiveValueIndicator
                   xPosition={state.x.position}
-                  yPosition={state.y.tempo.position}
+                  yPosition={state.y[playedKey].position}
                   xValue={state.x.value}
-                  yValue={state.y.tempo.value}
+                  yValue={state.y[playedKey].value}
                   textColor={"black"}
                   lineColor={"black"}
                   indicatorColor={"black"}
                   bottom={chartBounds.bottom}
                   top={chartBounds.top}
-                  label="Tempo"
+                  label="Played"
                 />)
             }
           }}
@@ -126,13 +141,23 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           {({ points }) => (
             <View>
               <Line
-                points={points.tempo}
+                points={points[playedKey]}
                 color="#ef4444"
                 strokeWidth={3}
               />
               <Scatter
-                points={points.tempo}
+                points={points[playedKey]}
                 color="#ef4444"
+                radius={5}
+              />
+              <Line
+                points={points[atGoalKey]}
+                color="#3b82f6"
+                strokeWidth={3}
+              />
+              <Scatter
+                points={points[atGoalKey]}
+                color="#3b82f6"
                 radius={5}
               />
             </View>

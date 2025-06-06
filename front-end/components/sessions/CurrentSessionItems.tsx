@@ -32,7 +32,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
       return (
         <View
           key={item.id}
-          className="flex-row items-start justify-between p-4 bg-slate-50 rounded-md mb-3"
+          className="flex-row items-start justify-between p-4 bg-slate-100 rounded-md mb-3"
         >
           <View className="flex-1 mr-2">
             <Text className="font-medium">{song.name}</Text>

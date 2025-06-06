@@ -1,41 +1,87 @@
 import { HighlightBar } from '@/components/shared/HighlightBar';
 import { ListItemCard } from '@/components/shared/ListItemCard';
+import { Separator } from '@/components/shared/Separator';
 import { StatBox } from '@/components/shared/StatBox';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
+import { BookStat, useStatStore } from '@/stores/stat-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import React, { useEffect } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 export default function BookDetailPage() {
   const router = useRouter();
   const { bookId } = useLocalSearchParams<{ bookId: string }>();
 
-  const fetchBooks = useBooksStore((state) => state.fetchBooks);
-  const fetchSections = useSectionsStore((state) => state.fetchSections);
+  const fetchBookStats = useStatStore((state) => state.fetchBookStatsByBookId);
+  const bookStats = useStatStore((state) => state.bookStats);
 
   useEffect(() => {
-    fetchBooks();
-    fetchSections();
-  }, [fetchBooks, fetchSections]);
+    fetchBookStats(bookId);
+  }, [fetchBookStats, bookId]);
 
   const book = useBooksStore((state) => state.books.find((book) => book.id === bookId));
   const sections = useSectionsStore((state) => state.sections);
   const usefulSections = sections.filter((section) => section.book_id === bookId);
+
+  const bookStat: BookStat = bookStats[bookId] || {
+    book_id: bookId,
+    goal_reached_exercises: 0,
+    played_exercises: 0,
+    total_exercises: 1,
+  };
+  const playedProgress = Math.floor(bookStat.played_exercises / bookStat.total_exercises * 100);
+  const goalProgress = Math.floor(bookStat.goal_reached_exercises / bookStat.total_exercises * 100);
+
 
   if (!book) return <NotFound />;
 
   return (
     <View className="flex-1 p-4">
       <HighlightBar type="book" name={book.name} />
-      <View className="mt-4 flex-row gap-x-4 mb-4">
 
+      <View className="mt-4 flex-row gap-x-4 mb-4">
         <StatBox label="Sections" value={usefulSections.length} />
         <StatBox label="Exercises" value={book.exercise_count} />
       </View>
+
+      <Pressable onPress={() => router.push(`/stat-detail/book/${bookId}`)}>
+        <View className="flex-col gap-y-2">
+          <View className="flex-row items-end gap-x-2">
+            <View className="w-32">
+              <Text className="text-lg">{playedProgress.toString()}% Played</Text>
+            </View>
+            <View className="flex-1">
+              <Progress
+                value={playedProgress}
+                className="bg-slate-300 mb-2"
+                indicatorClassName="bg-red-400"
+              />
+            </View>
+          </View>
+          <View className="flex-row items-end gap-x-2">
+            <View className="w-32">
+              <Text className="text-lg">{goalProgress.toString()}% Goal Beat</Text>
+            </View>
+            <View className="flex-1">
+              <Progress
+                value={goalProgress}
+                className="bg-slate-300 mb-2"
+                indicatorClassName="bg-red-400"
+              />
+            </View>
+          </View>
+          <Text className="text-xl text-blue-500">See more stats</Text>
+        </View>
+      </Pressable>
+
+      <Separator color="slate" />
+      <Text className="text-2xl font-semibold my-4">Sections</Text>
       <ScrollView className="rounded-lg">
+
         {usefulSections.map((section) => {
           return (
             <ListItemCard

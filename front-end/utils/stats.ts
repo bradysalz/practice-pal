@@ -1,4 +1,5 @@
-import { ItemTempoPoint, TimeRange } from "@/types/stats";
+import { TimeSeriesData } from "@/components/stats/ItemTempoGraph";
+import { TimeRange } from "@/types/stats";
 
 /**
  * Formats a date string based on the selected time range and data context
@@ -7,8 +8,8 @@ import { ItemTempoPoint, TimeRange } from "@/types/stats";
  * @param data - Array of data points used for context in 'all' range
  * @returns Formatted date string
  */
-export function formatDateByRange(dateStr: string, timeRange: TimeRange, data: ItemTempoPoint[]): string {
-  const date = new Date(dateStr);
+export function formatDateByRange(epochMillis: number, timeRange: TimeRange, data: TimeSeriesData[]): string {
+  const date = new Date(epochMillis);
 
   switch (timeRange) {
     case 'week':
