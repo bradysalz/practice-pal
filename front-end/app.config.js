@@ -3,11 +3,11 @@ import 'dotenv/config';
 export default () => ({
   name: 'PracticePal',
   owner: 'bradysalz',
-  slug: 'practicepal',
+  slug: 'practice-pal',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
-  scheme: 'practicepal',
+  scheme: 'practice-pal',
   userInterfaceStyle: 'automatic',
   jsEngine: 'hermes',
   newArchEnabled: true,
@@ -46,5 +46,8 @@ export default () => ({
   extra: {
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseKey: process.env.SUPABASE_ANON_KEY,
+    eas: {
+      projectId: '1d2b2f30-1119-49a5-80d8-2eee63d8f252'
+    }
   },
 });
