@@ -1,3 +1,4 @@
+import { useSession } from '@/components/providers/SessionProvider'; // Import useSession
 import { useArtistsStore } from '@/stores/artist-store';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
@@ -6,10 +7,11 @@ import { useSetlistsStore } from '@/stores/setlist-store';
 import { useSongsStore } from '@/stores/song-store';
 import * as React from 'react';
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native'; // Import Text for the loading message
 
 export function DataProvider({ children }: PropsWithChildren) {
-  const [isLoading, setIsLoading] = useState(true);
+  const { session, isLoading: isSessionLoading } = useSession(); // Destructure session and the new isLoading
+  const [isDataLoading, setIsDataLoading] = useState(true); // Renamed for clarity to avoid conflict
 
   // Core data fetching functions
   const fetchBooks = useBooksStore((state) => state.fetchBooks);
@@ -21,9 +23,25 @@ export function DataProvider({ children }: PropsWithChildren) {
   const fetchRecentSessions = useSessionsStore((state) => state.fetchRecentSessionsWithItems);
 
   useEffect(() => {
+    // 1. Wait for the session to finish loading
+    if (isSessionLoading) {
+      console.log("DataProvider: Session is still loading, waiting...");
+      return;
+    }
+
+    // 2. Once session is loaded, proceed based on user presence
     async function loadInitialData() {
+      if (!session?.user) {
+        // If there's no user, and session is done loading,
+        console.log("DataProvider: No user found after session load. Skipping user-specific data fetch.");
+        setIsDataLoading(false);
+        return;
+      }
+
+      // If user exists, proceed with fetching data
       try {
-        // Load all core data in parallel
+        console.log("DataProvider: Session loaded and user found. Starting data fetch...");
+        setIsDataLoading(true); // Ensure loading state is true while fetching
         await Promise.all([
           fetchBooks(),
           fetchSections(),
@@ -31,26 +49,40 @@ export function DataProvider({ children }: PropsWithChildren) {
           fetchSongs(),
           fetchSetlists(),
           fetchSessions(),
-          fetchRecentSessions(10), // Load last 10 sessions
+          fetchRecentSessions(10),
         ]);
+        console.log("DataProvider: All initial data fetched successfully.");
       } catch (error) {
-        console.error('Failed to load initial data:', error);
-        // You might want to show an error state here
+        console.error('DataProvider: Failed to load initial data:', error);
+        // You might want to show an error state here or retry
       } finally {
-        setIsLoading(false);
+        setIsDataLoading(false);
       }
     }
 
     loadInitialData();
-  }, [fetchBooks, fetchSections, fetchArtists, fetchSongs, fetchSessions, fetchSetlists, fetchRecentSessions]);
+  }, [
+    session, // Dependency: Re-run if session object changes (e.g., user logs in/out)
+    isSessionLoading, // Dependency: Re-run when session loading state changes from true to false
+    fetchBooks,
+    fetchSections,
+    fetchArtists,
+    fetchSongs,
+    fetchSessions,
+    fetchSetlists,
+    fetchRecentSessions,
+  ]);
 
-  if (isLoading) {
+  // Show a loading indicator if either session is loading or application data is loading
+  if (isSessionLoading || isDataLoading) {
     return (
       <View className="flex-1 items-center justify-center">
+        <Text>Loading application data...</Text>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
-  return <>{children}</>;
+  // If we reach here, both session and data (or lack thereof for non-users) are loaded.
+  return <View style={{ flex: 1 }}>{children}</View>;
 }

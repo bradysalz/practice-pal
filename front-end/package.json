@@ -82,7 +82,8 @@
     "ts-jest": "^29.3.4",
     "uuid": "^11.1.0",
     "victory-native": "^41.17.3",
-    "zustand": "^5.0.4"
+    "zustand": "^5.0.4",
+    "expo-dev-client": "~5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

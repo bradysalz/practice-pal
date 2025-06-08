@@ -1,7 +1,7 @@
 import { useSession } from '@/components/providers/SessionProvider';
 import { Redirect, Tabs } from 'expo-router';
 import { BarChart, BookOpen, Home, ListMusic } from 'lucide-react-native';
-import { JSX } from 'react';
+import React from 'react';
 import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,7 +13,7 @@ export default function TabLayout() {
     return <Redirect href="/login" />;
   }
 
-  if (!session?.user) {
+  if (!session?.session?.user) {
     // Redirect to login/home screen
     return <Redirect href="/login" />;
   }
@@ -25,7 +25,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: '#64748b', // Tailwind slate-500
         tabBarLabelStyle: { fontSize: 12 },
         tabBarIcon: ({ color, size }) => {
-          const icons: Record<string, JSX.Element> = {
+          const icons: Record<string, React.ReactNode> = {
             sessions: <Home size={size} color={color} />,
             setlists: <ListMusic size={size} color={color} />,
             library: <BookOpen size={size} color={color} />,
