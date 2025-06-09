@@ -95,7 +95,7 @@ export default function ItemDetailPage({
             return (
               <ListItemCard
                 key={item.id}
-                title={`${formatTimestampToDate(item.created_at)}, ${item.tempo} BPM`}
+                title={`${formatTimestampToDate(item.created_at)} – ${item.tempo} BPM`}
                 subtitle={item.notes ?? undefined}
                 onPress={() => handleSessionPress(item.session_id)}
                 className="mb-4"
