@@ -15,7 +15,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
   function renderEmptyState() {
     return (
-      <View className="p-4 bg-slate-50 rounded-md">
+      <View className="p-4 bg-slate-2000 rounded-xl">
         <Text className="text-slate-500">No items selected yet. Add items from below.</Text>
       </View>
     );
@@ -32,11 +32,14 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
       return (
         <View
           key={item.id}
-          className="flex-row items-start justify-between p-4 bg-slate-100 rounded-md mb-3"
+          className="flex-row items-center justify-between p-4 bg-slate-100 rounded-xl gap-x-4 border border-slate-300 border-2"
         >
+          <View className="flex-row items-center gap-x-2">
+            <ThemedIcon name="Music" size={24} />
+          </View>
           <View className="flex-1 mr-2">
-            <Text className="font-medium">{song.name}</Text>
-            {artist && <Text className=" text-slate-500">{artist.name}</Text>}
+            <Text className="font-bold text-lg">{song.name}</Text>
+            {artist && <Text className="  ">{artist.name}</Text>}
           </View>
           <Pressable onPress={() => onRemoveItem(item.id)}>
             <ThemedIcon name="X" size={20} />
@@ -50,10 +53,14 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
       return (
         <View
           key={item.id}
-          className="flex-row items-start justify-between p-4 bg-slate-200 rounded-md mb-3"
+          className="flex-row items-center justify-between p-4 bg-slate-100 rounded-xl gap-x-4 border border-slate-300 border-2"
         >
+          <View className="flex-row items-center gap-x-2">
+            <ThemedIcon name="Dumbbell" size={24} />
+          </View>
+
           <View className="flex-1 mr-2">
-            <Text className="font-bold text-lg">{item.exercise.name}</Text>
+            <Text className="font-bold text-lg">Exercise {item.exercise.name}</Text>
             {item.exercise.section?.book && (
               <Text className="">{item.exercise.section.book.name}</Text>
             )}
@@ -77,7 +84,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
   return (
     <View>
       <Text className="text-2xl font-heading-bold mb-2">Session Items</Text>
-      <View className="flex-1 px-4 mb-60">
+      <View className="flex-1 px-4 mb-60 gap-y-4">
         {sessionItems.length === 0 ? renderEmptyState() : sessionItems.map(renderSessionItem)}
       </View>
     </View>

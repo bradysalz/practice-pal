@@ -22,7 +22,7 @@ export default function BookAddOrEdit({ onSave, initialData }: BookAddOrEditProp
 
   return (
     <ScrollView>
-      <View className="space-y-4">
+      <View className="gap-y-4">
         <View>
           <Text className="mb-1 font-medium">Book Name</Text>
           <TextInput

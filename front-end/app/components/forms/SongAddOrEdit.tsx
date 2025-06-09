@@ -22,7 +22,7 @@ export default function SongAddOrEdit({ onSave, initialData }: SongAddOrEditProp
 
   return (
     <ScrollView>
-      <View className="space-y-4">
+      <View className="gap-y-4">
         <View>
           <Text className="mb-1 font-medium">Song Name</Text>
           <TextInput

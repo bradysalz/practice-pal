@@ -7,10 +7,9 @@ import { DraftSessionItem } from '@/types/session';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ActiveSessionPage() {
-  const insets = useSafeAreaInsets();
   const { draftSession, updateDraftDetails } = useDraftSessionsStore();
   const { insertSession } = useSessionsStore();
   const [isPaused, setIsPaused] = useState(false);
@@ -149,11 +148,10 @@ export default function ActiveSessionPage() {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       {/* Header Timer */}
       <View
         className="w-full border-b border-slate-200"
-        style={{ paddingTop: insets.top }}
       >
         <View className="px-4 py-4 flex-row justify-between items-center">
           <View>
@@ -179,35 +177,33 @@ export default function ActiveSessionPage() {
       </View>
 
       {/* Session Items */}
-
-      <ScrollView
-        className="flex-1 px-4 pt-4 pb-60 space-y-4"
-      >
-        {draftSession.items.map((item) => (
-          <ActiveSessionItemCard
-            key={item.id}
-            name={getItemName(item)}
-            source={getItemSource(item)}
-            tempo={tempos[item.id] || ''}
-            onTempoChange={(text) => handleTempoChange(item.id, text)}
-            itemId={getItemId(item)}
-            itemType={item.type}
-            exerciseDetails={
-              item.type === 'exercise' && item.exercise?.section
-                ? {
-                  bookId: item.exercise.section.book.id,
-                  sectionId: item.exercise.section.id,
-                }
-                : undefined
-            }
-          />
-        ))}
-      </ScrollView>
+      <View className="flex-1">
+        <ScrollView className="flex-1 px-4 pt-4" contentContainerStyle={{ paddingBottom: 320 }}>
+          {draftSession.items.map((item) => (
+            <ActiveSessionItemCard
+              key={item.id}
+              name={getItemName(item)}
+              source={getItemSource(item)}
+              tempo={tempos[item.id] || ''}
+              onTempoChange={(text) => handleTempoChange(item.id, text)}
+              itemId={getItemId(item)}
+              itemType={item.type}
+              exerciseDetails={
+                item.type === 'exercise' && item.exercise?.section
+                  ? {
+                    bookId: item.exercise.section.book.id,
+                    sectionId: item.exercise.section.id,
+                  }
+                  : undefined
+              }
+            />
+          ))}
+        </ScrollView>
+      </View>
 
       {/* End Session Button */}
       <View
         className="bg-white border-t border-slate-200"
-        style={{ paddingBottom: insets.bottom }}
       >
         <Pressable
           className="mx-4 my-4 flex-row items-center justify-center bg-red-500 rounded-xl py-4 active:opacity-80"
@@ -217,6 +213,6 @@ export default function ActiveSessionPage() {
           <Text className="text-white font-semibold text-lg">End Session</Text>
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

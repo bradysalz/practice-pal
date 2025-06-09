@@ -111,7 +111,7 @@ export const SetlistCard = ({ setlist, onEdit, onDelete }: Props) => {
 
             {/* Actions */}
             <View className="flex-row justify-end items-center mt-2">
-              <View className="flex-row space-x-2">
+              <View className="flex-row gap-x-2">
                 <Button
                   variant="ghost"
                   size="icon"
