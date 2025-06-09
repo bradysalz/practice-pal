@@ -97,7 +97,7 @@ export function ActiveSessionItemCard({
                 <Text className="text-slate-500 text-base">{source}</Text>
               </View>
 
-              <View className="flex-row items-center space-x-3">
+              <View className="flex-row items-center gap-x-2">
                 <View className="flex-row items-center">
                   <TextInput
                     value={tempo}

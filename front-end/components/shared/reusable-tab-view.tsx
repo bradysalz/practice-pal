@@ -44,7 +44,7 @@ export function ReusableTabView({ tabs, activeTab, onTabChange, children }: Reus
         </TabsList>
       </View>
 
-      <View className="mt-4 space-y-4 mb-24">
+      <View className="mt-4 gap-y-4 mb-24">
         {children}
       </View>
     </Tabs>

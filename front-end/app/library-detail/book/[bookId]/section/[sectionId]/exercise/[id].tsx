@@ -47,7 +47,7 @@ export default function ExerciseDetailPage() {
   if (!exercise) return <Text>Exercise not found</Text>;
 
   return (
-    <ScrollView className="flex-1 bg-white p-4 space-y-6">
+    <ScrollView className="flex-1 bg-white p-4">
       <View className="gap-y-4 mb-4">
         <HighlightBar type="book" name={book.name} />
         <HighlightBar type="section" name={section.name} />
