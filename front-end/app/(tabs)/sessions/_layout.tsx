@@ -26,13 +26,6 @@ export default function SessionsStack() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="active-session"
-        options={{
-          title: 'Active Session',
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 }

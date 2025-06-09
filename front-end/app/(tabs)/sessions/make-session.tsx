@@ -54,7 +54,7 @@ export default function MakeSessionPage() {
           {/* Start Practice Button */}
           <Pressable
             className="flex-1 flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
-            onPress={() => router.push('/sessions/active-session')}
+            onPress={() => router.push('/session-detail/active-session')}
           >
             <Play size={20} color="white" className="mr-2" />
             <Text className="text-white font-semibold text-lg">Start</Text>

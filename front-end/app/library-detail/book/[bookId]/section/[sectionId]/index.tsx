@@ -58,7 +58,7 @@ export default function SectionDetailPage() {
 
 
   const handleExercisePress = (exerciseId: string) => {
-    router.push(`/library/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
+    router.push(`/library-detail/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
   };
 
   return (

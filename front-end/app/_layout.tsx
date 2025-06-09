@@ -67,8 +67,9 @@ export default function RootLayout() {
             {/* <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} /> */}
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="stat-detail" />
-              <Stack.Screen name="session-detail/[id]" />
+              <Stack.Screen name="stat-detail" options={{ headerShown: false }} />
+              <Stack.Screen name="session-detail" options={{ headerShown: false }} />
+              <Stack.Screen name="library-detail" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>
             <PortalHost />

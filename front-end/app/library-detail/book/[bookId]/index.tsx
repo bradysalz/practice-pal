@@ -89,7 +89,7 @@ export default function BookDetailPage() {
               title={section.name || 'Untitled Section'}
               subtitle={`${section.exercise_count} exercises`}
               isAdded={false}
-              onPress={() => router.push(`/library/book/${bookId}/section/${section.id}`)}
+              onPress={() => router.push(`/library-detail/book/${bookId}/section/${section.id}`)}
               className="mb-4"
               rightElement={<ChevronRight size={20} className="text-slate-500" />}
             />

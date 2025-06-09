@@ -3,7 +3,7 @@ import { Database } from '@/types/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
+export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
 type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
 type InputLocalSessionItem = Omit<SessionItemInsert, 'id' | 'created_at' | 'updated_at'> & {
   session_id: string;

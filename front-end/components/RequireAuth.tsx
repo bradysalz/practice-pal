@@ -1,6 +1,6 @@
 import { useSession } from '@/components/providers/SessionProvider';
 import { Redirect } from 'expo-router';
-import { PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
 export function RequireAuth({ children }: PropsWithChildren) {
@@ -20,5 +20,5 @@ export function RequireAuth({ children }: PropsWithChildren) {
     return <Redirect href="/" />;
   }
 
-  return <View style={{ flex: 1 }}>{children}</View>;
+  return <>{children}</>;
 }

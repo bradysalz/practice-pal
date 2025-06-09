@@ -70,7 +70,7 @@ export default function ItemDetailPage({
       </View>
 
       {sessionItems.length > 0 ? (
-        <View className="mb-4">
+        <View className="mb-40">
           <Separator color="red" />
 
           {/* Graph */}
@@ -84,7 +84,7 @@ export default function ItemDetailPage({
           <Separator color="red" />
 
           {/* Session List */}
-          <Text className="text-2xl font-semibold y-4">Sessions</Text>
+          <Text className="text-2xl font-semibold mb-4">Sessions</Text>
           {sessionItems.map((item) => {
             const session = sessionMap.get(item.session_id);
             if (!session) {
@@ -95,8 +95,8 @@ export default function ItemDetailPage({
             return (
               <ListItemCard
                 key={item.id}
-                title={`${item.tempo} BPM`}
-                subtitle={formatTimestampToDate(item.created_at)}
+                title={`${formatTimestampToDate(item.created_at)}, ${item.tempo} BPM`}
+                subtitle={item.notes ?? undefined}
                 onPress={() => handleSessionPress(item.session_id)}
                 className="mb-4"
                 isAdded={false}
