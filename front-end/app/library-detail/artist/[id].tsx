@@ -20,7 +20,7 @@ export default function ArtistDetailPage() {
   const filteredSongs = songs.filter((s) => s.artist_id === id);
 
   const handleSongPress = (songId: string) => {
-    router.push(`/library/song/${songId}`);
+    router.push(`/library-detail/song/${songId}`);
   };
 
   if (!artist) return <Text>Artist not found!</Text>;
