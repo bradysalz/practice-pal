@@ -680,7 +680,14 @@ export type Database = {
     }
     Functions: {
       insert_full_book: {
-        Args: { book_name: string; book_author: string; sections: Json }
+        Args:
+          | { book_name: string; book_author: string; sections: Json }
+          | {
+              book_name: string
+              book_author: string
+              sections: Json
+              user_id: string
+            }
         Returns: string
       }
     }
