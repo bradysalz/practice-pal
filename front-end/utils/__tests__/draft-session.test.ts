@@ -269,10 +269,9 @@ describe('draft-session utils', () => {
               section: {
                 id: '1',
                 name: 'Test Section',
-                author: 'Test Author',
                 book: {
                   id: '1',
-                  name: 'Test Book'
+                  name: 'Test Book',
                 }
               }
             }
