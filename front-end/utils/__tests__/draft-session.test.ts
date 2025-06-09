@@ -108,6 +108,7 @@ describe('draft-session utils', () => {
       const book: BookWithCountsRow = {
         id: '1',
         name: 'Test Book',
+        author: 'Test Author',
         created_at: new Date().toISOString(),
         created_by: 'user1',
         updated_at: new Date().toISOString(),
@@ -225,6 +226,7 @@ describe('draft-session utils', () => {
                 book: {
                   id: '1',
                   name: 'Test Book',
+                  author: 'Test Author',
                   created_at: new Date().toISOString(),
                   created_by: 'user1',
                   updated_at: new Date().toISOString()
@@ -267,6 +269,7 @@ describe('draft-session utils', () => {
               section: {
                 id: '1',
                 name: 'Test Section',
+                author: 'Test Author',
                 book: {
                   id: '1',
                   name: 'Test Book'
@@ -360,6 +363,7 @@ describe('draft-session utils', () => {
             book: {
               id: '1',
               name: 'Test Book',
+              author: 'Test Author',
               created_at: new Date().toISOString(),
               created_by: 'user1',
               updated_at: new Date().toISOString()

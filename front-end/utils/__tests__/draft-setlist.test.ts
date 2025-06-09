@@ -92,6 +92,7 @@ describe('draft-setlist utils', () => {
             book: {
               id: '1',
               name: 'Test Book',
+              author: 'Test Author',
               created_at: new Date().toISOString(),
               created_by: 'user1',
               updated_at: new Date().toISOString(),
@@ -187,6 +188,7 @@ describe('draft-setlist utils', () => {
       const book: BookWithCountsRow = {
         id: '1',
         name: 'Test Book',
+        author: 'Test Author',
         created_at: new Date().toISOString(),
         created_by: 'user1',
         updated_at: new Date().toISOString(),
@@ -298,6 +300,7 @@ describe('draft-setlist utils', () => {
                 book: {
                   id: '1',
                   name: 'Test Book',
+                  author: 'Test Author',
                   created_at: new Date().toISOString(),
                   created_by: 'user1',
                   updated_at: new Date().toISOString()

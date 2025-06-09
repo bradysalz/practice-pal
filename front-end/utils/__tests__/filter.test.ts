@@ -35,6 +35,7 @@ describe('groupSessionItems', () => {
           book: {
             id: 'b1',
             name: 'Stick Control',
+            author: 'Test Author',
             created_at: '',
             updated_at: '',
             created_by: 'user1',
