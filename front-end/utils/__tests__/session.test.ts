@@ -37,8 +37,6 @@ describe('getBookAndSongNamesFromSession', () => {
             book: {
               id: 'book1',
               name: 'Stick Control',
-
-              cover_color: null,
               created_by: 'user1',
               created_at: '',
               updated_at: '',

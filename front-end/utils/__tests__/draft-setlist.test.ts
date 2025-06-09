@@ -95,7 +95,7 @@ describe('draft-setlist utils', () => {
               created_at: new Date().toISOString(),
               created_by: 'user1',
               updated_at: new Date().toISOString(),
-              cover_color: null
+
             }
           }
         }
@@ -191,7 +191,6 @@ describe('draft-setlist utils', () => {
         created_by: 'user1',
         updated_at: new Date().toISOString(),
         exercise_count: 1,
-        cover_color: null
       };
 
       const result = exerciseToDraftSetlistItem(exercise, section, book);
@@ -301,8 +300,7 @@ describe('draft-setlist utils', () => {
                   name: 'Test Book',
                   created_at: new Date().toISOString(),
                   created_by: 'user1',
-                  updated_at: new Date().toISOString(),
-                  cover_color: null
+                  updated_at: new Date().toISOString()
                 }
               }
             }

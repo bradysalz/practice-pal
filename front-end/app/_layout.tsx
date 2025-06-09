@@ -70,6 +70,7 @@ export default function RootLayout() {
               <Stack.Screen name="stat-detail" options={{ headerShown: false }} />
               <Stack.Screen name="session-detail" options={{ headerShown: false }} />
               <Stack.Screen name="library-detail" options={{ headerShown: false }} />
+              <Stack.Screen name="library-forms" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>
             <PortalHost />
