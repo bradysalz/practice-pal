@@ -123,8 +123,7 @@ export default function EditSetlistPage() {
   };
 
   return (
-    <View className="flex-1 bg-slate-50 p-4">
-
+    <View className="flex-1 bg-slate-50 px-4">
       <View className="flex-1 mb-20">
         <DraggableFlatList
           data={draftSetlist.items}
@@ -148,12 +147,9 @@ export default function EditSetlistPage() {
                 placeholder="Describe your setlist..."
                 className="mb-4 border border-slate-300 rounded-xl"
               />
-
-              <Text className="text-2xl font-semibold mb-4">Items</Text>
-
+              <Text className="text-2xl font-semibold">Items</Text>
             </View>
           }
-
         />
       </View>
 

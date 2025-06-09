@@ -92,10 +92,11 @@ describe('draft-setlist utils', () => {
             book: {
               id: '1',
               name: 'Test Book',
+              author: 'Test Author',
               created_at: new Date().toISOString(),
               created_by: 'user1',
               updated_at: new Date().toISOString(),
-              cover_color: null
+
             }
           }
         }
@@ -187,11 +188,11 @@ describe('draft-setlist utils', () => {
       const book: BookWithCountsRow = {
         id: '1',
         name: 'Test Book',
+        author: 'Test Author',
         created_at: new Date().toISOString(),
         created_by: 'user1',
         updated_at: new Date().toISOString(),
         exercise_count: 1,
-        cover_color: null
       };
 
       const result = exerciseToDraftSetlistItem(exercise, section, book);
@@ -299,10 +300,10 @@ describe('draft-setlist utils', () => {
                 book: {
                   id: '1',
                   name: 'Test Book',
+                  author: 'Test Author',
                   created_at: new Date().toISOString(),
                   created_by: 'user1',
-                  updated_at: new Date().toISOString(),
-                  cover_color: null
+                  updated_at: new Date().toISOString()
                 }
               }
             }

@@ -110,7 +110,7 @@ export default function SectionDetailPage() {
         <ScrollView className="rounded-lg">
           {exercises[sectionId]?.map((exercise) => (
             <ListItemCard
-              key={exercise.id}
+              key={exercise.created_at}
               title={`${exercise.name}`}
               isAdded={false}
               onPress={() => handleExercisePress(exercise.id)}

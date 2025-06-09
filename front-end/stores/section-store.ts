@@ -10,7 +10,7 @@ export type SectionWithCountsRow = SectionRow & {
 };
 
 type SectionInsert = Database['public']['Tables']['sections']['Insert'];
-type InputLocalSection = Omit<SectionInsert, 'id' | 'created_at' | 'updated_at'> & {
+type InputLocalSection = Omit<SectionInsert, 'id' | 'created_at' | 'updated_at' | 'created_by'> & {
   book_id: string;
 };
 
@@ -21,7 +21,7 @@ function toSectionInsert(section: SectionWithCountsRow): SectionInsert {
 
 type SectionsState = {
   sections: SectionWithCountsRow[];
-  addSectionLocal: (section: InputLocalSection) => string;
+  addSectionLocal: (section: InputLocalSection) => Promise<string>;
   syncAddSection: (tempId: string) => Promise<void>;
   fetchSections: () => Promise<void>;
 };
@@ -38,9 +38,11 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
     set({ sections: data as SectionWithCountsRow[] });
   },
 
-  addSectionLocal: (section) => {
+  addSectionLocal: async (section) => {
     const id = uuidv4();
     const now = new Date().toISOString();
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    if (!userId) throw new Error('User not authenticated');
 
     const newSection: SectionWithCountsRow = {
       ...section,
@@ -48,6 +50,7 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
       created_at: now,
       updated_at: now,
       exercise_count: 0, // lazy fill the view field, will drop later
+      created_by: userId,
     };
     set((state) => ({ sections: [...state.sections, newSection] }));
     return id;
@@ -58,7 +61,10 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
     if (!localSection) return;
 
     const cleanSection = toSectionInsert(localSection);
-    const { data, error } = await supabase.from('sections').insert(cleanSection).select().single();
+    const { data, error } = await supabase.from('sections')
+      .insert(cleanSection)
+      .select()
+      .single();
 
     if (error) {
       console.error('Sync failed', error);

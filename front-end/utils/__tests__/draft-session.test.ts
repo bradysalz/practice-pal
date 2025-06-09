@@ -108,11 +108,11 @@ describe('draft-session utils', () => {
       const book: BookWithCountsRow = {
         id: '1',
         name: 'Test Book',
+        author: 'Test Author',
         created_at: new Date().toISOString(),
         created_by: 'user1',
         updated_at: new Date().toISOString(),
         exercise_count: 1,
-        cover_color: null
       };
 
       const result = exerciseToDraftSessionItem(exercise, section, book);
@@ -226,10 +226,10 @@ describe('draft-session utils', () => {
                 book: {
                   id: '1',
                   name: 'Test Book',
+                  author: 'Test Author',
                   created_at: new Date().toISOString(),
                   created_by: 'user1',
-                  updated_at: new Date().toISOString(),
-                  cover_color: null
+                  updated_at: new Date().toISOString()
                 }
               }
             }
@@ -271,7 +271,7 @@ describe('draft-session utils', () => {
                 name: 'Test Section',
                 book: {
                   id: '1',
-                  name: 'Test Book'
+                  name: 'Test Book',
                 }
               }
             }
@@ -362,10 +362,10 @@ describe('draft-session utils', () => {
             book: {
               id: '1',
               name: 'Test Book',
+              author: 'Test Author',
               created_at: new Date().toISOString(),
               created_by: 'user1',
-              updated_at: new Date().toISOString(),
-              cover_color: null
+              updated_at: new Date().toISOString()
             }
           }
         }

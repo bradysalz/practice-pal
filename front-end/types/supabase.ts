@@ -68,7 +68,7 @@ export type Database = {
       }
       books: {
         Row: {
-          cover_color: string | null
+          author: string | null
           created_at: string
           created_by: string
           id: string
@@ -76,7 +76,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          cover_color?: string | null
+          author?: string | null
           created_at?: string
           created_by: string
           id: string
@@ -84,7 +84,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          cover_color?: string | null
+          author?: string | null
           created_at?: string
           created_by?: string
           id?: string
@@ -550,7 +550,7 @@ export type Database = {
       }
       book_with_counts: {
         Row: {
-          cover_color: string | null
+          author: string | null
           created_at: string | null
           created_by: string | null
           exercise_count: number | null
@@ -679,7 +679,17 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      insert_full_book: {
+        Args:
+          | { book_name: string; book_author: string; sections: Json }
+          | {
+              book_name: string
+              book_author: string
+              sections: Json
+              user_id: string
+            }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

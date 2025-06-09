@@ -6,13 +6,13 @@ import { create } from 'zustand';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
 type ExerciseInsert = Database['public']['Tables']['exercises']['Insert'];
-type InputLocalExercise = Omit<ExerciseInsert, 'id' | 'created_at' | 'updated_at'> & {
+type InputLocalExercise = Omit<ExerciseInsert, 'id' | 'created_at' | 'updated_at' | 'created_by'> & {
   section_id: string;
 };
 
 type ExercisesState = {
   exercises: Record<string, ExerciseRow[]>;
-  addExerciseLocal: (exercise: InputLocalExercise) => string;
+  addExerciseLocal: (exercise: InputLocalExercise) => Promise<string>;
   syncAddExercise: (tempId: string) => Promise<{ error: PostgrestError | null }>;
   updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
   syncUpdateExercise: (id: string) => Promise<{ error: PostgrestError | null }>;
@@ -88,13 +88,15 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     return { error: null };
   },
 
-  addExerciseLocal: (exercise) => {
+  addExerciseLocal: async (exercise) => {
     const id = uuidv4();
     const now = new Date().toISOString();
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    if (!userId) throw new Error('User not authenticated');
 
     const newExercise: ExerciseRow = {
       id,
-      created_by: exercise.created_by,
+      created_by: userId,
       name: exercise.name ?? null,
       section_id: exercise.section_id,
       goal_tempo: exercise.goal_tempo ?? null,

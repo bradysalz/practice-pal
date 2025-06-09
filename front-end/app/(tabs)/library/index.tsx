@@ -115,7 +115,9 @@ export default function LibraryPage() {
         </View>
       </ScrollView>
 
-      <FloatingActionButton href="/library/add-item" />
+      <FloatingActionButton
+        href={activeTab === 'books' ? '/library-forms/add-book' : '/library-forms/add-song'}
+      />
     </View>
   );
 }

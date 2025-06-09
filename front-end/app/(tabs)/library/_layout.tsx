@@ -13,13 +13,6 @@ export default function LibraryStackLayout() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="add-item"
-        options={{
-          title: 'Add Item',
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 }
