@@ -1,10 +1,12 @@
-import { fetchSections, getCurrentUserId, InputLocalSection, insertSection, SectionWithCountsRow, toSectionInsert } from '@/lib/supabase/section';
+import { fetchSections, insertSection } from '@/lib/supabase/section';
+import { getCurrentUserId } from '@/lib/supabase/shared';
+import { NewSection, SectionWithCountsRow } from '@/types/section';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 interface SectionsState {
   sections: SectionWithCountsRow[];
-  addSectionLocal: (section: InputLocalSection) => Promise<string>;
+  addSectionLocal: (section: NewSection) => Promise<string>;
   syncAddSection: (tempId: string) => Promise<void>;
   fetchSections: () => Promise<void>;
 }
@@ -21,7 +23,7 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
     set({ sections: data as SectionWithCountsRow[] });
   },
 
-  addSectionLocal: async (section) => {
+  addSectionLocal: async (section: NewSection) => {
     const id = uuidv4();
     const now = new Date().toISOString();
     const userId = await getCurrentUserId();
@@ -32,10 +34,8 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
       id,
       created_at: now,
       updated_at: now,
-      exercise_count: 0, // lazy fill the view field, will drop later
       created_by: userId,
-      name: section.name || '',
-      order: section.order || 0,
+      exercise_count: 0, // lazy fill the view field, will drop later
     };
     set((state) => ({ sections: [...state.sections, newSection] }));
     return id;
@@ -45,8 +45,7 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
     const localSection = get().sections.find((s) => s.id === id);
     if (!localSection) return;
 
-    const cleanSection = toSectionInsert(localSection);
-    const { data, error } = await insertSection(cleanSection);
+    const { data, error } = await insertSection(localSection);
 
     if (error) {
       console.error('Sync failed', error);

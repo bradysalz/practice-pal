@@ -1,8 +1,7 @@
-import { deleteSession, fetchRecentSessionsWithItems, fetchSessionDetail, fetchSessions, getCurrentUserId, insertSession, insertSessionItems } from '@/lib/supabase/session';
+import { deleteSession, fetchRecentSessionsWithItems, fetchSessionDetail, fetchSessions, insertSession, insertSessionItems } from '@/lib/supabase/session';
 import {
   DraftSession,
-  SessionInsert,
-  SessionItemInsert,
+  LocalSessionItem,
   SessionWithCountsRow,
   SessionWithItems
 } from '@/types/session';
@@ -67,22 +66,10 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
   },
 
   insertSession: async (draft: DraftSession) => {
-    const userId = await getCurrentUserId();
-    if (!userId) throw new Error('User not authenticated');
-
     const now = new Date().toISOString();
 
-    const sessionInsert: SessionInsert = {
-      id: draft.id,
-      created_by: userId,
-      created_at: now,
-      updated_at: now,
-      duration: draft.duration,
-      notes: draft.notes,
-    };
-
     // Insert the session
-    const { error: sessionError } = await insertSession(sessionInsert);
+    const { error: sessionError } = await insertSession(draft);
 
     if (sessionError) {
       console.error('Failed to insert session', sessionError);
@@ -90,17 +77,16 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     }
 
     // Insert session items
-    const sessionItemInserts: SessionItemInsert[] = draft.items.map((item, index) => ({
+    const sessionItemInserts: LocalSessionItem[] = draft.items.map((item, index) => ({
       id: item.id,
       session_id: draft.id,
-      created_by: userId,
       created_at: now,
       updated_at: now,
       position: index,
       notes: item.notes,
       tempo: item.tempo,
-      song_id: item.type === 'song' ? item.song?.id : null,
-      exercise_id: item.type === 'exercise' ? item.exercise?.id : null,
+      song_id: item.type === 'song' ? item.song?.id ?? null : null,
+      exercise_id: item.type === 'exercise' ? item.exercise?.id ?? null : null,
       type: item.type,
     }));
 

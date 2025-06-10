@@ -1,10 +1,6 @@
 import { supabase } from "@/lib/supabase";
-import { Database } from "@/types/supabase";
+import { BookStatOverTimeRow, BookStatRow, SectionStatOverTimeRow, SectionStatRow } from "@/types/stats";
 
-type BookStatRow = Database['public']['Views']['book_stats_view']['Row'];
-type SectionStatRow = Database['public']['Views']['section_stats_view']['Row'];
-type BookStatOverTimeRow = Database['public']['Views']['book_progress_history']['Row'];
-type SectionStatOverTimeRow = Database['public']['Views']['section_progress_history']['Row'];
 
 export type BookStat = Required<Pick<BookStatRow,
   'book_id' |

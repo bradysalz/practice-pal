@@ -1,4 +1,4 @@
-import { BookStat, SectionStat } from "@/stores/stat-store";
+import { BookStat, SectionStat } from "@/lib/supabase/stat";
 import { Database } from "@/types/supabase";
 
 type BookStatRow = Database['public']['Views']['book_stats_view']['Row'];

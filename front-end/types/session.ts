@@ -1,13 +1,11 @@
+import { ArtistRow } from '@/types/artist';
+import { BookRow } from '@/types/book';
+import { ExerciseRow } from '@/types/exercise';
+import { SectionRow } from '@/types/section';
+import { SongRow } from '@/types/song';
 import { Database } from '@/types/supabase';
 
 type SessionRow = Database['public']['Tables']['sessions']['Row'];
-
-export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
-export type SongRow = Database['public']['Tables']['songs']['Row'];
-export type ArtistRow = Database['public']['Tables']['artists']['Row'];
-export type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
-export type SectionRow = Database['public']['Tables']['sections']['Row'];
-export type BookRow = Database['public']['Tables']['books']['Row'];
 
 export type SessionItemWithNested = SessionItemRow & {
   song: (SongRow & {
@@ -94,6 +92,11 @@ export type DraftSession = {
 };
 
 export type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
-export type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
 export type SessionUpdate = Database['public']['Tables']['sessions']['Update'];
 export type SessionItemUpdate = Database['public']['Tables']['session_items']['Update'];
+
+
+export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
+export type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
+export type LocalSessionItem = Omit<SessionItemRow, 'created_by'>;
+export type NewSessionItem = Omit<LocalSessionItem, 'id'>;

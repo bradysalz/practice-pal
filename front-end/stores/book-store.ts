@@ -1,4 +1,5 @@
-import { BookWithCountsRow, fetchBooks } from '@/lib/supabase/book';
+import { fetchBooks } from '@/lib/supabase/book';
+import { BookWithCountsRow } from '@/types/book';
 import { create } from 'zustand';
 
 type BooksState = {
@@ -6,7 +7,7 @@ type BooksState = {
   fetchBooks: () => Promise<void>;
 };
 
-export const useBooksStore = create<BooksState>((set, get) => ({
+export const useBooksStore = create<BooksState>((set) => ({
   books: [],
 
   fetchBooks: async () => {

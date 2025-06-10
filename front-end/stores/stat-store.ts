@@ -1,12 +1,13 @@
-import { BookStat, BookStatOverTime, SectionStat, SectionStatOverTime, fetchBookStatsByBookId, fetchBookStatsOverTime, fetchSectionStatsBySectionId, fetchSectionStatsOverTime } from "@/lib/supabase/stat";
+import { fetchBookStatsByBookId, fetchBookStatsOverTime, fetchSectionStatsBySectionId, fetchSectionStatsOverTime } from "@/lib/supabase/stat";
+import { BookStatOverTimeRow, BookStatRow, SectionStatOverTimeRow, SectionStatRow } from "@/types/stats";
 import { toBookStat, toSectionStat } from "@/utils/stat-helpers";
 import { create } from "zustand";
 
 type StatStore = {
-  bookStats: Record<string, BookStat>;
-  sectionStats: Record<string, SectionStat>;
-  bookStatsOverTime: Record<string, BookStatOverTime[]>;
-  sectionStatsOverTime: Record<string, SectionStatOverTime[]>;
+  bookStats: Record<string, BookStatRow>;
+  sectionStats: Record<string, SectionStatRow>;
+  bookStatsOverTime: Record<string, BookStatOverTimeRow[]>;
+  sectionStatsOverTime: Record<string, SectionStatOverTimeRow[]>;
 
   fetchBookStatsByBookId: (bookId: string) => Promise<void>;
   fetchSectionStatsBySectionId: (sectionId: string) => Promise<void>;

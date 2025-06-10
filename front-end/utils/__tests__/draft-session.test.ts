@@ -44,7 +44,7 @@ describe('draft-session utils', () => {
     });
 
     it('should convert a song row to draft session item without artist', () => {
-      const songWithoutArtist = { ...mockSong, artist_id: null };
+      const songWithoutArtist = { ...mockSong, artist_id: '' };
       const result = songRowToDraftSessionItem(songWithoutArtist);
 
       expect(result).toEqual({

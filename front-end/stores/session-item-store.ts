@@ -1,18 +1,18 @@
-import { InputLocalSessionItem, SessionItemRow, fetchSessionItemsByExercise, fetchSessionItemsBySession, fetchSessionItemsBySong, insertSessionItem } from '@/lib/supabase/session';
+import { fetchSessionItemsByExercise, fetchSessionItemsBySession, fetchSessionItemsBySong } from '@/lib/supabase/session';
+import { LocalSessionItem, NewSessionItem, SessionItemRow } from '@/types/session';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type SessionItemsState = {
-  sessionItemsBySession: { [sessionId: string]: SessionItemRow[] };
-  sessionItemsByExercise: { [exerciseId: string]: SessionItemRow[] };
-  sessionItemsBySong: { [songId: string]: SessionItemRow[] };
+  sessionItemsBySession: { [sessionId: string]: LocalSessionItem[] };
+  sessionItemsByExercise: { [exerciseId: string]: LocalSessionItem[] };
+  sessionItemsBySong: { [songId: string]: LocalSessionItem[] };
 
   fetchSessionItemBySessionId: (sessionId: string) => Promise<void>;
   fetchSessionItemByExerciseId: (exerciseId: string, force?: boolean) => Promise<void>;
   fetchSessionItemBySongId: (songId: string) => Promise<void>;
 
-  addSessionItemLocal: (item: InputLocalSessionItem) => string;
-  syncAddSessionItem: (tempId: string) => Promise<void>;
+  addSessionItemLocal: (item: NewSessionItem) => string;
 };
 
 export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
@@ -31,7 +31,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     set((state) => ({
       sessionItemsBySession: {
         ...state.sessionItemsBySession,
-        [sessionId]: data as SessionItemRow[],
+        [sessionId]: data as LocalSessionItem[],
       },
     }));
   },
@@ -70,11 +70,11 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
   },
 
-  addSessionItemLocal: (item) => {
+  addSessionItemLocal: (item: NewSessionItem) => {
     const id = uuidv4();
     const now = new Date().toISOString();
 
-    const newItem: SessionItemRow = {
+    const newItem: LocalSessionItem = {
       ...item,
       id,
       created_at: now,
@@ -93,40 +93,5 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
 
     return id;
-  },
-
-  syncAddSessionItem: async (tempId) => {
-    // Search only in sessionItemsBySession
-    let found: { sessionId: string; item: SessionItemRow } | undefined;
-    for (const sessionId in get().sessionItemsBySession) {
-      const item = get().sessionItemsBySession[sessionId].find((i) => i.id === tempId);
-      if (item) {
-        found = { sessionId, item };
-        break;
-      }
-    }
-
-    if (!found) return;
-
-    const { item } = found;
-    const { id, ...insertData } = item;
-
-    const { data, error } = await insertSessionItem(insertData);
-
-    if (error) {
-      console.error('Sync failed', error);
-      return;
-    }
-
-    const newItem = data as SessionItemRow;
-
-    set((state) => ({
-      sessionItemsBySession: {
-        ...state.sessionItemsBySession,
-        [item.session_id!]: state.sessionItemsBySession[item.session_id!].map((i) =>
-          i.id === tempId ? newItem : i
-        ),
-      },
-    }));
-  },
+  }
 }));

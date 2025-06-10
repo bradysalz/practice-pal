@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { SetlistInsert, SetlistItemInsert, SetlistItemRow, SetlistUpdate } from '@/types/setlist';
+import { getCurrentUserId } from './shared';
 
 const SETLIST_WITH_ITEMS_QUERY = `
   *,
@@ -83,7 +84,4 @@ export async function insertSetlistItem(item: SetlistItemRow) {
     .single();
 }
 
-export async function getCurrentUserId() {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user?.id;
-}
+export { getCurrentUserId };

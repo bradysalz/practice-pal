@@ -1,18 +1,20 @@
 import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
-
-export type ArtistRow = Database['public']['Tables']['artists']['Row'];
-export type ArtistInsert = Database['public']['Tables']['artists']['Insert'];
-export type InputArtist = Omit<ArtistInsert, 'id' | 'created_at' | 'updated_at'>;
+import { ArtistRow, LocalArtist } from '@/types/artist';
+import { getCurrentUserId } from './shared';
 
 export async function fetchArtists() {
-  return supabase.from('artists').select('*');
-}
-
-export async function insertArtist(artist: ArtistRow) {
   return supabase
     .from('artists')
-    .insert(artist)
+    .select('*')
+    .order('name', { ascending: true });
+}
+
+export async function insertArtist(artist: LocalArtist) {
+  const userId = await getCurrentUserId();
+
+  return supabase
+    .from('artists')
+    .insert({ ...artist, created_by: userId })
     .select()
     .single();
 }

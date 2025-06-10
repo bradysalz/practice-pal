@@ -1,13 +1,6 @@
 import { supabase } from '@/lib/supabase';
-import { SessionInsert } from '@/types/session';
-import { Database } from '@/types/supabase';
-
-export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
-export type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
-export type InputLocalSessionItem = Omit<SessionItemInsert, 'id' | 'created_at' | 'updated_at'> & {
-  session_id: string;
-  tempo: number;
-};
+import { DraftSession, LocalSessionItem } from '@/types/session';
+import { getCurrentUserId } from './shared';
 
 const SESSION_WITH_ITEMS_QUERY = `
   *,
@@ -50,16 +43,18 @@ export async function fetchSessionDetail(sessionId: string) {
     .single();
 }
 
-export async function insertSession(sessionInsert: SessionInsert) {
+export async function insertSession(session: DraftSession) {
+  const userId = await getCurrentUserId();
   return supabase
     .from('sessions')
-    .insert(sessionInsert);
+    .insert({ ...session, created_by: userId });
 }
 
-export async function insertSessionItems(items: SessionItemInsert[]) {
+export async function insertSessionItems(items: LocalSessionItem[]) {
+  const userId = await getCurrentUserId();
   return supabase
     .from('session_items')
-    .insert(items);
+    .insert(items.map((item) => ({ ...item, created_by: userId })));
 }
 
 export async function deleteSession(sessionId: string) {
@@ -90,15 +85,12 @@ export async function fetchSessionItemsBySong(songId: string) {
     .eq('song_id', songId);
 }
 
-export async function insertSessionItem(item: Omit<SessionItemRow, 'id'>) {
+export async function insertSessionItem(item: LocalSessionItem) {
+  const userId = await getCurrentUserId();
+
   return supabase
     .from('session_items')
-    .insert(item)
+    .insert({ ...item, created_by: userId })
     .select()
     .single();
-}
-
-export async function getCurrentUserId() {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user?.id;
 }

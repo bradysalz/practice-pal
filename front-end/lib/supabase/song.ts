@@ -1,18 +1,28 @@
 import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { LocalSong, SongRow } from '@/types/song';
+import { getCurrentUserId } from './shared';
 
-export type SongRow = Database['public']['Tables']['songs']['Row'];
-export type SongInsert = Database['public']['Tables']['songs']['Insert'];
-export type InputLocalSong = Omit<SongInsert, 'id' | 'created_at' | 'updated_at'>;
 
 export async function fetchSongs() {
-  return supabase.from('songs').select('*');
+  return supabase
+    .from('songs_with_artist')
+    .select('*')
+    .order('title', { ascending: true });
 }
 
-export async function insertSong(song: SongRow) {
+export async function fetchSongsByArtist(artistId: string) {
+  return supabase
+    .from('songs_with_artist')
+    .select('*')
+    .eq('artist_id', artistId)
+    .order('title', { ascending: true });
+}
+
+export async function insertSong(song: LocalSong) {
+  const userId = await getCurrentUserId();
   return supabase
     .from('songs')
-    .insert(song)
+    .insert({ ...song, created_by: userId })
     .select()
     .single();
 }

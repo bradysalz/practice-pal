@@ -1,10 +1,11 @@
-import { ArtistRow, InputArtist, fetchArtists, insertArtist } from '@/lib/supabase/artist';
+import { fetchArtists, insertArtist } from '@/lib/supabase/artist';
+import { ArtistRow, LocalArtist, NewArtist } from '@/types/artist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type ArtistsState = {
-  artists: ArtistRow[];
-  addArtistLocal: (artist: InputArtist) => string;
+  artists: LocalArtist[];
+  addArtistLocal: (artist: NewArtist) => string;
   syncAddArtist: (tempId: string) => Promise<void>;
   fetchArtists: () => Promise<void>;
 };
@@ -21,13 +22,12 @@ export const useArtistsStore = create<ArtistsState>((set, get) => ({
     set({ artists: data as ArtistRow[] });
   },
 
-  addArtistLocal: (artist) => {
+  addArtistLocal: (artist: NewArtist) => {
     const id = uuidv4();
     const now = new Date().toISOString();
 
-    const newArtist: ArtistRow = {
+    const newArtist: LocalArtist = {
       id,
-      created_by: artist.created_by,
       name: artist.name,
       created_at: now,
       updated_at: now,

@@ -1,14 +1,15 @@
-import { fetchSongs, InputLocalSong, insertSong, SongRow, updateSong } from '@/lib/supabase/song';
+import { fetchSongs, insertSong, updateSong } from '@/lib/supabase/song';
+import { LocalSong, NewSong } from '@/types/song';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type SongsState = {
-  songs: SongRow[];
-  addSongLocal: (song: InputLocalSong) => string;
+  songs: LocalSong[];
+  addSongLocal: (song: NewSong) => string;
   syncAddSong: (tempId: string) => Promise<void>;
   fetchSongs: () => Promise<void>;
-  updateSongLocal: (id: string, updates: Partial<SongRow>) => void;
+  updateSongLocal: (id: string, updates: Partial<LocalSong>) => void;
   syncUpdateSong: (id: string) => Promise<{ error: PostgrestError | null }>;
 };
 
@@ -21,17 +22,17 @@ export const useSongsStore = create<SongsState>((set, get) => ({
       console.error('Fetch failed', error);
       return;
     }
-    set({ songs: data as SongRow[] });
+    set({ songs: data as LocalSong[] });
   },
 
-  addSongLocal: (song) => {
+  addSongLocal: (song: NewSong) => {
     const id = uuidv4();
     const now = new Date().toISOString();
 
-    const newSong: SongRow = {
+    const newSong: LocalSong = {
       ...song,
       id,
-      artist_id: song.artist_id ?? null,
+      artist_id: song.artist_id,
       goal_tempo: song.goal_tempo ?? null,
       created_at: now,
       updated_at: now,

@@ -1,16 +1,8 @@
 import { EditableSection } from '@/app/library-forms/edit-book/[bookId]';
 import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { LocalSection, SectionInsert, SectionRow, SectionWithCountsRow } from '@/types/section';
+import { getCurrentUserId } from './shared';
 
-export type SectionRow = Database['public']['Tables']['sections']['Row'];
-export type SectionWithCountsRow = SectionRow & {
-  exercise_count: number;
-};
-
-export type SectionInsert = Database['public']['Tables']['sections']['Insert'];
-export type InputLocalSection = Omit<SectionInsert, 'id' | 'created_at' | 'updated_at' | 'created_by'> & {
-  book_id: string;
-};
 
 export function toSectionInsert(section: SectionWithCountsRow): SectionInsert {
   const { exercise_count, ...sectionInsert } = section;
@@ -21,10 +13,11 @@ export async function fetchSections() {
   return supabase.from('section_with_counts').select('*');
 }
 
-export async function insertSection(section: SectionInsert) {
+export async function insertSection(section: LocalSection) {
+  const userId = await getCurrentUserId();
   return supabase
     .from('sections')
-    .insert(section)
+    .insert({ ...section, created_by: userId })
     .select()
     .single();
 }
@@ -41,11 +34,6 @@ export async function deleteSection(id: string) {
     .from("sections")
     .delete()
     .eq("id", id);
-}
-
-export async function getCurrentUserId() {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user?.id;
 }
 
 export async function updateSections(bookId: string, updates: EditableSection[]) {

@@ -1,7 +1,10 @@
-import { BookWithCountsRow } from '@/stores/book-store';
-import { SectionWithCountsRow } from '@/stores/section-store';
-import { ArtistRow, ExerciseRow, SessionItemWithNested, SessionWithItems, SongRow } from '@/types/session';
+import { ArtistRow } from '@/types/artist';
+import { BookWithCountsRow } from '@/types/book';
+import { ExerciseRow } from '@/types/exercise';
+import { SectionWithCountsRow } from '@/types/section';
+import { SessionItemWithNested, SessionWithItems } from '@/types/session';
 import { SetlistItemWithNested, SetlistWithItems } from '@/types/setlist';
+import { LocalSong } from '@/types/song';
 
 // Mock UUID for consistent testing
 export const MOCK_UUID = '123e4567-e89b-12d3-a456-426614174000';
@@ -100,23 +103,21 @@ export const mockExercise1: ExerciseRow = {
 };
 
 // Song mock data
-export const mockSong: SongRow = {
+export const mockSong: LocalSong = {
   id: '1',
   name: 'Test Song',
   artist_id: '1',
   created_at: BASE_TIMESTAMP,
-  created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
   goal_tempo: null
 };
 
 // So What song for session tests
-export const mockSoWhat: SongRow = {
+export const mockSoWhat: LocalSong = {
   id: 'song1',
   name: 'So What',
   artist_id: 'artist1',
   created_at: BASE_TIMESTAMP,
-  created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
   goal_tempo: null
 };
@@ -159,7 +160,11 @@ export const mockSessionItemWithSong: SessionItemWithNested = {
   position: 1,
   song: {
     ...mockSoWhat,
-    artist: mockMilesDavis
+    artist: mockMilesDavis,
+    created_by: 'user1',
+    created_at: BASE_TIMESTAMP,
+    updated_at: BASE_TIMESTAMP,
+    goal_tempo: null,
   },
   exercise: null
 };
@@ -190,7 +195,11 @@ export const mockSetlistItemWithSong: SetlistItemWithNested = {
   position: 1,
   song: {
     ...mockSong,
-    artist: mockArtist
+    artist: mockArtist,
+    created_by: 'user1',
+    created_at: BASE_TIMESTAMP,
+    updated_at: BASE_TIMESTAMP,
+    goal_tempo: null,
   },
   exercise: null
 };

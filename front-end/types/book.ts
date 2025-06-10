@@ -1,3 +1,10 @@
+import { Database } from '@/types/supabase';
+
+export type BookRow = Database['public']['Tables']['books']['Row'];
+export type BookWithCountsRow = BookRow & {
+  exercise_count: number;
+};
+
 export type ExerciseNamingType = 'alpha' | 'numeric' | 'custom';
 
 export interface SectionFormData {

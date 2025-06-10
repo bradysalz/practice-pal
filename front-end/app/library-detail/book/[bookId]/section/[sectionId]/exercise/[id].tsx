@@ -57,7 +57,7 @@ export default function ExerciseDetailPage() {
       <ItemDetailPage
         sessionItems={sessionItems}
         itemId={exerciseId}
-        initialGoalTempo={exercise.goal_tempo}
+        initialGoalTempo={exercise.goal_tempo || null}
         onUpdateLocal={updateExerciseLocal}
         onSyncUpdate={syncUpdateExercise}
       />

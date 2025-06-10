@@ -1,9 +1,7 @@
 import { EditableExercise } from '@/app/library-forms/edit-section/[sectionId]';
 import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
-
-type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
-type ExerciseInsert = Database['public']['Tables']['exercises']['Insert'];
+import { ExerciseRow, LocalExercise } from '@/types/exercise';
+import { getCurrentUserId } from './shared';
 
 export async function updateExercises(sectionId: string, updates: EditableExercise[]) {
   return supabase
@@ -12,11 +10,11 @@ export async function updateExercises(sectionId: string, updates: EditableExerci
     .eq("section_id", sectionId);
 }
 
-export async function updateExercise(exerciseId: string, updates: Partial<ExerciseRow>) {
+export async function updateExercise(id: string, updates: Partial<ExerciseRow>) {
   return supabase
-    .from("exercises")
+    .from('exercises')
     .update(updates)
-    .eq("id", exerciseId);
+    .eq('id', id);
 }
 
 export async function insertExercises(sectionId: string, updates: EditableExercise[]) {
@@ -45,15 +43,19 @@ export async function fetchExercisesBySection(section_id: string) {
     .eq('section_id', section_id);
 }
 
-export async function insertExercise(exercise: ExerciseRow) {
+export async function insertExercise(exercise: LocalExercise) {
+  const userId = await getCurrentUserId();
+
   return supabase
     .from('exercises')
-    .insert(exercise)
+    .insert({ ...exercise, created_by: userId })
     .select()
     .single();
 }
 
-export async function getCurrentUserId() {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user?.id;
+export async function deleteExercise(id: string) {
+  return supabase
+    .from('exercises')
+    .delete()
+    .eq('id', id);
 }

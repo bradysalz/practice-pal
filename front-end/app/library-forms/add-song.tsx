@@ -1,7 +1,7 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { supabase } from '@/lib/supabase';
-import { useArtistsStore, type ArtistRow } from '@/stores/artist-store';
+import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
+import { LocalArtist } from '@/types/artist';
 import { useRouter } from 'expo-router';
 import Fuse from 'fuse.js';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -70,9 +70,6 @@ export default function AddSongPage() {
     let needsArtistFetch = false;
 
     try {
-      const userId = (await supabase.auth.getUser()).data.user?.id;
-      if (!userId) throw new Error('User not authenticated');
-
       let artistId = artists.find((artist) => artist.name === songArtist)?.id;
 
       // If we have an artist name but no ID, create a new artist
@@ -80,7 +77,6 @@ export default function AddSongPage() {
         // Add artist locally first
         artistId = addArtistLocal({
           name: songArtist,
-          created_by: userId
         });
         // Sync with backend
         await syncAddArtist(artistId);
@@ -90,9 +86,8 @@ export default function AddSongPage() {
       // Add song locally
       const songId = addSongLocal({
         name: songName,
-        artist_id: artistId,
-        goal_tempo: songGoalTempo ? parseInt(songGoalTempo) : null,
-        created_by: userId
+        artist_id: artistId!,
+        goal_tempo: songGoalTempo ? parseInt(songGoalTempo) : undefined,
       });
 
       // Sync with backend
@@ -138,7 +133,7 @@ export default function AddSongPage() {
             {showArtistDropdown && filteredArtists.length > 0 && (
               <View className="absolute top-[100%] left-0 right-1 bg-white border border-slate-300 rounded-xl mt-1 z-10 max-h-48">
                 <ScrollView>
-                  {filteredArtists.map((artist: ArtistRow) => (
+                  {filteredArtists.map((artist: LocalArtist) => (
                     <Pressable
                       key={artist.id}
                       onPress={() => handleSelectArtist(artist.name)}

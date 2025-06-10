@@ -1,9 +1,11 @@
-import { BookWithCountsRow, useBooksStore } from '@/stores/book-store';
+import { useBooksStore } from '@/stores/book-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useExercisesStore } from '@/stores/exercise-store';
-import { SectionWithCountsRow, useSectionsStore } from '@/stores/section-store';
-import { ExerciseRow } from '@/types/session';
+import { useSectionsStore } from '@/stores/section-store';
+import { BookWithCountsRow } from '@/types/book';
+import { LocalExercise } from '@/types/exercise';
+import { SectionWithCountsRow } from '@/types/section';
 import { exerciseToDraftSessionItem } from '@/utils/draft-session';
 import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
 import { useEffect, useState } from 'react';
@@ -65,7 +67,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     }
   }, [selectedSection, fetchExercisesBySection]);
 
-  const handleAddExercise = (exercise: ExerciseRow) => {
+  const handleAddExercise = (exercise: LocalExercise) => {
     if (!selectedSection || !selectedBook) return;
 
     if (mode === 'session' && draftSession) {
@@ -87,7 +89,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     }
   };
 
-  const handleRemoveExercise = (exercise: ExerciseRow) => {
+  const handleRemoveExercise = (exercise: LocalExercise) => {
     if (mode === 'session' && draftSession) {
       const itemToRemove = draftSession.items.find(
         (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
@@ -116,7 +118,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     onNavigate?.();
   };
 
-  const isExerciseAdded = (exercise: ExerciseRow) => {
+  const isExerciseAdded = (exercise: LocalExercise) => {
     if (mode === 'session' && draftSession) {
       return draftSession.items.some(
         (item) => item.type === 'exercise' && item.exercise?.id === exercise.id

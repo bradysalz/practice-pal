@@ -1,23 +1,15 @@
 import { supabase } from '@/lib/supabase';
-import { BookUploadData } from '@/types/book';
-import { Database } from '@/types/supabase';
-
-export type BookRow = Database['public']['Tables']['books']['Row'];
-export type BookWithCountsRow = BookRow & {
-  exercise_count: number;
-};
+import { BookRow, BookUploadData } from '@/types/book';
+import { getCurrentUserId } from './shared';
 
 export async function insertFullBookRPC(bookData: BookUploadData): Promise<string> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    throw new Error('User not authenticated');
-  }
+  const userId = await getCurrentUserId();
 
   const { data, error } = await supabase.rpc('insert_full_book', {
     book_name: bookData.bookName,
     book_author: bookData.bookAuthor,
     sections: bookData.sections,
-    user_id: user.id
+    user_id: userId
   });
 
   if (error) {
@@ -38,13 +30,6 @@ export async function updateBook(bookId: string, updates: Partial<BookRow>) {
     .eq("id", bookId);
 }
 
-export async function insertBook(book: BookRow) {
-  return supabase
-    .from("books")
-    .insert(book)
-    .select()
-    .single();
-}
 
 export async function deleteBook(id: string) {
   return supabase
