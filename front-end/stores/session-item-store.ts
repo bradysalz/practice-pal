@@ -1,14 +1,6 @@
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { InputLocalSessionItem, SessionItemRow, fetchSessionItemsByExercise, fetchSessionItemsBySession, fetchSessionItemsBySong, insertSessionItem } from '@/lib/supabase/session';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
-
-export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
-type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
-type InputLocalSessionItem = Omit<SessionItemInsert, 'id' | 'created_at' | 'updated_at'> & {
-  session_id: string;
-  tempo: number;
-};
 
 type SessionItemsState = {
   sessionItemsBySession: { [sessionId: string]: SessionItemRow[] };
@@ -29,10 +21,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   sessionItemsBySong: {},
 
   fetchSessionItemBySessionId: async (sessionId) => {
-    const { data, error } = await supabase
-      .from('session_items')
-      .select('*')
-      .eq('session_id', sessionId);
+    const { data, error } = await fetchSessionItemsBySession(sessionId);
 
     if (error) {
       console.error('Fetch by session failed', error);
@@ -53,10 +42,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
       return;
     }
 
-    const { data, error } = await supabase
-      .from('session_items')
-      .select('*')
-      .eq('exercise_id', exerciseId);
+    const { data, error } = await fetchSessionItemsByExercise(exerciseId);
 
     if (error) {
       console.error('Fetch by exercise failed', error);
@@ -72,7 +58,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   },
 
   fetchSessionItemBySongId: async (songId) => {
-    const { data, error } = await supabase.from('session_items').select('*').eq('song_id', songId);
+    const { data, error } = await fetchSessionItemsBySong(songId);
 
     if (error) {
       console.error('Fetch by song failed', error);
@@ -125,11 +111,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     const { item } = found;
     const { id, ...insertData } = item;
 
-    const { data, error } = await supabase
-      .from('session_items')
-      .insert(insertData)
-      .select()
-      .single();
+    const { data, error } = await insertSessionItem(insertData);
 
     if (error) {
       console.error('Sync failed', error);

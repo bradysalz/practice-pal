@@ -1,12 +1,7 @@
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { fetchSongs, InputLocalSong, insertSong, SongRow, updateSong } from '@/lib/supabase/song';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
-
-export type SongRow = Database['public']['Tables']['songs']['Row'];
-type SongInsert = Database['public']['Tables']['songs']['Insert'];
-type InputLocalSong = Omit<SongInsert, 'id' | 'created_at' | 'updated_at'>;
 
 type SongsState = {
   songs: SongRow[];
@@ -21,7 +16,7 @@ export const useSongsStore = create<SongsState>((set, get) => ({
   songs: [],
 
   fetchSongs: async () => {
-    const { data, error } = await supabase.from('songs').select('*');
+    const { data, error } = await fetchSongs();
     if (error) {
       console.error('Fetch failed', error);
       return;
@@ -50,7 +45,7 @@ export const useSongsStore = create<SongsState>((set, get) => ({
     const localSong = get().songs.find((s) => s.id === id);
     if (!localSong) return;
 
-    const { data, error } = await supabase.from('songs').insert(localSong).select().single();
+    const { data, error } = await insertSong(localSong);
 
     if (error) {
       console.error('Sync failed', error);
@@ -76,7 +71,7 @@ export const useSongsStore = create<SongsState>((set, get) => ({
 
     const { id: _, created_at, ...updatePayload } = song;
 
-    const { error } = await supabase.from('songs').update(updatePayload).eq('id', id);
+    const { error } = await updateSong(id, updatePayload);
 
     if (error) {
       console.error('Failed to sync song update:', error);

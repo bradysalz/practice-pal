@@ -1,36 +1,19 @@
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { fetchSections, getCurrentUserId, InputLocalSection, insertSection, SectionWithCountsRow, toSectionInsert } from '@/lib/supabase/section';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-// Not directly typing on the view because it null'd every field
-export type SectionRow = Database['public']['Tables']['sections']['Row'];
-export type SectionWithCountsRow = SectionRow & {
-  exercise_count: number;
-};
-
-type SectionInsert = Database['public']['Tables']['sections']['Insert'];
-type InputLocalSection = Omit<SectionInsert, 'id' | 'created_at' | 'updated_at' | 'created_by'> & {
-  book_id: string;
-};
-
-function toSectionInsert(section: SectionWithCountsRow): SectionInsert {
-  const { exercise_count, ...sectionInsert } = section;
-  return sectionInsert;
-}
-
-type SectionsState = {
+interface SectionsState {
   sections: SectionWithCountsRow[];
   addSectionLocal: (section: InputLocalSection) => Promise<string>;
   syncAddSection: (tempId: string) => Promise<void>;
   fetchSections: () => Promise<void>;
-};
+}
 
 export const useSectionsStore = create<SectionsState>((set, get) => ({
   sections: [],
 
   fetchSections: async () => {
-    const { data, error } = await supabase.from('section_with_counts').select('*');
+    const { data, error } = await fetchSections();
     if (error) {
       console.error('Fetch failed', error);
       return;
@@ -41,7 +24,7 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
   addSectionLocal: async (section) => {
     const id = uuidv4();
     const now = new Date().toISOString();
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = await getCurrentUserId();
     if (!userId) throw new Error('User not authenticated');
 
     const newSection: SectionWithCountsRow = {
@@ -51,6 +34,8 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
       updated_at: now,
       exercise_count: 0, // lazy fill the view field, will drop later
       created_by: userId,
+      name: section.name || '',
+      order: section.order || 0,
     };
     set((state) => ({ sections: [...state.sections, newSection] }));
     return id;
@@ -61,10 +46,7 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
     if (!localSection) return;
 
     const cleanSection = toSectionInsert(localSection);
-    const { data, error } = await supabase.from('sections')
-      .insert(cleanSection)
-      .select()
-      .single();
+    const { data, error } = await insertSection(cleanSection);
 
     if (error) {
       console.error('Sync failed', error);

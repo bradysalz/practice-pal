@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { deleteSetlist, deleteSetlistItems, fetchSetlistById, fetchSetlists, getCurrentUserId, insertSetlist, insertSetlistItems, updateSetlist } from '@/lib/supabase/setlist';
 import { DraftSetlist, SetlistInsert, SetlistItemInsert, SetlistUpdate, SetlistWithItems } from '@/types/setlist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
@@ -14,28 +14,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
   setlistDetailMap: {},
 
   fetchSetlists: async () => {
-    const { data, error } = await supabase
-      .from('setlists_with_items')
-      .select(
-        `
-        *,
-        setlist_items (
-          *,
-          song:song_id (
-            *,
-            artist:artist_id (*)
-          ),
-          exercise:exercise_id (
-            *,
-            section:section_id (
-              *,
-              book:book_id (*)
-            )
-          )
-        )
-      `
-      )
-      .order('created_at', { ascending: false });
+    const { data, error } = await fetchSetlists();
 
     if (error) {
       console.error('Failed to fetch setlists with items', error);
@@ -50,9 +29,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
 
   updateSetlist: async (setlist: DraftSetlist) => {
     const now = new Date().toISOString();
-    const userId = (await supabase.auth.getUser()).data.user?.id;
-    console.log('userId', userId, 'supabase.user()', await supabase.auth.getUser());
-
+    const userId = await getCurrentUserId();
     if (!userId) throw new Error('User not authenticated');
 
     const setlistUpdate: SetlistUpdate = {
@@ -63,10 +40,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     };
 
     // Step 1: Update the setlist
-    const { error: setlistError } = await supabase
-      .from('setlists')
-      .update(setlistUpdate)
-      .eq('id', setlist.id);
+    const { error: setlistError } = await updateSetlist(setlist.id, setlistUpdate);
 
     if (setlistError) {
       console.error('Failed to update setlist', setlistError);
@@ -74,10 +48,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 2: Delete existing items
-    const { error: deleteError } = await supabase
-      .from('setlist_items')
-      .delete()
-      .eq('setlist_id', setlist.id);
+    const { error: deleteError } = await deleteSetlistItems(setlist.id);
 
     if (deleteError) {
       console.error('Failed to delete existing setlist items', deleteError);
@@ -85,7 +56,6 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 3: Insert updated items
-
     const setlistItemInserts: SetlistItemInsert[] = setlist.items.map((item, index) => ({
       id: uuidv4(), // Generate new IDs for items
       setlist_id: setlist.id,
@@ -98,9 +68,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
       created_by: userId,
     }));
 
-    const { error: insertError } = await supabase
-      .from('setlist_items')
-      .insert(setlistItemInserts);
+    const { error: insertError } = await insertSetlistItems(setlistItemInserts);
 
     if (insertError) {
       console.error('Failed to insert updated setlist items', insertError);
@@ -108,29 +76,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 4: Fetch updated data to ensure consistency
-    const { data, error: viewError } = await supabase
-      .from('setlists_with_items')
-      .select(
-        `
-        *,
-        setlist_items (
-          *,
-          song:song_id (
-            *,
-            artist:artist_id (*)
-          ),
-          exercise:exercise_id (
-            *,
-            section:section_id (
-              *,
-              book:book_id (*)
-            )
-          )
-        )
-      `
-      )
-      .eq('id', setlist.id)
-      .single();
+    const { data, error: viewError } = await fetchSetlistById(setlist.id);
 
     if (viewError) {
       console.error('Failed to fetch updated setlist', viewError);
@@ -148,7 +94,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
 
   insertSetlist: async (draft: DraftSetlist) => {
     const now = new Date().toISOString();
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = await getCurrentUserId();
     if (!userId) throw new Error('User not authenticated');
 
     // Step 1: Insert the setlist
@@ -161,9 +107,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
       updated_at: now,
     };
 
-    const { error: setlistError } = await supabase
-      .from('setlists')
-      .insert(setlistInsert);
+    const { error: setlistError } = await insertSetlist(setlistInsert);
 
     if (setlistError) {
       console.error('Failed to insert setlist', setlistError);
@@ -183,41 +127,17 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
       updated_at: now,
     }));
 
-    const { error: itemsError } = await supabase
-      .from('setlist_items')
-      .insert(setlistItemInserts);
+    const { error: itemsError } = await insertSetlistItems(setlistItemInserts);
 
     if (itemsError) {
       console.error('Failed to insert setlist items', itemsError);
       // Cleanup the setlist since items failed
-      await supabase.from('setlists').delete().eq('id', draft.id);
+      await deleteSetlist(draft.id);
       throw new Error('Failed to insert setlist items');
     }
 
     // Step 3: Fetch updated data to ensure consistency
-    const { data, error: viewError } = await supabase
-      .from('setlists_with_items')
-      .select(
-        `
-        *,
-        setlist_items (
-          *,
-          song:song_id (
-            *,
-            artist:artist_id (*)
-          ),
-          exercise:exercise_id (
-            *,
-            section:section_id (
-              *,
-              book:book_id (*)
-            )
-          )
-        )
-      `
-      )
-      .eq('id', draft.id)
-      .single();
+    const { data, error: viewError } = await fetchSetlistById(draft.id);
 
     if (viewError) {
       console.error('Failed to fetch inserted setlist', viewError);

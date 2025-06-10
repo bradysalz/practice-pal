@@ -1,15 +1,18 @@
 import { EditableExercise } from '@/app/library-forms/edit-section/[sectionId]';
 import { supabase } from '@/lib/supabase';
+import { Database } from '@/types/supabase';
+
+type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
+type ExerciseInsert = Database['public']['Tables']['exercises']['Insert'];
 
 export async function updateExercises(sectionId: string, updates: EditableExercise[]) {
-
   return supabase
     .from("exercises")
     .update(updates)
     .eq("section_id", sectionId);
 }
 
-export async function updateExercise(exerciseId: string, updates: { name: string }) {
+export async function updateExercise(exerciseId: string, updates: Partial<ExerciseRow>) {
   return supabase
     .from("exercises")
     .update(updates)
@@ -33,4 +36,24 @@ export async function deleteExercises(ids: string[]) {
     .from("exercises")
     .delete()
     .in("id", ids);
+}
+
+export async function fetchExercisesBySection(section_id: string) {
+  return supabase
+    .from('exercises')
+    .select('*')
+    .eq('section_id', section_id);
+}
+
+export async function insertExercise(exercise: ExerciseRow) {
+  return supabase
+    .from('exercises')
+    .insert(exercise)
+    .select()
+    .single();
+}
+
+export async function getCurrentUserId() {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user?.id;
 }

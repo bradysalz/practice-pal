@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { fetchExercisesBySection, getCurrentUserId, insertExercise, updateExercise } from '@/lib/supabase/exercise';
 import { Database } from '@/types/supabase';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,10 +28,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       return;
     }
 
-    const { data, error } = await supabase
-      .from('exercises')
-      .select('*')
-      .eq('section_id', section_id);
+    const { data, error } = await fetchExercisesBySection(section_id);
 
     if (error) {
       console.error('Fetch failed', error);
@@ -78,7 +75,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     const { id: _, created_at, ...updatePayload } = exercise;
 
-    const { error } = await supabase.from('exercises').update(updatePayload).eq('id', id);
+    const { error } = await updateExercise(id, updatePayload);
 
     if (error) {
       console.error('Failed to sync exercise update:', error);
@@ -91,7 +88,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
   addExerciseLocal: async (exercise) => {
     const id = uuidv4();
     const now = new Date().toISOString();
-    const userId = (await supabase.auth.getUser()).data.user?.id;
+    const userId = await getCurrentUserId();
     if (!userId) throw new Error('User not authenticated');
 
     const newExercise: ExerciseRow = {
@@ -133,11 +130,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     if (!localExercise || !sectionId) return { error: null };
 
-    const { data, error } = await supabase
-      .from('exercises')
-      .insert(localExercise)
-      .select()
-      .single();
+    const { data, error } = await insertExercise(localExercise);
 
     if (error) {
       console.error('Sync failed', error);

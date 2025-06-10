@@ -1,11 +1,6 @@
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { ArtistRow, InputArtist, fetchArtists, insertArtist } from '@/lib/supabase/artist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
-
-export type ArtistRow = Database['public']['Tables']['artists']['Row'];
-type ArtistInsert = Database['public']['Tables']['artists']['Insert'];
-type InputArtist = Omit<ArtistInsert, 'id' | 'created_at' | 'updated_at'>;
 
 type ArtistsState = {
   artists: ArtistRow[];
@@ -18,7 +13,7 @@ export const useArtistsStore = create<ArtistsState>((set, get) => ({
   artists: [],
 
   fetchArtists: async () => {
-    const { data, error } = await supabase.from('artists').select('*');
+    const { data, error } = await fetchArtists();
     if (error) {
       console.error('Fetch failed', error);
       return;
@@ -46,7 +41,7 @@ export const useArtistsStore = create<ArtistsState>((set, get) => ({
     const localArtist = get().artists.find((s) => s.id === id);
     if (!localArtist) return;
 
-    const { data, error } = await supabase.from('artists').insert(localArtist).select().single();
+    const { data, error } = await insertArtist(localArtist);
 
     if (error) {
       console.error('Sync failed', error);
