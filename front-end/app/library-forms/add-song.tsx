@@ -1,10 +1,11 @@
+import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { supabase } from '@/lib/supabase';
 import { useArtistsStore, type ArtistRow } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { useRouter } from 'expo-router';
 import Fuse from 'fuse.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -16,7 +17,6 @@ export default function AddSongPage() {
   const [songGoalTempo, setSongGoalTempo] = useState('');
   const [showArtistDropdown, setShowArtistDropdown] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [selectedArtistId, setSelectedArtistId] = useState<string | null>(null);
 
   // Get store hooks
   const { artists, fetchArtists, addArtistLocal, syncAddArtist } = useArtistsStore();
@@ -46,9 +46,8 @@ export default function AddSongPage() {
       .map(result => result.item);
   }, [artistQuery, fuse]);
 
-  const handleSelectArtist = (artistName: string, artistId: string) => {
+  const handleSelectArtist = (artistName: string) => {
     setSongArtist(artistName);
-    setSelectedArtistId(artistId);
     setArtistQuery(artistName);
     setShowArtistDropdown(false);
   };
@@ -56,7 +55,7 @@ export default function AddSongPage() {
   const handleArtistInputChange = (text: string) => {
     setArtistQuery(text);
     setSongArtist(text);
-    setSelectedArtistId(null);
+
     if (text.length > 0) {
       setShowArtistDropdown(true);
     } else {
@@ -122,22 +121,18 @@ export default function AddSongPage() {
       <Text className="text-2xl font-bold mb-4">Add New Song</Text>
       <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="mr-1">
         <View className="gap-y-4">
-          <View>
-            <Text className="mb-1 font-medium text-xl">Song Name</Text>
-            <TextInput
-              value={songName}
-              onChangeText={setSongName}
-              placeholder="e.g., Uptown Funk"
-              className="border border-slate-300 text-lg rounded-xl px-3 py-2 bg-slate-50 mr-1"
-            />
-          </View>
+          <TextInputWithLabel
+            label="Song Name"
+            value={songName}
+            onChangeText={setSongName}
+            placeholder="e.g., Uptown Funk"
+          />
           <View className="relative">
-            <Text className="mb-1 font-medium text-xl">Artist</Text>
-            <TextInput
+            <TextInputWithLabel
+              label="Artist"
               value={artistQuery}
               onChangeText={handleArtistInputChange}
               placeholder="e.g., Bruno Mars"
-              className="border border-slate-300 text-lg rounded-xl px-3 py-2 bg-slate-50 mr-1"
             />
             {showArtistDropdown && filteredArtists.length > 0 && (
               <View className="absolute top-[100%] left-0 right-1 bg-white border border-slate-300 rounded-xl mt-1 z-10 max-h-48">
@@ -145,7 +140,7 @@ export default function AddSongPage() {
                   {filteredArtists.map((artist: ArtistRow) => (
                     <Pressable
                       key={artist.id}
-                      onPress={() => handleSelectArtist(artist.name, artist.id)}
+                      onPress={() => handleSelectArtist(artist.name)}
                       className="px-3 py-2 border-b border-slate-200 active:bg-slate-100"
                     >
                       <Text className="text-lg">{artist.name}</Text>
@@ -155,16 +150,13 @@ export default function AddSongPage() {
               </View>
             )}
           </View>
-          <View>
-            <Text className="mb-1 font-medium text-xl">Goal Tempo (BPM)</Text>
-            <TextInput
-              value={songGoalTempo}
-              onChangeText={setSongGoalTempo}
-              placeholder="e.g., 120"
-              keyboardType="numeric"
-              className="border border-slate-300 text-lg rounded-xl px-3 py-2 bg-slate-50 mr-1"
-            />
-          </View>
+          <TextInputWithLabel
+            label="Goal Tempo (BPM)"
+            value={songGoalTempo}
+            onChangeText={setSongGoalTempo}
+            placeholder="e.g., 120"
+            keyboardType="numeric"
+          />
           <Pressable
             onPress={handleSaveSong}
             disabled={isSaving}
