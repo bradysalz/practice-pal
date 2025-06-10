@@ -79,7 +79,6 @@ export default function LibraryPage() {
                     key={book.id}
                     title={book.name}
                     description={`${bookSections(book.id).length} sections • ${book.exercise_count} exercises`}
-                    isAdded={false}
                     onPress={() => router.push(`/library-detail/book/${book.id}`)}
                     className="mb-4"
                     rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
@@ -99,7 +98,6 @@ export default function LibraryPage() {
                     key={song.id}
                     title={song.name}
                     subtitle={song.artist}
-                    isAdded={false}
                     onPress={() => router.push(`/library-detail/song/${song.id}`)}
                     className="mb-4"
                     rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}

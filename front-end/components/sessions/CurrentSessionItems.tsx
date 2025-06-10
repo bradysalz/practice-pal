@@ -1,8 +1,9 @@
+import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ListItemCard } from '@/components/shared/ListItemCard';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { DraftSessionItem } from '@/types/session';
-import { Pressable, Text, View } from 'react-native';
-import { ThemedIcon } from '../icons/themed-icon';
+import { Text, View } from 'react-native';
 
 interface CurrentSessionItemsProps {
   sessionItems: DraftSessionItem[];
@@ -30,51 +31,41 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
       const artist = artists.find((a) => a.id === song.artist_id);
 
       return (
-        <View
+        <ListItemCard
           key={item.id}
-          className="flex-row items-center justify-between p-4 bg-slate-100 rounded-xl gap-x-4 border border-slate-300 border-2"
-        >
-          <View className="flex-row items-center gap-x-2">
-            <ThemedIcon name="Music" size={24} />
-          </View>
-          <View className="flex-1 mr-2">
-            <Text className="font-bold text-lg">{song.name}</Text>
-            {artist && <Text className="  ">{artist.name}</Text>}
-          </View>
-          <Pressable onPress={() => onRemoveItem(item.id)}>
-            <ThemedIcon name="X" size={20} />
-          </Pressable>
-        </View>
+          title={song.name}
+          subtitle={artist?.name}
+          subtitleIcon={<ThemedIcon name="MicVocal" size={16} color="black" />}
+          leftElement={<ThemedIcon name="Music" size={24} />}
+          rightElement={<ThemedIcon name="X" size={28} />}
+          onRemove={() => onRemoveItem(item.id)}
+          isAdded={true}
+        />
       );
     }
 
     // Handle exercise items
     if (item.type === 'exercise' && item.exercise) {
-      return (
-        <View
-          key={item.id}
-          className="flex-row items-center justify-between p-4 bg-slate-100 rounded-xl gap-x-4 border border-slate-300 border-2"
-        >
-          <View className="flex-row items-center gap-x-2">
-            <ThemedIcon name="Dumbbell" size={24} />
-          </View>
+      const bookName = item.exercise.section?.book?.name?.length > 28
+        ? item.exercise.section.book.name.slice(0, 28) + '...'
+        : item.exercise.section?.book?.name;
+      const sectionName = item.exercise.section?.name?.length > 28
+        ? item.exercise.section.name.slice(0, 28) + '...'
+        : item.exercise.section?.name;
 
-          <View className="flex-1 mr-2">
-            <Text className="font-bold text-lg">Exercise {item.exercise.name}</Text>
-            {item.exercise.section?.book && (
-              <Text className="">{item.exercise.section.book.name}</Text>
-            )}
-            {item.exercise.section && (
-              <Text className="">{item.exercise.section.name}</Text>
-            )}
-            {item.tempo && (
-              <Text className="">Goal: {item.tempo} BPM</Text>
-            )}
-          </View>
-          <Pressable onPress={() => onRemoveItem(item.id)}>
-            <ThemedIcon name="X" size={20} />
-          </Pressable>
-        </View>
+      return (
+        <ListItemCard
+          key={item.id}
+          title={`Exercise ${item.exercise.name}`}
+          subtitle={bookName}
+          subtitleIcon={bookName ? <ThemedIcon name="BookOpen" size={16} color="black" /> : undefined}
+          description={sectionName}
+          descriptionIcon={sectionName ? <ThemedIcon name="Bookmark" size={16} color="black" /> : undefined}
+          leftElement={<ThemedIcon name="Dumbbell" size={24} />}
+          rightElement={<ThemedIcon name="X" size={28} />}
+          onRemove={() => onRemoveItem(item.id)}
+          isAdded={true}
+        />
       );
     }
 
