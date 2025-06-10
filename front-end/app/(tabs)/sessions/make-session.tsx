@@ -1,6 +1,5 @@
 import { CurrentSessionItems } from '@/components/sessions/CurrentSessionItems';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
-import { DraftSessionItem } from '@/types/session';
 import { createNewDraft } from '@/utils/draft-session';
 import { router } from 'expo-router';
 import { Play, Plus } from 'lucide-react-native';
@@ -24,10 +23,6 @@ export default function MakeSessionPage() {
     removeItemFromDraft(itemId);
   };
 
-  const handleReorderItems = (items: DraftSessionItem[]) => {
-    setDraftSession({ ...draftSession, items });
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView
@@ -38,7 +33,6 @@ export default function MakeSessionPage() {
         <CurrentSessionItems
           sessionItems={draftSession?.items || []}
           onRemoveItem={handleRemoveItem}
-          onReorderItems={handleReorderItems}
         />
       </ScrollView>
 
