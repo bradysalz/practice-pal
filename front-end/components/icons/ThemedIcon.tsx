@@ -25,6 +25,7 @@ import {
   Plus,
   Save,
   Trash2,
+  TriangleAlert,
   X,
 } from 'lucide-react-native';
 
@@ -48,6 +49,7 @@ const ICONS = {
   ArrowLeft,
   ChevronRight,
   Trash2,
+  TriangleAlert,
   Play,
   Pause,
   X,
@@ -79,6 +81,7 @@ const DEFAULT_COLORS: Record<string, string> = {
   Pause: 'orange-500',
   Edit: 'black',
   X: 'red-500',
+  TriangleAlert: 'red-500',
 };
 
 export const ThemedIcon = ({ name, size = 24, className, style, color }: ThemedIconProps) => {

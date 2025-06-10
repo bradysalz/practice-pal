@@ -1,13 +1,14 @@
 import { InputWithDelete } from '@/components/forms/InputWithDelete';
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
-import { updateBook } from '@/lib/supabase/book';
+import { Separator } from '@/components/shared/Separator';
+import { deleteBook, updateBook } from '@/lib/supabase/book';
 import { deleteSections, insertSections, updateSection } from '@/lib/supabase/section';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export type EditableSection = {
@@ -20,9 +21,11 @@ export default function EditBookPage() {
 
   const router = useRouter();
 
+  const fetchBooks = useBooksStore((state) => state.fetchBooks);
   const books = useBooksStore((state) => state.books);
   const book = books.find((book) => book.id === bookId);
 
+  const fetchSections = useSectionsStore((state) => state.fetchSections);
   const sections = useSectionsStore((state) => state.sections);
   const usefulSectionsFromStore = sections.filter((section) => section.book_id === bookId);
 
@@ -44,7 +47,7 @@ export default function EditBookPage() {
 
   const handleSaveBook = async () => {
     if (!hasChanges) {
-      router.push(`/library-detail/book/${bookId}`);
+      router.navigate(`/library-detail/book/${bookId}`);
       return;
     }
 
@@ -76,7 +79,25 @@ export default function EditBookPage() {
     ]);
 
     setIsSaving(false);
-    router.push(`/library-detail/book/${bookId}`);
+    router.navigate(`/library-detail/book/${bookId}`);
+  }
+
+  const handleDeleteBook = async () => {
+    Alert.alert('Delete', `Are you sure you want to delete the entire book, sections, and exercises?`, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          await deleteBook(bookId);
+          await Promise.all([
+            fetchBooks(),
+            fetchSections()
+          ]);
+          router.navigate(`/library`);
+        }
+      },
+    ]);
   }
 
   const handleAddSection = () => {
@@ -99,8 +120,8 @@ export default function EditBookPage() {
   }
 
   return (
-    <View className="flex-1 bg-white p-4 mr-2">
-      <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="mr-1">
+    <View className="flex-1 bg-white p-4">
+      <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="">
         <View className="gap-y-4">
           <TextInputWithLabel
             label="Book Name"
@@ -114,47 +135,56 @@ export default function EditBookPage() {
             onChangeText={setBookAuthor}
             placeholder=""
           />
-          <View className="mb-4"></View>
-          <View>
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-2xl font-semibold">Sections</Text>
-              <Pressable
-                onPress={handleAddSection}
-                className="bg-slate-100 rounded-xl py-2 px-4 text-lg border border-slate-300 flex-row items-center gap-x-1.5"
-              >
-                <ThemedIcon name="Plus" size={16} color="slate-500" />
-                <Text className="text-lg">Add Section</Text>
-              </Pressable>
+          <Pressable onPress={handleDeleteBook} className="self-start">
+            <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4">
+              <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
+              <Text className="text-red-500 font-semibold text-lg">Delete Book</Text>
             </View>
-
-            <View className="gap-y-2">
-              {sectionForms.map((section, index) => (
-                <InputWithDelete
-                  key={index}
-                  name={section.name}
-                  onNameChange={(value) => handleUpdateSection(index, { ...section, name: value })}
-                  onDelete={() => handleDeleteSection(index)}
-                />
-              ))}
-            </View>
-          </View>
-
-          <Pressable
-            onPress={handleSaveBook}
-            disabled={isSaving}
-            className={`rounded-xl py-3 items-center flex-row justify-center ${isSaving ? 'bg-primary/70' : 'bg-primary'}`}
-          >
-            {isSaving ? (
-              <>
-                <ActivityIndicator color="white" className="mr-2" />
-                <Text className="text-white text-xl font-medium">Saving...</Text>
-              </>
-            ) : (
-              <Text className="text-white text-xl font-medium">Save Book</Text>
-            )}
           </Pressable>
         </View>
-      </ScrollView>
-    </View>
+        <Separator color="slate" className="my-4" />
+
+        {/* Sections */}
+        <View>
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-2xl font-semibold">Sections</Text>
+            <Pressable
+              onPress={handleAddSection}
+              className="bg-slate-100 rounded-xl py-2 px-4 text-lg border border-slate-300 flex-row items-center gap-x-1.5"
+            >
+              <ThemedIcon name="Plus" size={16} color="slate-500" />
+              <Text className="text-lg">Add Section</Text>
+            </Pressable>
+          </View>
+
+          <View className="gap-y-4 mb-4">
+            {sectionForms.map((section, index) => (
+              <InputWithDelete
+                key={index}
+                name={section.name}
+                onNameChange={(value) => handleUpdateSection(index, { ...section, name: value })}
+                onDelete={() => handleDeleteSection(index)}
+              />
+            ))}
+          </View>
+        </View>
+
+        <Pressable
+          onPress={handleSaveBook}
+          disabled={isSaving}
+          className={`rounded-xl py-3 items-center flex-row justify-center ${isSaving ? 'bg-primary/70' : 'bg-primary'}`}
+        >
+          {isSaving ? (
+            <>
+              <ActivityIndicator color="white" className="mr-2" />
+              <Text className="text-white text-xl font-medium">Saving...</Text>
+            </>
+          ) : (
+            <Text className="text-white text-xl font-medium">Save Book</Text>
+          )}
+        </Pressable>
+      </ScrollView >
+    </View >
+
   );
 }

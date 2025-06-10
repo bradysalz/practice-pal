@@ -1,13 +1,15 @@
 import { InputWithDelete } from '@/components/forms/InputWithDelete';
+
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { Separator } from '@/components/shared/Separator';
 import { deleteExercises, insertExercises, updateExercise } from '@/lib/supabase/exercise';
-import { updateSection } from '@/lib/supabase/section';
+import { deleteSections, updateSection } from '@/lib/supabase/section';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export type EditableExercise = {
@@ -32,6 +34,8 @@ export default function EditSectionPage() {
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  const fetchSections = useSectionsStore((state) => state.fetchSections);
+
   useEffect(() => {
     setExerciseForms(exercises.map(exercise => ({
       id: exercise.id,
@@ -44,7 +48,7 @@ export default function EditSectionPage() {
 
   const handleSaveSection = async () => {
     if (!hasChanges) {
-      router.push(`/library-detail/book/${section?.book_id}/section/${sectionId}`);
+      router.navigate(`/library-detail/book/${section?.book_id}/section/${sectionId}`);
       return;
     }
 
@@ -76,8 +80,24 @@ export default function EditSectionPage() {
     ]);
 
     setIsSaving(false);
-    router.push(`/library-detail/book/${section?.book_id}/section/${sectionId}`);
+    router.navigate(`/library-detail/book/${section?.book_id}/section/${sectionId}`);
   }
+
+  const handleDeleteSection = async () => {
+    Alert.alert('Delete', `Are you sure you want to delete this section and all its exercises?`, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          await deleteSections([sectionId]);
+          await fetchSections();
+          router.navigate(`/library-detail/book/${section?.book_id}`);
+        }
+      },
+    ]);
+  }
+
 
   const handleAddExercise = () => {
     setHasChanges(true);
@@ -99,8 +119,8 @@ export default function EditSectionPage() {
   }
 
   return (
-    <View className="flex-1 bg-white p-4 mr-2">
-      <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="mr-1">
+    <View className="flex-1 bg-white p-4">
+      <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="">
         <View className="gap-y-4">
           <TextInputWithLabel
             label="Section Name"
@@ -108,7 +128,15 @@ export default function EditSectionPage() {
             onChangeText={setSectionName}
             placeholder="Example Section"
           />
-          <View className="mb-4"></View>
+          <Pressable onPress={handleDeleteSection} className="self-start">
+            <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4">
+              <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
+              <Text className="text-red-500 font-semibold text-lg">Delete Section</Text>
+            </View>
+          </Pressable>
+          <Separator color="slate" className="my-4" />
+
+          {/* Exercises */}
           <View>
             <View className="flex-row justify-between items-center mb-4">
               <Text className="text-2xl font-semibold">Exercises</Text>

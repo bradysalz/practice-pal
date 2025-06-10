@@ -21,6 +21,12 @@ export async function insertFullBookRPC(bookData: BookUploadData): Promise<strin
   return data; // UUID of the new book
 }
 
+export async function deleteBook(bookId: string) {
+  return supabase
+    .from("books")
+    .delete()
+    .eq("id", bookId);
+}
 
 export async function updateBook(bookId: string, updates: { name?: string; author?: string }) {
   return supabase
