@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ActiveSessionItemCard } from '@/components/sessions/ActiveSessionItemCard';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';

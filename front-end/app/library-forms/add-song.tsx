@@ -22,29 +22,30 @@ export default function AddSongPage() {
   const { artists, fetchArtists, addArtistLocal, syncAddArtist } = useArtistsStore();
   const { addSongLocal, syncAddSong, fetchSongs } = useSongsStore();
 
-  // Initialize Fuse instance with options
-  const fuse = new Fuse(artists, {
-    keys: ['name'],
-    threshold: 0.3, // Lower threshold = more strict matching
-    distance: 100, // How far to search for matches
-    minMatchCharLength: 1,
-    shouldSort: true, // Sort by score
-    includeScore: true
-  });
-
   useEffect(() => {
     fetchArtists();
-  }, []);
+  }, [fetchArtists]);
 
   // Fuzzy search using Fuse.js
   const getFilteredArtists = useCallback(() => {
     if (!artistQuery) return [];
+
+    // Initialize Fuse instance with options
+    const fuse = new Fuse(artists, {
+      keys: ['name'],
+      threshold: 0.3, // Lower threshold = more strict matching
+      distance: 100, // How far to search for matches
+      minMatchCharLength: 1,
+      shouldSort: true, // Sort by score
+      includeScore: true
+    });
+
     const results = fuse.search(artistQuery);
     // Filter out low-quality matches (high scores mean less relevant)
     return results
       .filter(result => result.score && result.score < 0.6)
       .map(result => result.item);
-  }, [artistQuery, fuse]);
+  }, [artistQuery, artists]);
 
   const handleSelectArtist = (artistName: string) => {
     setSongArtist(artistName);

@@ -1,7 +1,3 @@
-import { BookWithCountsRow } from '@/stores/book-store';
-import { SectionWithCountsRow } from '@/stores/section-store';
-import { ArtistRow, ExerciseRow, SessionWithItems, SongRow } from '@/types/session';
-import { SetlistItemWithNested } from '@/types/setlist';
 import {
   createDraftFromSession,
   createNewDraft,
@@ -10,37 +6,29 @@ import {
   songRowToDraftSessionItem
 } from '@/utils/draft-session';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  MOCK_UUID,
+  mockArtist,
+  mockBook,
+  mockExercise,
+  mockSection,
+  mockSession,
+  mockSetlistItemWithExercise,
+  mockSetlistItemWithSong,
+  mockSong
+} from './mock-data';
 
 // Mock uuid to return predictable values
 jest.mock('uuid');
-const mockUuid = '123e4567-e89b-12d3-a456-426614174000';
-(uuidv4 as jest.Mock).mockReturnValue(mockUuid);
+(uuidv4 as jest.Mock).mockReturnValue(MOCK_UUID);
 
 describe('draft-session utils', () => {
   describe('songRowToDraftSessionItem', () => {
     it('should convert a song row to draft session item with artist', () => {
-      const song: SongRow = {
-        id: '1',
-        name: 'Test Song',
-        artist_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        goal_tempo: null
-      };
-
-      const artist: ArtistRow = {
-        id: '1',
-        name: 'Test Artist',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString()
-      };
-
-      const result = songRowToDraftSessionItem(song, artist);
+      const result = songRowToDraftSessionItem(mockSong, mockArtist);
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         type: 'song',
         notes: null,
         tempo: null,
@@ -56,20 +44,11 @@ describe('draft-session utils', () => {
     });
 
     it('should convert a song row to draft session item without artist', () => {
-      const song: SongRow = {
-        id: '1',
-        name: 'Test Song',
-        artist_id: null,
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        goal_tempo: null
-      };
-
-      const result = songRowToDraftSessionItem(song);
+      const songWithoutArtist = { ...mockSong, artist_id: null };
+      const result = songRowToDraftSessionItem(songWithoutArtist);
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         type: 'song',
         notes: null,
         tempo: null,
@@ -83,42 +62,11 @@ describe('draft-session utils', () => {
 
   describe('exerciseToDraftSessionItem', () => {
     it('should convert exercise, section, and book to draft session item', () => {
-      const exercise: ExerciseRow = {
-        id: '1',
-        name: 'Test Exercise',
-        section_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        goal_tempo: 120,
-        filepath: null,
-        sort_position: null
-      };
-
-      const section: SectionWithCountsRow = {
-        id: '1',
-        name: 'Test Section',
-        book_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        exercise_count: 1
-      };
-
-      const book: BookWithCountsRow = {
-        id: '1',
-        name: 'Test Book',
-        author: 'Test Author',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        exercise_count: 1,
-      };
-
-      const result = exerciseToDraftSessionItem(exercise, section, book);
+      const exerciseWithTempo = { ...mockExercise, goal_tempo: 120 };
+      const result = exerciseToDraftSessionItem(exerciseWithTempo, mockSection, mockBook);
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         type: 'exercise',
         notes: null,
         tempo: 120,
@@ -143,7 +91,7 @@ describe('draft-session utils', () => {
       const result = createNewDraft();
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         notes: null,
         duration: null,
         items: []
@@ -153,91 +101,7 @@ describe('draft-session utils', () => {
 
   describe('createDraftFromSession', () => {
     it('should convert a session with items to a draft session', () => {
-      const session: SessionWithItems = {
-        id: '1',
-        notes: 'Test Notes',
-        duration: 30,
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        song_count: 1,
-        exercise_count: 1,
-        session_items: [
-          {
-            id: '1',
-            session_id: '1',
-            type: 'song',
-            song_id: '1',
-            exercise_id: null,
-            notes: 'Song Notes',
-            tempo: 100,
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString(),
-            position: 0,
-            song: {
-              id: '1',
-              name: 'Test Song',
-              artist_id: '1',
-              created_at: new Date().toISOString(),
-              created_by: 'user1',
-              updated_at: new Date().toISOString(),
-              goal_tempo: null,
-              artist: {
-                id: '1',
-                name: 'Test Artist',
-                created_at: new Date().toISOString(),
-                created_by: 'user1',
-                updated_at: new Date().toISOString()
-              }
-            },
-            exercise: null
-          },
-          {
-            id: '2',
-            session_id: '1',
-            type: 'exercise',
-            song_id: null,
-            exercise_id: '1',
-            notes: 'Exercise Notes',
-            tempo: 120,
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString(),
-            song: null,
-            position: 1,
-            exercise: {
-              id: '1',
-              name: 'Test Exercise',
-              section_id: '1',
-              created_at: new Date().toISOString(),
-              created_by: 'user1',
-              updated_at: new Date().toISOString(),
-              filepath: null,
-              goal_tempo: null,
-              sort_position: null,
-              section: {
-                id: '1',
-                name: 'Test Section',
-                book_id: '1',
-                created_at: new Date().toISOString(),
-                created_by: 'user1',
-                updated_at: new Date().toISOString(),
-                book: {
-                  id: '1',
-                  name: 'Test Book',
-                  author: 'Test Author',
-                  created_at: new Date().toISOString(),
-                  created_by: 'user1',
-                  updated_at: new Date().toISOString()
-                }
-              }
-            }
-          }
-        ]
-      };
-
-      const result = createDraftFromSession(session);
+      const result = createDraftFromSession(mockSession);
 
       expect(result).toEqual({
         id: '1',
@@ -245,33 +109,33 @@ describe('draft-session utils', () => {
         duration: 30,
         items: [
           {
-            id: mockUuid,
+            id: MOCK_UUID,
             type: 'song',
             notes: 'Song Notes',
             tempo: 100,
             song: {
-              id: '1',
-              name: 'Test Song',
+              id: 'song1',
+              name: 'So What',
               artist: {
-                id: '1',
-                name: 'Test Artist'
+                id: 'artist1',
+                name: 'Miles Davis'
               }
             }
           },
           {
-            id: mockUuid,
+            id: MOCK_UUID,
             type: 'exercise',
             notes: 'Exercise Notes',
             tempo: 120,
             exercise: {
-              id: '1',
-              name: 'Test Exercise',
+              id: 'ex1',
+              name: 'Exercise 1',
               section: {
-                id: '1',
-                name: 'Test Section',
+                id: 'sec1',
+                name: 'Section 1',
                 book: {
-                  id: '1',
-                  name: 'Test Book',
+                  id: 'book1',
+                  name: 'Stick Control'
                 }
               }
             }
@@ -283,39 +147,10 @@ describe('draft-session utils', () => {
 
   describe('setlistItemToDraftSessionItem', () => {
     it('should convert a setlist song item to draft session item', () => {
-      const setlistItem: SetlistItemWithNested = {
-        id: '1',
-        setlist_id: '1',
-        type: 'song',
-        song_id: '1',
-        exercise_id: null,
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        position: 1,
-        song: {
-          id: '1',
-          name: 'Test Song',
-          artist_id: '1',
-          created_at: new Date().toISOString(),
-          created_by: 'user1',
-          updated_at: new Date().toISOString(),
-          goal_tempo: null,
-          artist: {
-            id: '1',
-            name: 'Test Artist',
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString()
-          }
-        },
-        exercise: null
-      };
-
-      const result = setlistItemToDraftSessionItem(setlistItem);
+      const result = setlistItemToDraftSessionItem(mockSetlistItemWithSong);
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         type: 'song',
         notes: null,
         tempo: null,
@@ -331,50 +166,10 @@ describe('draft-session utils', () => {
     });
 
     it('should convert a setlist exercise item to draft session item', () => {
-      const setlistItem: SetlistItemWithNested = {
-        id: '1',
-        setlist_id: '1',
-        type: 'exercise',
-        song_id: null,
-        exercise_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        position: 1,
-        song: null,
-        exercise: {
-          id: '1',
-          name: 'Test Exercise',
-          section_id: '1',
-          created_at: new Date().toISOString(),
-          created_by: 'user1',
-          updated_at: new Date().toISOString(),
-          filepath: null,
-          goal_tempo: null,
-          sort_position: null,
-          section: {
-            id: '1',
-            name: 'Test Section',
-            book_id: '1',
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString(),
-            book: {
-              id: '1',
-              name: 'Test Book',
-              author: 'Test Author',
-              created_at: new Date().toISOString(),
-              created_by: 'user1',
-              updated_at: new Date().toISOString()
-            }
-          }
-        }
-      };
-
-      const result = setlistItemToDraftSessionItem(setlistItem);
+      const result = setlistItemToDraftSessionItem(mockSetlistItemWithExercise);
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         type: 'exercise',
         notes: null,
         tempo: null,

@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { SessionWithItems } from '@/types/session';

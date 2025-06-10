@@ -1,5 +1,5 @@
 import { CardWithAccent } from '@/components/card-with-accent';
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { CardContent, CardHeader } from '@/components/ui/card';
 import React from 'react';
 import { Text, View } from 'react-native';

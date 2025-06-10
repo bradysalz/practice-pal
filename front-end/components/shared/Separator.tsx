@@ -2,6 +2,7 @@ import { View } from "react-native";
 
 interface SeparatorProps {
   color?: keyof typeof colorMap;
+  className?: string;
 }
 
 const colorMap = {
@@ -12,6 +13,6 @@ const colorMap = {
   slate: 'bg-slate-200',
 } as const;
 
-export function Separator({ color = 'red' }: SeparatorProps) {
-  return <View className={`h-2 ${colorMap[color]} my-3 w-full rounded-xl`} />;
+export function Separator({ color = 'red', className }: SeparatorProps) {
+  return <View className={`h-2 ${colorMap[color]} my-3 w-full rounded-xl ${className}`} />;
 }

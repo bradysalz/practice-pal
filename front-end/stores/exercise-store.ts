@@ -11,7 +11,7 @@ type InputLocalExercise = Omit<ExerciseInsert, 'id' | 'created_at' | 'updated_at
 };
 
 type ExercisesState = {
-  exercises: Record<string, ExerciseRow[]>;
+  exercisesBySectionId: Record<string, ExerciseRow[]>;
   addExerciseLocal: (exercise: InputLocalExercise) => Promise<string>;
   syncAddExercise: (tempId: string) => Promise<{ error: PostgrestError | null }>;
   updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
@@ -20,11 +20,11 @@ type ExercisesState = {
 };
 
 export const useExercisesStore = create<ExercisesState>((set, get) => ({
-  exercises: {},
+  exercisesBySectionId: {},
 
   fetchExercisesBySection: async (section_id, force = false) => {
     // If not forced and we already have the data, return early
-    if (!force && get().exercises[section_id]?.length > 0) {
+    if (!force && get().exercisesBySectionId[section_id]?.length > 0) {
       return;
     }
 
@@ -39,8 +39,8 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     }
 
     set((state) => ({
-      exercises: {
-        ...state.exercises,
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
         [section_id]: data as ExerciseRow[],
       },
     }));
@@ -48,10 +48,10 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
   updateExerciseLocal: (id, updates) => {
     set((state) => {
-      const newExercises = { ...state.exercises };
+      const newExercises = { ...state.exercisesBySectionId };
 
       // Find the section containing this exercise
-      for (const [sectionId, exercises] of Object.entries(state.exercises)) {
+      for (const [sectionId, exercises] of Object.entries(state.exercisesBySectionId)) {
         const exerciseIndex = exercises.findIndex(e => e.id === id);
         if (exerciseIndex !== -1) {
           newExercises[sectionId] = exercises.map((e) =>
@@ -61,7 +61,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
         }
       }
 
-      return { exercises: newExercises };
+      return { exercisesBySectionId: newExercises };
     });
   },
 
@@ -69,7 +69,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     let exercise: ExerciseRow | undefined;
 
     // Find the exercise in any section
-    for (const exercises of Object.values(get().exercises)) {
+    for (const exercises of Object.values(get().exercisesBySectionId)) {
       exercise = exercises.find(e => e.id === id);
       if (exercise) break;
     }
@@ -101,16 +101,16 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       section_id: exercise.section_id,
       goal_tempo: exercise.goal_tempo ?? null,
       filepath: exercise.filepath ?? null,
-      sort_position: exercise.sort_position ?? null,
+      order: exercise.order ?? null,
       created_at: now,
       updated_at: now,
     };
 
     set((state) => ({
-      exercises: {
-        ...state.exercises,
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
         [exercise.section_id]: [
-          ...(state.exercises[exercise.section_id] || []),
+          ...(state.exercisesBySectionId[exercise.section_id] || []),
           newExercise,
         ],
       },
@@ -123,7 +123,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     let sectionId: string | undefined;
 
     // Find the exercise and its section
-    for (const [section, exercises] of Object.entries(get().exercises)) {
+    for (const [section, exercises] of Object.entries(get().exercisesBySectionId)) {
       localExercise = exercises.find(e => e.id === id);
       if (localExercise) {
         sectionId = section;
@@ -145,9 +145,9 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     }
 
     set((state) => ({
-      exercises: {
-        ...state.exercises,
-        [sectionId!]: state.exercises[sectionId!].map((e) =>
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
+        [sectionId!]: state.exercisesBySectionId[sectionId!].map((e) =>
           e.id === id ? data : e
         ),
       },

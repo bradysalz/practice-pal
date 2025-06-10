@@ -8,7 +8,7 @@ import { exerciseToDraftSessionItem } from '@/utils/draft-session';
 import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
-import { ThemedIcon } from '../icons/themed-icon';
+import { ThemedIcon } from '../icons/ThemedIcon';
 import { HighlightBar } from './HighlightBar';
 import { ListItemCard } from './ListItemCard';
 
@@ -24,7 +24,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
   const [selectedSection, setSelectedSection] = useState<SectionWithCountsRow | null>(null);
 
   // Store hooks
-  const { exercises, fetchExercisesBySection } = useExercisesStore();
+  const { exercisesBySectionId: exercises, fetchExercisesBySection } = useExercisesStore();
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
 

@@ -1,8 +1,9 @@
 import { SectionForm } from '@/components/forms/SectionForm';
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { ThemedIcon } from '@/components/icons/themed-icon';
-import { insertFullBookRPC } from '@/lib/supabase-rpc';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { insertFullBookRPC } from '@/lib/supabase/book';
 import { useBooksStore } from '@/stores/book-store';
+import { useSectionsStore } from '@/stores/section-store';
 import { SectionFormData, SectionUploadData } from '@/types/book';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -13,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function AddBookPage() {
   const router = useRouter();
   const { fetchBooks } = useBooksStore();
+  const { fetchSections } = useSectionsStore();
   const [bookName, setBookName] = useState('');
   const [bookAuthor, setBookAuthor] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -79,7 +81,7 @@ export default function AddBookPage() {
       });
 
       // Navigate to library
-      await fetchBooks();
+      await Promise.all([fetchBooks(), fetchSections()]);
       router.push('/library');
     } catch (error) {
       console.error('Failed to save book:', error);

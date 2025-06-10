@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';

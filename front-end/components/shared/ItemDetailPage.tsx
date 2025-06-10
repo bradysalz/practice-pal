@@ -1,4 +1,4 @@
-import { ThemedIcon } from "@/components/icons/themed-icon";
+import { ThemedIcon } from "@/components/icons/ThemedIcon";
 import { ListItemCard } from "@/components/shared/ListItemCard";
 import { Separator } from "@/components/shared/Separator";
 import ItemTempoGraph from "@/components/stats/ItemTempoGraph";
