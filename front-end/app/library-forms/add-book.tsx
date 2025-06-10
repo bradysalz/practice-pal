@@ -1,11 +1,12 @@
 import { SectionForm } from '@/components/forms/SectionForm';
+import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/themed-icon';
 import { insertFullBookRPC } from '@/lib/supabase-rpc';
 import { useBooksStore } from '@/stores/book-store';
 import { SectionFormData, SectionUploadData } from '@/types/book';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -93,24 +94,18 @@ export default function AddBookPage() {
       <Text className="text-2xl font-bold mb-4">Add New Book</Text>
       <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="mr-1">
         <View className="gap-y-4">
-          <View>
-            <Text className="mb-1 font-medium text-xl">Book Name</Text>
-            <TextInput
-              value={bookName}
-              onChangeText={setBookName}
-              placeholder="Stick Control"
-              className="border border-slate-300 text-lg rounded-xl px-3 py-2 bg-slate-50 mr-1"
-            />
-          </View>
-          <View>
-            <Text className="mb-1 font-medium text-xl">Author</Text>
-            <TextInput
-              value={bookAuthor}
-              onChangeText={setBookAuthor}
-              placeholder="George Lawrence Stone"
-              className="border border-slate-300 text-lg rounded-xl px-3 py-2 bg-slate-50 mr-1"
-            />
-          </View>
+          <TextInputWithLabel
+            label="Book Name"
+            value={bookName}
+            onChangeText={setBookName}
+            placeholder="Stick Control"
+          />
+          <TextInputWithLabel
+            label="Author"
+            value={bookAuthor}
+            onChangeText={setBookAuthor}
+            placeholder="George Lawrence Stone"
+          />
           <View className="mb-4"></View>
           <View>
             <View className="flex-row justify-between items-center mb-4">
