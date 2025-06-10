@@ -18,7 +18,7 @@ export default function SectionDetailPage() {
 
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
-  const exercises = useExercisesStore((state) => state.exercises);
+  const exercises = useExercisesStore((state) => state.exercisesBySectionId);
   const fetchExercisesBySection = useExercisesStore((state) => state.fetchExercisesBySection);
 
   const fetchSectionStats = useStatStore((state) => state.fetchSectionStatsBySectionId);
@@ -40,6 +40,7 @@ export default function SectionDetailPage() {
 
   const book = books.find((b) => b.id === bookId);
   const section = sections.find((s) => s.id === sectionId);
+  const usefulExercises = exercises[sectionId]?.sort((a, b) => a.order - b.order) || [];
 
   const sectionStat: SectionStat = sectionStats[sectionId] || {
     section_id: sectionId,
@@ -52,20 +53,24 @@ export default function SectionDetailPage() {
   const goalProgress = Math.floor((sectionStat.goal_reached_exercises || 0) / (sectionStat.total_exercises || 1) * 100);
 
 
-  if (!book) return <Text>Book not found</Text>;
-  if (!section) return <Text>Section not found</Text>;
-
-
-
   const handleExercisePress = (exerciseId: string) => {
     router.push(`/library-detail/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
   };
+
+
+  const handleEditSection = () => {
+    router.push(`/library-forms/edit-section/${sectionId}`);
+  };
+
+  if (!book) return <Text>Book not found</Text>;
+  if (!section) return <Text>Section not found</Text>;
+
 
   return (
     <View className="flex-1 p-4">
       <View className="gap-y-4 mb-4">
         <HighlightBar type="book" name={book.name} />
-        <HighlightBar type="section" name={section.name} />
+        <HighlightBar type="section" name={section.name} showEditIcon={true} onPressEdit={handleEditSection} />
       </View>
 
       <Pressable onPress={() => router.push(`/stat-detail/section/${sectionId}`)}>
@@ -108,9 +113,9 @@ export default function SectionDetailPage() {
         </View>
       ) : (
         <ScrollView className="rounded-lg">
-          {exercises[sectionId]?.map((exercise) => (
+          {usefulExercises.map((exercise) => (
             <ListItemCard
-              key={exercise.created_at}
+              key={exercise.order}
               title={`${exercise.name}`}
               isAdded={false}
               onPress={() => handleExercisePress(exercise.id)}

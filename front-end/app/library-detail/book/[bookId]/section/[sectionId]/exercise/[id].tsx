@@ -20,7 +20,7 @@ export default function ExerciseDetailPage() {
   // Stores
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
-  const exercises = useExercisesStore((state) => state.exercises);
+  const exercises = useExercisesStore((state) => state.exercisesBySectionId);
   const sessionItemsByExercise = useSessionItemsStore((state) => state.sessionItemsByExercise);
 
   // Fetch

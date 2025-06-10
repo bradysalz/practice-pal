@@ -1,11 +1,12 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ExerciseNamingType, SectionFormData } from '@/types/book';
 import { ChevronDown } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { ExerciseNamingPreview } from './ExerciseNamingPreview';
+import { TextInputWithLabel } from './TextInputWithLabel';
 
 interface SectionFormProps {
   section: SectionFormData;
@@ -73,14 +74,14 @@ export function SectionForm({ section, onUpdate, onDelete, index }: SectionFormP
           <CardContent className="p-4">
             <View className="gap-y-4">
               <View>
-                <Text className="mb-1 font-medium text-lg">Section Name</Text>
-                <View className="flex-row justify-between items-center">
+                <View className="flex-row justify-between items-end">
                   <View className="flex-1">
-                    <TextInput
+                    <TextInputWithLabel
+                      label="Section Name"
                       value={section.name}
                       onChangeText={(value) => onUpdate({ ...section, name: value })}
                       placeholder={`Syncopation Work`}
-                      className="border border-slate-300 text-lg rounded-xl px-3 py-2 bg-slate-50"
+                      textSize="lg"
                     />
                   </View>
                   <Pressable
@@ -94,13 +95,13 @@ export function SectionForm({ section, onUpdate, onDelete, index }: SectionFormP
 
               <View className="flex-row items-end gap-x-2">
                 <View className="flex-1">
-                  <Text className="mb-1 font-medium text-lg">Exercises</Text>
-                  <TextInput
+                  <TextInputWithLabel
+                    label="Exercises"
                     value={section.exerciseCount.toString()}
                     onChangeText={handleExerciseCountChange}
                     placeholder="5"
                     keyboardType="numeric"
-                    className="border border-slate-300 text-lg rounded-xl px-3 py-2 bg-slate-50"
+                    textSize="lg"
                   />
                 </View>
 
@@ -158,12 +159,12 @@ export function SectionForm({ section, onUpdate, onDelete, index }: SectionFormP
               {section.exerciseNaming === 'custom' && (
                 <View className="gap-y-2">
                   {Array.from({ length: section.exerciseCount }).map((_, i) => (
-                    <TextInput
+                    <TextInputWithLabel
                       key={i}
                       value={section.customExerciseNames?.[i] || ''}
                       onChangeText={(value) => handleCustomNameChange(i, value)}
                       placeholder={`Exercise ${i + 1} Name`}
-                      className="border border-slate-300 rounded-xl px-3 py-2 bg-slate-50"
+                      textSize="md"
                     />
                   ))}
                 </View>

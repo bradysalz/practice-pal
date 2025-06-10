@@ -109,8 +109,8 @@ export type Database = {
           goal_tempo: number | null
           id: string
           name: string | null
+          order: number
           section_id: string | null
-          sort_position: number | null
           updated_at: string
         }
         Insert: {
@@ -120,8 +120,8 @@ export type Database = {
           goal_tempo?: number | null
           id: string
           name?: string | null
+          order: number
           section_id?: string | null
-          sort_position?: number | null
           updated_at?: string
         }
         Update: {
@@ -131,8 +131,8 @@ export type Database = {
           goal_tempo?: number | null
           id?: string
           name?: string | null
+          order?: number
           section_id?: string | null
-          sort_position?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -204,6 +204,7 @@ export type Database = {
           created_by: string
           id: string
           name: string
+          order: number
           updated_at: string
         }
         Insert: {
@@ -212,6 +213,7 @@ export type Database = {
           created_by: string
           id: string
           name: string
+          order: number
           updated_at?: string
         }
         Update: {
@@ -220,6 +222,7 @@ export type Database = {
           created_by?: string
           id?: string
           name?: string
+          order?: number
           updated_at?: string
         }
         Relationships: [

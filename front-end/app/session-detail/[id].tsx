@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ExerciseDetailCard } from '@/components/sessions/ExerciseDetailCard';
 import { NotesDetailCard } from '@/components/sessions/NotesDetailCard';
 import { SongDetailCard } from '@/components/sessions/SongDetailCard';

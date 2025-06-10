@@ -1,7 +1,3 @@
-import { BookWithCountsRow } from '@/stores/book-store';
-import { SectionWithCountsRow } from '@/stores/section-store';
-import { ArtistRow, ExerciseRow, SongRow } from '@/types/session';
-import { SetlistItemWithNested, SetlistWithItems } from '@/types/setlist';
 import {
   createDraftFromSetlist,
   createNewDraft,
@@ -10,45 +6,26 @@ import {
   songRowToDraftSetlistItem
 } from '@/utils/draft-setlist';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  MOCK_UUID,
+  mockArtist,
+  mockBook,
+  mockExercise,
+  mockSection,
+  mockSetlist,
+  mockSetlistItemWithExercise,
+  mockSetlistItemWithSong,
+  mockSong
+} from './mock-data';
 
 // Mock uuid to return predictable values
 jest.mock('uuid');
-const mockUuid = '123e4567-e89b-12d3-a456-426614174000';
-(uuidv4 as jest.Mock).mockReturnValue(mockUuid);
+(uuidv4 as jest.Mock).mockReturnValue(MOCK_UUID);
 
 describe('draft-setlist utils', () => {
   describe('setlistItemToDraftSetlistItem', () => {
     it('should convert a setlist song item to draft setlist item', () => {
-      const setlistItem: SetlistItemWithNested = {
-        id: '1',
-        setlist_id: '1',
-        type: 'song',
-        song_id: '1',
-        exercise_id: null,
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        position: 1,
-        song: {
-          id: '1',
-          name: 'Test Song',
-          artist_id: '1',
-          created_at: new Date().toISOString(),
-          created_by: 'user1',
-          updated_at: new Date().toISOString(),
-          goal_tempo: null,
-          artist: {
-            id: '1',
-            name: 'Test Artist',
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString()
-          }
-        },
-        exercise: null
-      };
-
-      const result = setlistItemToDraftSetlistItem(setlistItem);
+      const result = setlistItemToDraftSetlistItem(mockSetlistItemWithSong);
 
       expect(result).toEqual({
         id: '1',
@@ -61,51 +38,10 @@ describe('draft-setlist utils', () => {
     });
 
     it('should convert a setlist exercise item to draft setlist item', () => {
-      const setlistItem: SetlistItemWithNested = {
-        id: '1',
-        setlist_id: '1',
-        type: 'exercise',
-        song_id: null,
-        exercise_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        position: 2,
-        song: null,
-        exercise: {
-          id: '1',
-          name: 'Test Exercise',
-          section_id: '1',
-          created_at: new Date().toISOString(),
-          created_by: 'user1',
-          updated_at: new Date().toISOString(),
-          filepath: null,
-          goal_tempo: null,
-          sort_position: null,
-          section: {
-            id: '1',
-            name: 'Test Section',
-            book_id: '1',
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString(),
-            book: {
-              id: '1',
-              name: 'Test Book',
-              author: 'Test Author',
-              created_at: new Date().toISOString(),
-              created_by: 'user1',
-              updated_at: new Date().toISOString(),
-
-            }
-          }
-        }
-      };
-
-      const result = setlistItemToDraftSetlistItem(setlistItem);
+      const result = setlistItemToDraftSetlistItem(mockSetlistItemWithExercise);
 
       expect(result).toEqual({
-        id: '1',
+        id: '2',
         type: 'exercise',
         exercise: {
           id: '1',
@@ -125,30 +61,11 @@ describe('draft-setlist utils', () => {
 
   describe('songRowToDraftSetlistItem', () => {
     it('should convert a song row to draft setlist item with artist', () => {
-      const song: SongRow = {
-        id: '1',
-        name: 'Test Song',
-        artist_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        goal_tempo: null
-      };
-
-      const artist: ArtistRow = {
-        id: '1',
-        name: 'Test Artist',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString()
-      };
-
-      const result = songRowToDraftSetlistItem(song, artist);
+      const result = songRowToDraftSetlistItem(mockSong, mockArtist);
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         type: 'song',
-
         song: {
           id: '1',
           name: 'Test Song',
@@ -163,42 +80,10 @@ describe('draft-setlist utils', () => {
 
   describe('exerciseToDraftSetlistItem', () => {
     it('should convert exercise, section, and book to draft setlist item', () => {
-      const exercise: ExerciseRow = {
-        id: '1',
-        name: 'Test Exercise',
-        section_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        filepath: null,
-        goal_tempo: null,
-        sort_position: null
-      };
-
-      const section: SectionWithCountsRow = {
-        id: '1',
-        name: 'Test Section',
-        book_id: '1',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        exercise_count: 1
-      };
-
-      const book: BookWithCountsRow = {
-        id: '1',
-        name: 'Test Book',
-        author: 'Test Author',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        exercise_count: 1,
-      };
-
-      const result = exerciseToDraftSetlistItem(exercise, section, book);
+      const result = exerciseToDraftSetlistItem(mockExercise, mockSection, mockBook);
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         type: 'exercise',
         exercise: {
           id: '1',
@@ -221,7 +106,7 @@ describe('draft-setlist utils', () => {
       const result = createNewDraft();
 
       expect(result).toEqual({
-        id: mockUuid,
+        id: MOCK_UUID,
         name: null,
         description: null,
         items: []
@@ -231,87 +116,7 @@ describe('draft-setlist utils', () => {
 
   describe('createDraftFromSetlist', () => {
     it('should convert a setlist with items to a draft setlist', () => {
-      const setlist: SetlistWithItems = {
-        id: '1',
-        name: 'Test Setlist',
-        description: 'Test Description',
-        created_at: new Date().toISOString(),
-        created_by: 'user1',
-        updated_at: new Date().toISOString(),
-        song_count: 1,
-        exercise_count: 1,
-        setlist_items: [
-          {
-            id: '1',
-            setlist_id: '1',
-            type: 'song',
-            song_id: '1',
-            exercise_id: null,
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString(),
-            position: 1,
-            song: {
-              id: '1',
-              name: 'Test Song',
-              artist_id: '1',
-              created_at: new Date().toISOString(),
-              created_by: 'user1',
-              updated_at: new Date().toISOString(),
-              goal_tempo: null,
-              artist: {
-                id: '1',
-                name: 'Test Artist',
-                created_at: new Date().toISOString(),
-                created_by: 'user1',
-                updated_at: new Date().toISOString()
-              }
-            },
-            exercise: null
-          },
-          {
-            id: '2',
-            setlist_id: '1',
-            type: 'exercise',
-            song_id: null,
-            exercise_id: '1',
-            created_at: new Date().toISOString(),
-            created_by: 'user1',
-            updated_at: new Date().toISOString(),
-            position: 2,
-            song: null,
-            exercise: {
-              id: '1',
-              name: 'Test Exercise',
-              section_id: '1',
-              created_at: new Date().toISOString(),
-              created_by: 'user1',
-              updated_at: new Date().toISOString(),
-              filepath: null,
-              goal_tempo: null,
-              sort_position: null,
-              section: {
-                id: '1',
-                name: 'Test Section',
-                book_id: '1',
-                created_at: new Date().toISOString(),
-                created_by: 'user1',
-                updated_at: new Date().toISOString(),
-                book: {
-                  id: '1',
-                  name: 'Test Book',
-                  author: 'Test Author',
-                  created_at: new Date().toISOString(),
-                  created_by: 'user1',
-                  updated_at: new Date().toISOString()
-                }
-              }
-            }
-          }
-        ]
-      };
-
-      const result = createDraftFromSetlist(setlist);
+      const result = createDraftFromSetlist(mockSetlist);
 
       expect(result).toEqual({
         id: '1',
@@ -319,7 +124,7 @@ describe('draft-setlist utils', () => {
         description: 'Test Description',
         items: [
           {
-            id: mockUuid,
+            id: MOCK_UUID,
             type: 'song',
             song: {
               id: '1',
@@ -331,7 +136,7 @@ describe('draft-setlist utils', () => {
             }
           },
           {
-            id: mockUuid,
+            id: MOCK_UUID,
             type: 'exercise',
             exercise: {
               id: '1',

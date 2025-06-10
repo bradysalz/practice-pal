@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';

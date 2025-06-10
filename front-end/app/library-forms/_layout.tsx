@@ -18,6 +18,18 @@ export default function LibraryFormsLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="edit-book/[bookId]"
+        options={{
+          title: 'Edit Book',
+        }}
+      />
+      <Stack.Screen
+        name="edit-section/[sectionId]"
+        options={{
+          title: 'Edit Section',
+        }}
+      />
     </Stack>
   );
 }

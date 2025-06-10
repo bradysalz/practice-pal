@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';

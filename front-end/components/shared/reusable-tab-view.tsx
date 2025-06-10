@@ -10,7 +10,7 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated';
 
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export type TabValue = 'books' | 'songs' | 'setlists';
