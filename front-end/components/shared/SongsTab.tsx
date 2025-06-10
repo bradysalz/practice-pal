@@ -1,7 +1,9 @@
+
 import { useArtistsStore } from '@/stores/artist-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
-import { SongRow, useSongsStore } from '@/stores/song-store';
+import { useSongsStore } from '@/stores/song-store';
+import { LocalSong } from '@/types/song';
 import { songRowToDraftSessionItem } from '@/utils/draft-session';
 import { songRowToDraftSetlistItem } from '@/utils/draft-setlist';
 import { View } from 'react-native';
@@ -14,7 +16,7 @@ interface SongsTabProps {
 
 export function SongsTab({ mode, searchQuery = '' }: SongsTabProps) {
   // Store hooks
-  const songs: SongRow[] = useSongsStore((state) => state.songs);
+  const songs: LocalSong[] = useSongsStore((state) => state.songs);
   const artists = useArtistsStore((state) => state.artists);
 
   // Session/Setlist store hooks
@@ -31,7 +33,7 @@ export function SongsTab({ mode, searchQuery = '' }: SongsTabProps) {
     return null;
   }
 
-  const handleAddSong = (song: SongRow) => {
+  const handleAddSong = (song: LocalSong) => {
     const artist = artists.find((a) => a.id === song.artist_id);
 
     if (mode === 'session' && draftSession) {
@@ -43,7 +45,7 @@ export function SongsTab({ mode, searchQuery = '' }: SongsTabProps) {
     }
   };
 
-  const handleRemoveSong = (song: SongRow) => {
+  const handleRemoveSong = (song: LocalSong) => {
     if (mode === 'session' && draftSession) {
       const itemToRemove = draftSession.items.find(
         (item) => item.type === 'song' && item.song?.id === song.id
@@ -61,7 +63,7 @@ export function SongsTab({ mode, searchQuery = '' }: SongsTabProps) {
     }
   };
 
-  const isSongAdded = (song: SongRow) => {
+  const isSongAdded = (song: LocalSong) => {
     if (mode === 'session' && draftSession) {
       return draftSession.items.some(
         (item) => item.type === 'song' && item.song?.id === song.id

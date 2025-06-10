@@ -1,10 +1,13 @@
-import { BookWithCountsRow } from "@/stores/book-store";
-import { SectionWithCountsRow } from "@/stores/section-store";
-import { ArtistRow, DraftSession, DraftSessionItem, ExerciseRow, SessionWithItems, SongRow } from "@/types/session";
+import { LocalArtist } from "@/types/artist";
+import { BookWithCountsRow } from "@/types/book";
+import { LocalExercise } from "@/types/exercise";
+import { SectionWithCountsRow } from "@/types/section";
+import { DraftSession, DraftSessionItem, SessionWithItems } from "@/types/session";
 import { SetlistItemWithNested } from "@/types/setlist";
+import { LocalSong } from "@/types/song";
 import { v4 as uuidv4 } from 'uuid';
 
-export function songRowToDraftSessionItem(song: SongRow, artist?: ArtistRow): DraftSessionItem {
+export function songRowToDraftSessionItem(song: LocalSong, artist?: LocalArtist): DraftSessionItem {
   return {
     id: uuidv4(),
     type: 'song',
@@ -22,7 +25,7 @@ export function songRowToDraftSessionItem(song: SongRow, artist?: ArtistRow): Dr
 }
 
 export function exerciseToDraftSessionItem(
-  exercise: ExerciseRow,
+  exercise: LocalExercise,
   section: SectionWithCountsRow,
   book: BookWithCountsRow
 ): DraftSessionItem {

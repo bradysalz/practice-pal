@@ -46,7 +46,7 @@ export function ActiveSessionItemCard({
 
     // Sort by created_at in descending order and find the first item with a tempo
     const lastItem = [...items]
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .sort((a, b) => new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime())
       .find(item => item.tempo !== null);
 
     return lastItem?.tempo || null;

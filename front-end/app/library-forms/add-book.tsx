@@ -74,7 +74,7 @@ export default function AddBookPage() {
       }));
 
       // Call Supabase RPC
-      const newBookId = await insertFullBookRPC({
+      await insertFullBookRPC({
         bookName: bookName,
         bookAuthor: bookAuthor,
         sections: preparedSections,

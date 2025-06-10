@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { fetchSetlistItems, insertSetlistItem } from '@/lib/supabase/setlist';
 import { SetlistItemRow } from '@/types/setlist';
 import { create } from 'zustand';
 
@@ -12,11 +12,7 @@ export const useSetlistItemsStore = create<SetlistItemsState>((set, get) => ({
   setlistItems: [],
 
   fetchSetlistItems: async (setlistId) => {
-    const { data, error } = await supabase
-      .from('setlist_items')
-      .select('*')
-      .eq('setlist_id', setlistId)
-      .order('position', { ascending: true });
+    const { data, error } = await fetchSetlistItems(setlistId);
 
     if (error) {
       console.error('Fetch failed', error);
@@ -29,11 +25,7 @@ export const useSetlistItemsStore = create<SetlistItemsState>((set, get) => ({
     const localItem = get().setlistItems.find((s) => s.id === id);
     if (!localItem) return;
 
-    const { data, error } = await supabase
-      .from('setlist_items')
-      .insert(localItem)
-      .select()
-      .single();
+    const { data, error } = await insertSetlistItem(localItem);
 
     if (error) {
       console.error('Sync failed', error);

@@ -1,20 +1,15 @@
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { fetchExercisesBySection, insertExercise, updateExercise } from '@/lib/supabase/exercise';
+import { LocalExercise, NewExercise } from '@/types/exercise';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
-type ExerciseInsert = Database['public']['Tables']['exercises']['Insert'];
-type InputLocalExercise = Omit<ExerciseInsert, 'id' | 'created_at' | 'updated_at' | 'created_by'> & {
-  section_id: string;
-};
 
 type ExercisesState = {
-  exercisesBySectionId: Record<string, ExerciseRow[]>;
-  addExerciseLocal: (exercise: InputLocalExercise) => Promise<string>;
+  exercisesBySectionId: Record<string, LocalExercise[]>;
+  addExerciseLocal: (exercise: NewExercise) => Promise<string>;
   syncAddExercise: (tempId: string) => Promise<{ error: PostgrestError | null }>;
-  updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
+  updateExerciseLocal: (id: string, updates: Partial<LocalExercise>) => void;
   syncUpdateExercise: (id: string) => Promise<{ error: PostgrestError | null }>;
   fetchExercisesBySection: (section_id: string, force?: boolean) => Promise<void>;
 };
@@ -28,10 +23,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       return;
     }
 
-    const { data, error } = await supabase
-      .from('exercises')
-      .select('*')
-      .eq('section_id', section_id);
+    const { data, error } = await fetchExercisesBySection(section_id);
 
     if (error) {
       console.error('Fetch failed', error);
@@ -41,7 +33,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     set((state) => ({
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
-        [section_id]: data as ExerciseRow[],
+        [section_id]: data as LocalExercise[],
       },
     }));
   },
@@ -66,7 +58,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
   },
 
   syncUpdateExercise: async (id) => {
-    let exercise: ExerciseRow | undefined;
+    let exercise: LocalExercise | undefined;
 
     // Find the exercise in any section
     for (const exercises of Object.values(get().exercisesBySectionId)) {
@@ -78,7 +70,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     const { id: _, created_at, ...updatePayload } = exercise;
 
-    const { error } = await supabase.from('exercises').update(updatePayload).eq('id', id);
+    const { error } = await updateExercise(id, updatePayload);
 
     if (error) {
       console.error('Failed to sync exercise update:', error);
@@ -88,15 +80,12 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     return { error: null };
   },
 
-  addExerciseLocal: async (exercise) => {
+  addExerciseLocal: async (exercise: NewExercise) => {
     const id = uuidv4();
     const now = new Date().toISOString();
-    const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
 
-    const newExercise: ExerciseRow = {
+    const newExercise: LocalExercise = {
       id,
-      created_by: userId,
       name: exercise.name ?? null,
       section_id: exercise.section_id,
       goal_tempo: exercise.goal_tempo ?? null,
@@ -119,7 +108,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
   },
 
   syncAddExercise: async (id) => {
-    let localExercise: ExerciseRow | undefined;
+    let localExercise: LocalExercise | undefined;
     let sectionId: string | undefined;
 
     // Find the exercise and its section
@@ -133,11 +122,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     if (!localExercise || !sectionId) return { error: null };
 
-    const { data, error } = await supabase
-      .from('exercises')
-      .insert(localExercise)
-      .select()
-      .single();
+    const { data, error } = await insertExercise(localExercise);
 
     if (error) {
       console.error('Sync failed', error);

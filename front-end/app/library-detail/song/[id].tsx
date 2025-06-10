@@ -52,7 +52,7 @@ export default function SongDetailPage() {
       <ItemDetailPage
         sessionItems={sessionItems}
         itemId={songId}
-        initialGoalTempo={song.goal_tempo}
+        initialGoalTempo={song.goal_tempo ?? null}
         onUpdateLocal={updateSongLocal}
         onSyncUpdate={syncUpdateSong}
       />

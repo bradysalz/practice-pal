@@ -1,12 +1,12 @@
+import { ArtistRow } from '@/types/artist';
+import { BookRow } from '@/types/book';
+import { ExerciseRow } from '@/types/exercise';
+import { SectionRow } from '@/types/section';
 import {
-  ArtistRow,
-  BookRow,
-  ExerciseRow,
-  SectionRow,
   SessionItemRow,
-  SessionItemWithNested,
-  SongRow,
+  SessionItemWithNested
 } from '@/types/session';
+import { SongRow } from '@/types/song';
 
 export type ExerciseWithSession = ExerciseRow & {
   session: SessionItemRow;
