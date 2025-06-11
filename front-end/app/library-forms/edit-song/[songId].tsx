@@ -5,7 +5,7 @@ import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { LocalArtist } from '@/types/artist';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import Fuse from 'fuse.js';
+import { fuzzySearchArtists } from '@/utils/song-edit';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -32,25 +32,9 @@ export default function EditSongPage() {
     fetchArtists();
   }, [fetchArtists]);
 
-  // Fuzzy search using Fuse.js
+  // Fuzzy search using utility function
   const getFilteredArtists = useCallback(() => {
-    if (!artistQuery) return [];
-
-    // Initialize Fuse instance with options
-    const fuse = new Fuse(artists, {
-      keys: ['name'],
-      threshold: 0.3, // Lower threshold = more strict matching
-      distance: 100, // How far to search for matches
-      minMatchCharLength: 1,
-      shouldSort: true, // Sort by score
-      includeScore: true
-    });
-
-    const results = fuse.search(artistQuery);
-    // Filter out low-quality matches (high scores mean less relevant)
-    return results
-      .filter(result => result.score && result.score < 0.6)
-      .map(result => result.item);
+    return fuzzySearchArtists(artists, artistQuery);
   }, [artistQuery, artists]);
 
   const handleSelectArtist = (artistName: string) => {

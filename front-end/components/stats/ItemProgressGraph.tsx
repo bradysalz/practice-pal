@@ -1,7 +1,7 @@
 import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ItemProgressPoint, TimeRange } from "@/types/stats";
-import { calculateCutoffDate } from "@/utils/date-time";
+import { filterProgressData } from "@/utils/item-progress";
 import { formatDateByRange } from "@/utils/stats";
 import { useFont } from "@shopify/react-native-skia";
 import React, { useMemo, useState } from "react";
@@ -32,21 +32,10 @@ export default function ItemProgressGraph({
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const now = Date.now();
-  const cutoffDate =
-    timeRange === 'all' && data.length > 0
-      ? Math.min(...data.map(point => point.timestamp))
-      : calculateCutoffDate(timeRange).getTime();
-
-  const filteredData = useMemo(() => {
-    return data
-      .filter(point => point.timestamp >= cutoffDate)
-      .filter(point => point.timestamp <= now)
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map(point => ({
-        ...point,
-        timestamp: point.timestamp, // optional, if no transformation needed
-      }));
-  }, [data, cutoffDate, now]);
+  const { filteredData, cutoffDate } = useMemo(
+    () => filterProgressData(data, timeRange, now),
+    [data, timeRange, now]
+  );
 
 
   if (!font) {
@@ -99,7 +88,8 @@ export default function ItemProgressGraph({
 
       <View style={{ height: 300 }} className="gap-y-4">
         <CartesianChart
-          data={filteredData}
+          // this is realistically just ItemProgressPoint[] but I can't figure out how to type it
+          data={filteredData as any[]}
           xKey="timestamp"
           yKeys={[playedKey, atGoalKey]}
           domain={{
@@ -115,11 +105,11 @@ export default function ItemProgressGraph({
           yAxis={[{
             tickCount: 5,
             font,
-            formatYLabel: (value: number) => {
+            formatYLabel: (label: number) => {
               if (use_percent) {
-                return `${Math.round(value)}%`;
+                return `${Math.round(label)}%`;
               }
-              return Math.round(value).toString();
+              return Math.round(label).toString();
             },
           }]}
           chartPressState={state as any}

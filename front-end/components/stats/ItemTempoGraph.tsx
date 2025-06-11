@@ -1,7 +1,7 @@
 import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ItemTempoPoint, TimeRange } from "@/types/stats";
-import { calculateCutoffDate } from "@/utils/date-time";
+import { filterProgressData } from "@/utils/item-progress";
 import { formatDateByRange } from "@/utils/stats";
 import { useFont } from "@shopify/react-native-skia";
 import React, { useMemo, useState } from "react";
@@ -21,22 +21,10 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const now = Date.now();
-  const cutoffDate =
-    timeRange === 'all' && data.length > 0
-      ? Math.min(...data.map(point => point.timestamp))
-      : calculateCutoffDate(timeRange).getTime();
-
-  const filteredData = useMemo(() => {
-    return data
-      .filter(point => point.timestamp >= cutoffDate)
-      .filter(point => point.timestamp <= now)
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map(point => ({
-        ...point,
-        timestamp: point.timestamp, // optional, if no transformation needed
-      }));
-  }, [data, cutoffDate, now]);
-
+  const { filteredData, cutoffDate } = useMemo(
+    () => filterProgressData(data, timeRange, now),
+    [data, timeRange, now]
+  );
 
   if (!font) {
     return null;
@@ -88,7 +76,8 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
 
       <View style={{ height: 300 }}>
         <CartesianChart
-          data={filteredData}
+          // this is realistically just ItemTempoPoint[] but I can't figure out how to type it
+          data={filteredData as any[]}
           xKey="timestamp"
           yKeys={["tempo"]}
           domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}

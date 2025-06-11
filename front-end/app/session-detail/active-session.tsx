@@ -4,6 +4,14 @@ import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
 import { useSessionsStore } from '@/stores/session-store';
 import { DraftSessionItem } from '@/types/session';
+import {
+  applyTemposToDraft,
+  formatTime,
+  getItemId,
+  getItemName,
+  initializeTempos,
+  updateDraftItemTempo,
+} from '@/utils/session-detail';
 import { router } from 'expo-router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
@@ -36,13 +44,7 @@ export default function ActiveSessionPage() {
   // Initialize tempos from session items
   useEffect(() => {
     if (!draftSession) return;
-    const initialTempos = Object.fromEntries(
-      draftSession.items.map((item) => [
-        item.id,
-        item.tempo?.toString() || ''
-      ])
-    );
-    setTempos(initialTempos);
+    setTempos(initializeTempos(draftSession.items));
   }, [draftSession]);
 
   // Timer logic
@@ -67,48 +69,17 @@ export default function ActiveSessionPage() {
     return null;
   }
 
-  // Format time as mm:ss
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
 
   // Handle tempo changes
   const handleTempoChange = (id: string, text: string) => {
     setTempos((prev) => ({ ...prev, [id]: text }));
-
-    const updatedItems = draftSession.items.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          tempo: text ? parseInt(text, 10) || null : null,
-        };
-      }
-      return item;
-    });
-
-    updateDraftDetails({
-      items: updatedItems,
-    });
+    const updatedItems = updateDraftItemTempo(draftSession.items, id, text);
+    updateDraftDetails({ items: updatedItems });
   };
 
   const handleEndSession = async () => {
     console.log('handleEndSession', draftSession);
-    // Update all tempos one final time before ending
-    const finalItems = draftSession.items.map((item) => {
-      const currentTempo = tempos[item.id];
-      return {
-        ...item,
-        tempo: currentTempo ? parseInt(currentTempo, 10) || null : null,
-      };
-    });
-
-    const finalDraft = {
-      ...draftSession,
-      duration: elapsedTime,
-      items: finalItems,
-    };
+    const finalDraft = applyTemposToDraft(draftSession, tempos, elapsedTime);
 
     try {
       await insertSession(finalDraft);
@@ -118,23 +89,7 @@ export default function ActiveSessionPage() {
     }
   };
 
-  const getItemId = (item: DraftSessionItem): string => {
-    if (item.type === 'exercise' && item.exercise) {
-      return item.exercise.id;
-    } else if (item.type === 'song' && item.song) {
-      return item.song.id;
-    }
-    return '';
-  };
 
-  const getItemName = (item: DraftSessionItem) => {
-    if (item.type === 'exercise' && item.exercise) {
-      return item.exercise.name || 'Untitled Exercise';
-    } else if (item.type === 'song' && item.song) {
-      return item.song.name || 'Untitled Song';
-    }
-    return '';
-  };
 
   const getItemSource = (item: DraftSessionItem): ReactNode => {
     if (item.type === 'exercise' && item.exercise) {
