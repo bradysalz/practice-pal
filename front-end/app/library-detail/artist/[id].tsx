@@ -23,11 +23,15 @@ export default function ArtistDetailPage() {
     router.push(`/library-detail/song/${songId}`);
   };
 
+  const handleEditArtist = () => {
+    router.push(`/library-forms/edit-artist/${id}`);
+  };
+
   if (!artist) return <Text>Artist not found!</Text>;
   return (
     <View className="flex-1 p-4">
       <View className="gap-y-4 mb-4">
-        <HighlightBar type="artist" name={artist.name} />
+        <HighlightBar type="artist" name={artist.name} showEditIcon={true} onPressEdit={handleEditArtist} />
       </View>
       <View className="flex-row gap-x-4 mb-4">
         <StatBox label="Songs" value={filteredSongs.length} />

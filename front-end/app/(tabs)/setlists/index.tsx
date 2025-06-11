@@ -1,5 +1,6 @@
 import { SetlistCard } from '@/components/setlists/SetlistCard';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';
+import { deleteSetlist } from '@/lib/supabase/setlist';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { useRouter } from 'expo-router';
 import { ListMusic } from 'lucide-react-native';
@@ -10,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function SetlistsPage() {
   const router = useRouter();
   const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
-
+  const fetchSetlists = useSetlistsStore((state) => state.fetchSetlists);
   useEffect(() => {
     // Reset navigation state to prevent back button
     router.setParams({ index: 0 });
@@ -25,12 +26,16 @@ export default function SetlistsPage() {
   };
 
   const handleDeleteSetlist = (id: string) => {
-    Alert.alert('Delete', `Are you sure you want to delete setlist ${id}?`, [
+    const setlistName = setlistDetailMap[id]?.name;
+    Alert.alert('Delete', `Are you sure you want to delete setlist ${setlistName}?`, [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete',
         style: 'destructive',
-        // onPress: () => setSetlists(setlists.filter((s) => s.id !== id)), // TODO: delete setlist
+        onPress: async () => {
+          await deleteSetlist(id);
+          await fetchSetlists();
+        },
       },
     ]);
   };

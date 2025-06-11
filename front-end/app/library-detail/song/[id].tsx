@@ -36,12 +36,16 @@ export default function SongDetailPage() {
     router.push(`/library-detail/artist/${artistId}`);
   };
 
+  const handleEditSong = () => {
+    router.push(`/library-forms/edit-song/${id}`);
+  };
+
   // Component Layout
   if (!song) return <Text> Song not found! </Text>;
   return (
     <ScrollView className="flex-1 p-4">
       <View className="gap-y-4 mb-4">
-        <HighlightBar type="song" name={song.name} />
+        <HighlightBar type="song" name={song.name} showEditIcon={true} onPressEdit={handleEditSong} />
         {artist && (
           <Pressable onPress={() => handleBackToArtist(artist.id)}>
             <HighlightBar type="artist" name={artist.name} showRightArrow={true} />

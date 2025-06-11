@@ -25,9 +25,21 @@ export default function LibraryFormsLayout() {
         }}
       />
       <Stack.Screen
+        name="edit-artist/[artistId]"
+        options={{
+          title: 'Edit Artist',
+        }}
+      />
+      <Stack.Screen
         name="edit-section/[sectionId]"
         options={{
           title: 'Edit Section',
+        }}
+      />
+      <Stack.Screen
+        name="edit-song/[songId]"
+        options={{
+          title: 'Edit Song',
         }}
       />
     </Stack>
