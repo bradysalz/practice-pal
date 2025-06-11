@@ -18,9 +18,9 @@ export function songRowToDraftSessionItem(song: LocalSong, artist?: LocalArtist)
       name: song.name,
       artist: artist
         ? {
-            id: artist.id,
-            name: artist.name,
-          }
+          id: artist.id,
+          name: artist.name,
+        }
         : undefined,
     },
   };
@@ -54,7 +54,6 @@ export function exerciseToDraftSessionItem(
 export function createNewDraft(): DraftSession {
   return {
     id: uuidv4(),
-    notes: null,
     duration: null,
     items: [],
   };
@@ -75,9 +74,9 @@ export function createDraftFromSession(session: SessionWithItems): DraftSession 
         name: item.song.name,
         artist: item.song.artist
           ? {
-              id: item.song.artist.id,
-              name: item.song.artist.name,
-            }
+            id: item.song.artist.id,
+            name: item.song.artist.name,
+          }
           : undefined,
       };
     } else if (item.type === 'exercise' && item.exercise) {
@@ -100,8 +99,6 @@ export function createDraftFromSession(session: SessionWithItems): DraftSession 
 
   return {
     id: session.id,
-
-    notes: session.notes,
     duration: session.duration,
     items: draftItems,
   };
@@ -121,9 +118,9 @@ export function setlistItemToDraftSessionItem(item: SetlistItemWithNested): Draf
       name: item.song.name || '',
       artist: item.song.artist
         ? {
-            id: item.song.artist.id,
-            name: item.song.artist.name,
-          }
+          id: item.song.artist.id,
+          name: item.song.artist.name,
+        }
         : undefined,
     };
   } else if (item.type === 'exercise' && item.exercise?.section?.book) {

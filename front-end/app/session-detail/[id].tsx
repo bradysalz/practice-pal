@@ -1,6 +1,5 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ExerciseDetailCard } from '@/components/sessions/ExerciseDetailCard';
-import { NotesDetailCard } from '@/components/sessions/NotesDetailCard';
 import { SongDetailCard } from '@/components/sessions/SongDetailCard';
 import { useSessionsStore } from '@/stores/session-store';
 import { formatTimestampToDate, formatToMinutes } from '@/utils/date-time';
@@ -55,7 +54,6 @@ export default function PracticeSessionDetailPage() {
         <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
           <ExerciseDetailCard items={exercises} />
           <SongDetailCard items={songs} />
-          <NotesDetailCard notes={session.notes} />
         </ScrollView>
       </SafeAreaView>
     </>

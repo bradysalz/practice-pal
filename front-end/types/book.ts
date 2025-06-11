@@ -1,9 +1,9 @@
 import { Database } from '@/types/supabase';
+import { NonNullableFields } from '@/types/util';
 
 export type BookRow = Database['public']['Tables']['books']['Row'];
-export type BookWithCountsRow = BookRow & {
-  exercise_count: number;
-};
+type BookWithCountsPrivate = Database['public']['Views']['book_with_counts']['Row'];
+export type BookWithCountsRow = NonNullableFields<BookWithCountsPrivate>;
 
 export type ExerciseNamingType = 'alpha' | 'numeric' | 'custom';
 

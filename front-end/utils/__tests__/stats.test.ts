@@ -4,8 +4,8 @@ import { formatDateByRange } from '../stats';
 describe('formatDateByRange', () => {
   // Helper function to create test data
   const createTestData = (startDate: string, endDate: string): ItemTempoPoint[] => [
-    { timestamp: new Date(startDate).getTime(), tempo: 100 },
-    { timestamp: new Date(endDate).getTime(), tempo: 120 },
+    { timestamp: new Date(startDate).getTime(), tempo: 100, goal_tempo: 100 },
+    { timestamp: new Date(endDate).getTime(), tempo: 120, goal_tempo: 120 },
   ];
 
   describe('week range', () => {

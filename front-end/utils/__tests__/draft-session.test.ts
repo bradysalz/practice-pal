@@ -92,7 +92,6 @@ describe('draft-session utils', () => {
 
       expect(result).toEqual({
         id: MOCK_UUID,
-        notes: null,
         duration: null,
         items: [],
       });
@@ -105,7 +104,6 @@ describe('draft-session utils', () => {
 
       expect(result).toEqual({
         id: '1',
-        notes: 'Test Notes',
         duration: 30,
         items: [
           {

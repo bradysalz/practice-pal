@@ -1,10 +1,6 @@
-import { BookStat, SectionStat } from '@/lib/supabase/stat';
-import { Database } from '@/types/supabase';
+import { BookStatRow, SectionStatRow } from '@/types/stats';
 
-type BookStatRow = Database['public']['Views']['book_stats_view']['Row'];
-type SectionStatRow = Database['public']['Views']['section_stats_view']['Row'];
-
-export function toBookStat(row: BookStatRow | null): BookStat {
+export function toBookStat(row: BookStatRow | null): BookStatRow {
   if (!row) {
     return {
       book_id: '',
@@ -22,7 +18,7 @@ export function toBookStat(row: BookStatRow | null): BookStat {
   };
 }
 
-export function toSectionStat(row: SectionStatRow | null): SectionStat {
+export function toSectionStat(row: SectionStatRow | null): SectionStatRow {
   if (!row) {
     return {
       section_id: '',

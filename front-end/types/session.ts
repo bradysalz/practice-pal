@@ -4,8 +4,19 @@ import { ExerciseRow } from '@/types/exercise';
 import { SectionRow } from '@/types/section';
 import { SongRow } from '@/types/song';
 import { Database } from '@/types/supabase';
+import { NonNullableFields } from '@/types/util';
 
-type SessionRow = Database['public']['Tables']['sessions']['Row'];
+export type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
+export type SessionUpdate = Database['public']['Tables']['sessions']['Update'];
+export type SessionItemUpdate = Database['public']['Tables']['session_items']['Update'];
+
+export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
+export type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
+export type LocalSessionItem = Omit<SessionItemRow, 'created_by'>;
+export type NewSessionItem = Omit<LocalSessionItem, 'id'>;
+
+type SessionWithCountsPrivate = Database['public']['Views']['sessions_with_items']['Row'];
+export type SessionWithCountsRow = NonNullableFields<SessionWithCountsPrivate>;
 
 export type SessionItemWithNested = SessionItemRow & {
   song:
@@ -20,6 +31,11 @@ export type SessionItemWithNested = SessionItemRow & {
     };
   })
   | null;
+};
+
+
+export type SessionWithItems = SessionWithCountsRow & {
+  session_items: SessionItemWithNested[];
 };
 
 // Local exercise details for display
@@ -47,15 +63,6 @@ export type InputLocalSessionItem = {
   exercise?: LocalExerciseDetails;
 };
 
-// Manually build the View row
-export type SessionWithCountsRow = SessionRow & {
-  song_count: number;
-  exercise_count: number;
-};
-
-export type SessionWithItems = SessionWithCountsRow & {
-  session_items: SessionItemWithNested[];
-};
 
 // Manual create types for local sessions
 export type DraftSessionItem = {
@@ -89,16 +96,6 @@ export type DraftSessionItem = {
 
 export type DraftSession = {
   id: string;
-  notes: string | null;
   duration: number | null;
   items: DraftSessionItem[];
 };
-
-export type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
-export type SessionUpdate = Database['public']['Tables']['sessions']['Update'];
-export type SessionItemUpdate = Database['public']['Tables']['session_items']['Update'];
-
-export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
-export type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
-export type LocalSessionItem = Omit<SessionItemRow, 'created_by'>;
-export type NewSessionItem = Omit<LocalSessionItem, 'id'>;

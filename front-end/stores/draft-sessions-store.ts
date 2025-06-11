@@ -22,7 +22,6 @@ export const useDraftSessionsStore = create<DraftSessionsState>((set, get) => ({
 
     const newSession: DraftSession = {
       id,
-      notes: draft.notes ?? null,
       duration: draft.duration ?? null,
       items: draft.items ?? [],
     };

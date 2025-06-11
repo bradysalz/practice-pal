@@ -172,7 +172,6 @@ export const mockSessionItemWithSong: SessionItemWithNested = {
 // Complete session mock data
 export const mockSession: SessionWithItems = {
   id: '1',
-  notes: 'Test Notes',
   duration: 30,
   created_at: BASE_TIMESTAMP,
   created_by: 'user1',

@@ -9,6 +9,7 @@ const MOCK_DATA: ItemTempoPoint[] = Array.from({ length: 40 }, (_, i) => {
   return {
     timestamp: date.getTime(),
     tempo: 60 + Math.random() * i, // Random tempo between 60 and 100
+    goal_tempo: 140,
   };
 });
 

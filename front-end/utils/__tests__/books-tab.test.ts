@@ -25,7 +25,6 @@ describe('books-tab utils', () => {
   test('isExerciseInDraft detects exercise in session or setlist', () => {
     const session: DraftSession = {
       id: '1',
-      notes: null,
       duration: null,
       items: [
         {
@@ -76,7 +75,7 @@ describe('books-tab utils', () => {
       goal_tempo: null,
       order: 1,
     };
-    const draft: DraftSession = { id: '1', notes: null, duration: null, items: [] };
+    const draft: DraftSession = { id: '1', duration: null, items: [] };
     const item = createSessionExerciseItem(exercise, section, book);
     const updated: DraftSession = { ...draft, items: [item] };
     expect(findSessionExerciseItemId(updated, 'ex1')).toBe(item.id);
