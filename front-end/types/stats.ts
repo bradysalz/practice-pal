@@ -13,6 +13,7 @@ export type Timestamped = {
 
 export interface ItemTempoPoint extends Timestamped {
   tempo: number;
+  goal_tempo: number;
 }
 
 export interface ItemProgressPoint extends Timestamped {

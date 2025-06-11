@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ItemTempoPoint, TimeRange } from '@/types/stats';
 import { filterProgressData } from '@/utils/item-progress';
 import { formatDateByRange } from '@/utils/stats';
-import { useFont } from '@shopify/react-native-skia';
+import { DashPathEffect, useFont } from '@shopify/react-native-skia';
 import React, { useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import { CartesianChart, Line, Scatter, useChartPressState } from 'victory-native';
@@ -76,7 +76,7 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           // this is realistically just ItemTempoPoint[] but I can't figure out how to type it
           data={filteredData as any[]}
           xKey="timestamp"
-          yKeys={['tempo']}
+          yKeys={['tempo', 'goal_tempo']}
           domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
           xAxis={{
             font,
@@ -117,10 +117,17 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
             <View>
               <Line points={points.tempo} color="#ef4444" strokeWidth={3} />
               <Scatter points={points.tempo} color="#ef4444" radius={5} />
+              <Line
+                points={points.goal_tempo}
+                color="#3b82f6"
+                strokeWidth={3}
+              >
+                <DashPathEffect intervals={[15, 5]} />
+              </Line>
             </View>
           )}
         </CartesianChart>
-      </View>
-    </View>
+      </View >
+    </View >
   );
 }

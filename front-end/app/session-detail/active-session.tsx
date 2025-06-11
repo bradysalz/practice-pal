@@ -79,7 +79,6 @@ export default function ActiveSessionPage() {
   };
 
   const handleEndSession = async () => {
-    console.log('handleEndSession', draftSession);
     const finalDraft = applyTemposToDraft(draftSession, tempos, elapsedTime);
 
     try {
@@ -166,9 +165,9 @@ export default function ActiveSessionPage() {
               exerciseDetails={
                 item.type === 'exercise' && item.exercise?.section
                   ? {
-                      bookId: item.exercise.section.book.id,
-                      sectionId: item.exercise.section.id,
-                    }
+                    bookId: item.exercise.section.book.id,
+                    sectionId: item.exercise.section.id,
+                  }
                   : undefined
               }
             />
