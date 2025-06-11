@@ -5,7 +5,7 @@ export default function LibraryDetailLayout() {
   return (
     <Stack>
       <Stack.Screen
-        name="book/[bookId]/index"
+        name="book/[bookId]"
         options={{
           title: 'Book Details',
         }}
@@ -13,7 +13,7 @@ export default function LibraryDetailLayout() {
 
       {/* Section Detail screen */}
       <Stack.Screen
-        name="book/[bookId]/section/[sectionId]/index"
+        name="section/[sectionId]"
         options={{
           title: 'Section Details',
         }}
@@ -21,7 +21,7 @@ export default function LibraryDetailLayout() {
 
       {/* Exercise Detail screen */}
       <Stack.Screen
-        name="book/[bookId]/section/[sectionId]/exercise/[id]"
+        name="exercise/[exerciseId]"
         options={{
           title: 'Exercise Details',
         }}

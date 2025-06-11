@@ -56,7 +56,7 @@ export function ActiveSessionItemCard({
     if (!itemId) return;
 
     if (itemType === 'exercise' && exerciseDetails) {
-      router.push(`/library-detail/book/${exerciseDetails.bookId}/section/${exerciseDetails.sectionId}/exercise/${itemId}`);
+      router.push(`/library-detail/exercise/${itemId}`);
     } else if (itemType === 'song') {
       router.push(`/library-detail/song/${itemId}`);
     }

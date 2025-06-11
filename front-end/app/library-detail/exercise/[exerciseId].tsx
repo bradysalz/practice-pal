@@ -10,17 +10,12 @@ import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ExerciseDetailPage() {
-  const { bookId, sectionId, id } = useLocalSearchParams<{
-    bookId: string;
-    sectionId: string;
-    id: string;
-  }>();
-  const exerciseId = id; // Easier if we re-define it
+  const { exerciseId } = useLocalSearchParams<{ exerciseId: string; }>();
 
   // Stores
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
-  const exercises = useExercisesStore((state) => state.exercisesBySectionId);
+  const exercisesBySectionId = useExercisesStore((state) => state.exercisesBySectionId);
   const sessionItemsByExercise = useSessionItemsStore((state) => state.sessionItemsByExercise);
 
   // Fetch
@@ -34,17 +29,17 @@ export default function ExerciseDetailPage() {
 
   useEffect(() => {
     fetchSessionItemByExerciseId(exerciseId);
-  }, [sectionId, fetchSessionItemByExerciseId, exerciseId]);
+  }, [fetchSessionItemByExerciseId, exerciseId]);
 
-  const book = books.find((b) => b.id === bookId);
-  const section = sections.find((s) => s.id === sectionId);
-  const exercise = exercises[sectionId].find((e) => e.id === exerciseId);
+  const exercise = Object.values(exercisesBySectionId).flat().find((e) => e.id === exerciseId)
+  const section = sections.find((s) => s.id === exercise?.section_id);
+  const book = books.find((b) => b.id === section?.book_id);
 
   const sessionItems = sessionItemsByExercise[exerciseId || ''] || [];
 
-  if (!book) return <Text>Book not found</Text>;
-  if (!section) return <Text>Section not found</Text>;
   if (!exercise) return <Text>Exercise not found</Text>;
+  if (!section) return <Text>Section not found</Text>;
+  if (!book) return <Text>Book not found</Text>;
 
   return (
     <ScrollView className="flex-1 bg-white p-4">

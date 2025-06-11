@@ -48,7 +48,7 @@ export default function EditSectionPage() {
 
   const handleSaveSection = async () => {
     if (!hasChanges) {
-      router.navigate(`/library-detail/book/${section?.book_id}/section/${sectionId}`);
+      router.navigate(`/library-detail/section/${sectionId}`);
       return;
     }
 
@@ -80,7 +80,7 @@ export default function EditSectionPage() {
     ]);
 
     setIsSaving(false);
-    router.navigate(`/library-detail/book/${section?.book_id}/section/${sectionId}`);
+    router.navigate(`/library-detail/section/${sectionId}`);
   }
 
   const handleDeleteSection = async () => {
