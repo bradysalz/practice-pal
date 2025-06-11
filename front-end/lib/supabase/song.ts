@@ -5,17 +5,15 @@ import { getCurrentUserId } from './shared';
 
 export async function fetchSongs() {
   return supabase
-    .from('songs_with_artist')
-    .select('*')
-    .order('title', { ascending: true });
+    .from('songs')
+    .select('*');
 }
 
 export async function fetchSongsByArtist(artistId: string) {
   return supabase
-    .from('songs_with_artist')
-    .select('*')
-    .eq('artist_id', artistId)
-    .order('title', { ascending: true });
+    .from('songs')
+    .select('*, artist:artists(id, name)')
+    .eq('artist_id', artistId);
 }
 
 export async function insertSong(song: LocalSong) {
