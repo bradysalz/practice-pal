@@ -68,7 +68,7 @@ export type Database = {
       }
       books: {
         Row: {
-          cover_color: string | null
+          author: string | null
           created_at: string
           created_by: string
           id: string
@@ -76,7 +76,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          cover_color?: string | null
+          author?: string | null
           created_at?: string
           created_by: string
           id: string
@@ -84,7 +84,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          cover_color?: string | null
+          author?: string | null
           created_at?: string
           created_by?: string
           id?: string
@@ -109,8 +109,8 @@ export type Database = {
           goal_tempo: number | null
           id: string
           name: string | null
-          section_id: string | null
-          sort_position: number | null
+          order: number
+          section_id: string
           updated_at: string
         }
         Insert: {
@@ -120,8 +120,8 @@ export type Database = {
           goal_tempo?: number | null
           id: string
           name?: string | null
-          section_id?: string | null
-          sort_position?: number | null
+          order: number
+          section_id: string
           updated_at?: string
         }
         Update: {
@@ -131,8 +131,8 @@ export type Database = {
           goal_tempo?: number | null
           id?: string
           name?: string | null
-          section_id?: string | null
-          sort_position?: number | null
+          order?: number
+          section_id?: string
           updated_at?: string
         }
         Relationships: [
@@ -142,6 +142,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "section_progress_history"
+            referencedColumns: ["section_id"]
+          },
+          {
+            foreignKeyName: "exercises_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "section_stats_view"
+            referencedColumns: ["section_id"]
           },
           {
             foreignKeyName: "exercises_section_id_fkey"
@@ -190,6 +204,7 @@ export type Database = {
           created_by: string
           id: string
           name: string
+          order: number
           updated_at: string
         }
         Insert: {
@@ -198,6 +213,7 @@ export type Database = {
           created_by: string
           id: string
           name: string
+          order: number
           updated_at?: string
         }
         Update: {
@@ -206,9 +222,24 @@ export type Database = {
           created_by?: string
           id?: string
           name?: string
+          order?: number
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_progress_history"
+            referencedColumns: ["book_id"]
+          },
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_stats_view"
+            referencedColumns: ["book_id"]
+          },
           {
             foreignKeyName: "sections_book_id_fkey"
             columns: ["book_id"]
@@ -240,7 +271,7 @@ export type Database = {
           id: string
           notes: string | null
           position: number | null
-          session_id: string | null
+          session_id: string
           song_id: string | null
           tempo: number | null
           type: string
@@ -253,7 +284,7 @@ export type Database = {
           id: string
           notes?: string | null
           position?: number | null
-          session_id?: string | null
+          session_id: string
           song_id?: string | null
           tempo?: number | null
           type: string
@@ -266,7 +297,7 @@ export type Database = {
           id?: string
           notes?: string | null
           position?: number | null
-          session_id?: string | null
+          session_id?: string
           song_id?: string | null
           tempo?: number | null
           type?: string
@@ -499,9 +530,30 @@ export type Database = {
       }
     }
     Views: {
+      book_progress_history: {
+        Row: {
+          at_goal: number | null
+          book_id: string | null
+          date: string | null
+          percent_at_goal: number | null
+          percent_played: number | null
+          played: number | null
+          total: number | null
+        }
+        Relationships: []
+      }
+      book_stats_view: {
+        Row: {
+          book_id: string | null
+          goal_reached_exercises: number | null
+          played_exercises: number | null
+          total_exercises: number | null
+        }
+        Relationships: []
+      }
       book_with_counts: {
         Row: {
-          cover_color: string | null
+          author: string | null
           created_at: string | null
           created_by: string | null
           exercise_count: number | null
@@ -519,6 +571,27 @@ export type Database = {
           },
         ]
       }
+      section_progress_history: {
+        Row: {
+          at_goal: number | null
+          date: string | null
+          percent_at_goal: number | null
+          percent_played: number | null
+          played: number | null
+          section_id: string | null
+          total: number | null
+        }
+        Relationships: []
+      }
+      section_stats_view: {
+        Row: {
+          goal_reached_exercises: number | null
+          played_exercises: number | null
+          section_id: string | null
+          total_exercises: number | null
+        }
+        Relationships: []
+      }
       section_with_counts: {
         Row: {
           book_id: string | null
@@ -530,6 +603,20 @@ export type Database = {
           updated_at: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_progress_history"
+            referencedColumns: ["book_id"]
+          },
+          {
+            foreignKeyName: "sections_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "book_stats_view"
+            referencedColumns: ["book_id"]
+          },
           {
             foreignKeyName: "sections_book_id_fkey"
             columns: ["book_id"]
@@ -595,7 +682,17 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      insert_full_book: {
+        Args:
+          | { book_name: string; book_author: string; sections: Json }
+          | {
+              book_name: string
+              book_author: string
+              sections: Json
+              user_id: string
+            }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

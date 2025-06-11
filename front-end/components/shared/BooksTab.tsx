@@ -1,14 +1,17 @@
-import { BookWithCountsRow, useBooksStore } from '@/stores/book-store';
+import { useBooksStore } from '@/stores/book-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useExercisesStore } from '@/stores/exercise-store';
-import { SectionWithCountsRow, useSectionsStore } from '@/stores/section-store';
-import { ExerciseRow } from '@/types/session';
+import { useSectionsStore } from '@/stores/section-store';
+import { BookWithCountsRow } from '@/types/book';
+import { LocalExercise } from '@/types/exercise';
+import { SectionWithCountsRow } from '@/types/section';
 import { exerciseToDraftSessionItem } from '@/utils/draft-session';
 import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
-import { ThemedIcon } from '../icons/themed-icon';
+import { ThemedIcon } from '../icons/ThemedIcon';
+import { HighlightBar } from './HighlightBar';
 import { ListItemCard } from './ListItemCard';
 
 interface BooksTabProps {
@@ -23,7 +26,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
   const [selectedSection, setSelectedSection] = useState<SectionWithCountsRow | null>(null);
 
   // Store hooks
-  const { exercises, fetchExercisesBySection } = useExercisesStore();
+  const { exercisesBySectionId: exercises, fetchExercisesBySection } = useExercisesStore();
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
 
@@ -64,7 +67,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     }
   }, [selectedSection, fetchExercisesBySection]);
 
-  const handleAddExercise = (exercise: ExerciseRow) => {
+  const handleAddExercise = (exercise: LocalExercise) => {
     if (!selectedSection || !selectedBook) return;
 
     if (mode === 'session' && draftSession) {
@@ -86,7 +89,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     }
   };
 
-  const handleRemoveExercise = (exercise: ExerciseRow) => {
+  const handleRemoveExercise = (exercise: LocalExercise) => {
     if (mode === 'session' && draftSession) {
       const itemToRemove = draftSession.items.find(
         (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
@@ -115,7 +118,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     onNavigate?.();
   };
 
-  const isExerciseAdded = (exercise: ExerciseRow) => {
+  const isExerciseAdded = (exercise: LocalExercise) => {
     if (mode === 'session' && draftSession) {
       return draftSession.items.some(
         (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
@@ -140,8 +143,8 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
           <Text className="text-primary">{'< Back'}</Text>
         </Pressable>
 
-        <Text className="text-2xl font-bold">{selectedBook.name}</Text>
-        <Text className="text-xl font-bold">{selectedSection.name}</Text>
+        <HighlightBar type="book" name={selectedBook.name} />
+        <HighlightBar type="section" name={selectedSection.name} />
         {filteredExercises.map((exercise) => (
           <ListItemCard
             key={exercise.id}
@@ -168,7 +171,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
           <Text className="text-primary">{'< Back'}</Text>
         </Pressable>
 
-        <Text className="text-2xl font-bold">{selectedBook.name}</Text>
+        <HighlightBar type="book" name={selectedBook.name} />
         {filteredSections.map((section) => (
           <ListItemCard
             key={section.id}

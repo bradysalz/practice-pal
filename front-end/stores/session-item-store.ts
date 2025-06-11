@@ -1,26 +1,18 @@
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { fetchSessionItemsByExercise, fetchSessionItemsBySession, fetchSessionItemsBySong } from '@/lib/supabase/session';
+import { LocalSessionItem, NewSessionItem, SessionItemRow } from '@/types/session';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
-type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];
-type InputLocalSessionItem = Omit<SessionItemInsert, 'id' | 'created_at' | 'updated_at'> & {
-  session_id: string;
-  tempo: number;
-};
-
 type SessionItemsState = {
-  sessionItemsBySession: { [sessionId: string]: SessionItemRow[] };
-  sessionItemsByExercise: { [exerciseId: string]: SessionItemRow[] };
-  sessionItemsBySong: { [songId: string]: SessionItemRow[] };
+  sessionItemsBySession: { [sessionId: string]: LocalSessionItem[] };
+  sessionItemsByExercise: { [exerciseId: string]: LocalSessionItem[] };
+  sessionItemsBySong: { [songId: string]: LocalSessionItem[] };
 
   fetchSessionItemBySessionId: (sessionId: string) => Promise<void>;
-  fetchSessionItemByExerciseId: (exerciseId: string) => Promise<void>;
+  fetchSessionItemByExerciseId: (exerciseId: string, force?: boolean) => Promise<void>;
   fetchSessionItemBySongId: (songId: string) => Promise<void>;
 
-  addSessionItemLocal: (item: InputLocalSessionItem) => string;
-  syncAddSessionItem: (tempId: string) => Promise<void>;
+  addSessionItemLocal: (item: NewSessionItem) => string;
 };
 
 export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
@@ -29,10 +21,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   sessionItemsBySong: {},
 
   fetchSessionItemBySessionId: async (sessionId) => {
-    const { data, error } = await supabase
-      .from('session_items')
-      .select('*')
-      .eq('session_id', sessionId);
+    const { data, error } = await fetchSessionItemsBySession(sessionId);
 
     if (error) {
       console.error('Fetch by session failed', error);
@@ -42,16 +31,18 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     set((state) => ({
       sessionItemsBySession: {
         ...state.sessionItemsBySession,
-        [sessionId]: data as SessionItemRow[],
+        [sessionId]: data as LocalSessionItem[],
       },
     }));
   },
 
-  fetchSessionItemByExerciseId: async (exerciseId) => {
-    const { data, error } = await supabase
-      .from('session_items')
-      .select('*')
-      .eq('exercise_id', exerciseId);
+  fetchSessionItemByExerciseId: async (exerciseId: string, force: boolean = false) => {
+    // Return early if data exists and not forcing refresh
+    if (!force && get().sessionItemsByExercise[exerciseId]?.length > 0) {
+      return;
+    }
+
+    const { data, error } = await fetchSessionItemsByExercise(exerciseId);
 
     if (error) {
       console.error('Fetch by exercise failed', error);
@@ -67,7 +58,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   },
 
   fetchSessionItemBySongId: async (songId) => {
-    const { data, error } = await supabase.from('session_items').select('*').eq('song_id', songId);
+    const { data, error } = await fetchSessionItemsBySong(songId);
 
     if (error) {
       console.error('Fetch by song failed', error);
@@ -79,11 +70,11 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
   },
 
-  addSessionItemLocal: (item) => {
+  addSessionItemLocal: (item: NewSessionItem) => {
     const id = uuidv4();
     const now = new Date().toISOString();
 
-    const newItem: SessionItemRow = {
+    const newItem: LocalSessionItem = {
       ...item,
       id,
       created_at: now,
@@ -102,44 +93,5 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
 
     return id;
-  },
-
-  syncAddSessionItem: async (tempId) => {
-    // Search only in sessionItemsBySession
-    let found: { sessionId: string; item: SessionItemRow } | undefined;
-    for (const sessionId in get().sessionItemsBySession) {
-      const item = get().sessionItemsBySession[sessionId].find((i) => i.id === tempId);
-      if (item) {
-        found = { sessionId, item };
-        break;
-      }
-    }
-
-    if (!found) return;
-
-    const { item } = found;
-    const { id, ...insertData } = item;
-
-    const { data, error } = await supabase
-      .from('session_items')
-      .insert(insertData)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Sync failed', error);
-      return;
-    }
-
-    const newItem = data as SessionItemRow;
-
-    set((state) => ({
-      sessionItemsBySession: {
-        ...state.sessionItemsBySession,
-        [item.session_id!]: state.sessionItemsBySession[item.session_id!].map((i) =>
-          i.id === tempId ? newItem : i
-        ),
-      },
-    }));
-  },
+  }
 }));

@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';
@@ -79,8 +79,7 @@ export default function LibraryPage() {
                     key={book.id}
                     title={book.name}
                     description={`${bookSections(book.id).length} sections • ${book.exercise_count} exercises`}
-                    isAdded={false}
-                    onPress={() => router.push(`/library/book/${book.id}`)}
+                    onPress={() => router.push(`/library-detail/book/${book.id}`)}
                     className="mb-4"
                     rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
                   />
@@ -99,8 +98,7 @@ export default function LibraryPage() {
                     key={song.id}
                     title={song.name}
                     subtitle={song.artist}
-                    isAdded={false}
-                    onPress={() => router.push(`/library/song/${song.id}`)}
+                    onPress={() => router.push(`/library-detail/song/${song.id}`)}
                     className="mb-4"
                     rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
                   />
@@ -115,7 +113,9 @@ export default function LibraryPage() {
         </View>
       </ScrollView>
 
-      <FloatingActionButton href="/library/add-item" />
+      <FloatingActionButton
+        href={activeTab === 'books' ? '/library-forms/add-book' : '/library-forms/add-song'}
+      />
     </View>
   );
 }

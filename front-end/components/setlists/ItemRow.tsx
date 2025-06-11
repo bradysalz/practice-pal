@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { DraftSetlistItem } from '@/types/setlist';
 import { GripVertical } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { ThemedIcon } from '../icons/themed-icon';
+import { ThemedIcon } from '../icons/ThemedIcon';
 
 interface ItemContentProps {
   item: DraftSetlistItem;

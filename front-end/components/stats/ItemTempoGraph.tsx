@@ -1,12 +1,13 @@
+import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ItemTempoPoint, TimeRange } from "@/types/stats";
-import { calculateCutoffDate, isValidDate } from "@/utils/date-time";
+import { calculateCutoffDate } from "@/utils/date-time";
 import { formatDateByRange } from "@/utils/stats";
-import { Circle, Skia, Line as SkiaLine, Text as SkiaText, useFont, vec } from "@shopify/react-native-skia";
+import { useFont } from "@shopify/react-native-skia";
 import React, { useMemo, useState } from "react";
 import { Text, View } from "react-native";
-import { useDerivedValue, type SharedValue } from "react-native-reanimated";
 import { CartesianChart, Line, Scatter, useChartPressState } from "victory-native";
+
 
 interface ItemTempoGraphProps {
   data: ItemTempoPoint[];
@@ -16,19 +17,25 @@ interface ItemTempoGraphProps {
 
 export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
   const font = useFont(require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"), 14);
-  const { state, isActive } = useChartPressState({ x: '', y: { tempo: 0 } });
+  const { state, isActive } = useChartPressState({ x: 0, y: { tempo: 0 } });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
-  const filteredData = useMemo(() => {
-    const now = new Date();
-    const cutoffDate = calculateCutoffDate(timeRange);
+  const now = Date.now();
+  const cutoffDate =
+    timeRange === 'all' && data.length > 0
+      ? Math.min(...data.map(point => point.timestamp))
+      : calculateCutoffDate(timeRange).getTime();
 
+  const filteredData = useMemo(() => {
     return data
-      .filter(point => isValidDate(point.timestamp))
-      .filter(point => new Date(point.timestamp) >= cutoffDate)
-      .filter(point => new Date(point.timestamp) <= now)
-      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-  }, [data, timeRange]);
+      .filter(point => point.timestamp >= cutoffDate)
+      .filter(point => point.timestamp <= now)
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(point => ({
+        ...point,
+        timestamp: point.timestamp, // optional, if no transformation needed
+      }));
+  }, [data, cutoffDate, now]);
 
 
   if (!font) {
@@ -79,9 +86,8 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
         </TabsList>
       </Tabs>
 
-
       <View style={{ height: 300 }}>
-        <CartesianChart<ItemTempoPoint, "timestamp", "tempo">
+        <CartesianChart
           data={filteredData}
           xKey="timestamp"
           yKeys={["tempo"]}
@@ -89,14 +95,17 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           xAxis={{
             font,
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
-            tickCount: filteredData.length <= 2 ? 1 : 4
+            tickCount: filteredData.length <= 2 ? 2 : 4
           }}
           yAxis={[{
             tickCount: 5,
             font,
             formatYLabel: (value: number) => `${Math.round(value)}`
           }]}
-          chartPressState={state}
+          domain={{
+            x: [cutoffDate, now],
+          }}
+          chartPressState={state as any}
           renderOutside={({ chartBounds }) => {
             if (isActive) {
               return (
@@ -107,9 +116,10 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
                   yValue={state.y.tempo.value}
                   textColor={"black"}
                   lineColor={"black"}
-                  indicatorColor={"black"}
+                  indicatorColor={"#ef4444"}
                   bottom={chartBounds.bottom}
                   top={chartBounds.top}
+                  label="Tempo"
                 />)
             }
           }}
@@ -133,84 +143,3 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
     </View>
   );
 }
-
-const ActiveValueIndicator = ({
-  xPosition,
-  yPosition,
-  top,
-  bottom,
-  xValue,
-  yValue,
-  textColor,
-  lineColor,
-  indicatorColor,
-  topOffset = 0,
-}: {
-  xPosition: SharedValue<number>;
-  yPosition: SharedValue<number>;
-  xValue: SharedValue<string>;
-  yValue: SharedValue<number>;
-  bottom: number;
-  top: number;
-  textColor: string;
-  lineColor: string;
-  indicatorColor: string;
-  topOffset?: number;
-}) => {
-  const FONT_SIZE = 16;
-  const font = useFont(require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"), FONT_SIZE);
-  const start = useDerivedValue(() => vec(xPosition.value, bottom));
-  const end = useDerivedValue(() =>
-    vec(xPosition.value, top + 1.5 * FONT_SIZE + topOffset),
-  );
-
-  // Text label
-  const tempoDisplay = useDerivedValue(
-    () => Math.floor(yValue.value).toString(),
-  );
-  const dateDisplay = useDerivedValue(
-    () => xValue.value.split('T')[0],
-  );
-
-  const toolTipWidth = useDerivedValue(
-    () =>
-      font
-        ?.getGlyphWidths?.(font.getGlyphIDs(dateDisplay.value))
-        .reduce((sum, value) => sum + value, 0) || 0,
-  );
-
-  const dateX = useDerivedValue(
-    () => xPosition.value - toolTipWidth.value / 2,
-  );
-
-  const dashEffect = Skia.PathEffect.MakeDash([10, 5], 0);
-  const paint = Skia.Paint();
-  paint.setPathEffect(dashEffect);
-
-  return (
-    <>
-      <SkiaLine p1={start} p2={end} color={lineColor} strokeWidth={1} paint={paint} />
-      <Circle cx={xPosition} cy={yPosition} r={10} color={indicatorColor} />
-      <Circle
-        cx={xPosition}
-        cy={yPosition}
-        r={8}
-        color="hsla(0, 0, 100%, 0.25)"
-      />
-      <SkiaText
-        color={textColor}
-        font={font}
-        text={dateDisplay}
-        x={dateX}
-        y={top + FONT_SIZE + topOffset}
-      />
-      <SkiaText
-        color={textColor}
-        font={font}
-        text={tempoDisplay}
-        x={dateX}
-        y={top + 2 * FONT_SIZE + topOffset}
-      />
-    </>
-  );
-};

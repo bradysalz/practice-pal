@@ -1,4 +1,4 @@
-import { ThemedIcon } from '@/components/icons/themed-icon';
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { SessionWithItems } from '@/types/session';
@@ -35,7 +35,7 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
     <View className='my-3 border-l-4 border-l-orange-500 rounded-xl' >
       <Card className="rounded-xl overflow-hidden shadow">
         <Pressable onPress={handleCardClick}>
-          <CardHeader className="p-4 pb-2 bg-slate-50 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
+          <CardHeader className="p-4 pb-2 bg-slate-100 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
             {/* Title + Chevron */}
             <View className="flex-row items-center justify-between mb-2">
               <Text className="font-bold text-2xl pb-2">
@@ -99,7 +99,7 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
                 className="mt-4 bg-orange-500 "
                 onPress={(e) => {
                   e.stopPropagation?.(); // Only on web
-                  router.push(`/sessions/${session.id}`);
+                  router.push(`/session-detail/${session.id}`);
                 }}
               >
                 <Text className="text-white font-medium">View Full Session</Text>

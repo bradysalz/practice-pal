@@ -1,37 +1,32 @@
-import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/supabase';
+import { fetchExerciseById, fetchExercisesBySection, insertExercise, updateExercise } from '@/lib/supabase/exercise';
+import { LocalExercise, NewExercise } from '@/types/exercise';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
-type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
-type ExerciseInsert = Database['public']['Tables']['exercises']['Insert'];
-type InputLocalExercise = Omit<ExerciseInsert, 'id' | 'created_at' | 'updated_at'> & {
-  section_id: string;
-};
 
 type ExercisesState = {
-  exercises: Record<string, ExerciseRow[]>;
-  addExerciseLocal: (exercise: InputLocalExercise) => string;
+  exercisesById: Record<string, LocalExercise>;
+  exercisesBySectionId: Record<string, LocalExercise[]>;
+  addExerciseLocal: (exercise: NewExercise) => Promise<string>;
   syncAddExercise: (tempId: string) => Promise<{ error: PostgrestError | null }>;
-  updateExerciseLocal: (id: string, updates: Partial<ExerciseRow>) => void;
+  updateExerciseLocal: (id: string, updates: Partial<LocalExercise>) => void;
   syncUpdateExercise: (id: string) => Promise<{ error: PostgrestError | null }>;
   fetchExercisesBySection: (section_id: string, force?: boolean) => Promise<void>;
+  fetchExerciseById: (id: string) => Promise<void>;
 };
 
 export const useExercisesStore = create<ExercisesState>((set, get) => ({
-  exercises: {},
+  exercisesById: {},
+  exercisesBySectionId: {},
 
   fetchExercisesBySection: async (section_id, force = false) => {
     // If not forced and we already have the data, return early
-    if (!force && get().exercises[section_id]?.length > 0) {
+    if (!force && get().exercisesBySectionId[section_id]?.length > 0) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('exercises')
-      .select('*')
-      .eq('section_id', section_id);
+    const { data, error } = await fetchExercisesBySection(section_id);
 
     if (error) {
       console.error('Fetch failed', error);
@@ -39,19 +34,43 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     }
 
     set((state) => ({
-      exercises: {
-        ...state.exercises,
-        [section_id]: data as ExerciseRow[],
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
+        [section_id]: data as LocalExercise[],
+      },
+    }));
+  },
+
+  fetchExerciseById: async (id) => {
+    const { data, error } = await fetchExerciseById(id);
+
+    if (error) {
+      console.error('Fetch failed', error);
+      return;
+    }
+
+    set((state) => ({
+      exercisesById: {
+        ...state.exercisesById,
+        [id]: data as LocalExercise,
+      },
+
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
+        [data.section_id]: [
+          ...(state.exercisesBySectionId[data.section_id] || []),
+          data as LocalExercise,
+        ],
       },
     }));
   },
 
   updateExerciseLocal: (id, updates) => {
     set((state) => {
-      const newExercises = { ...state.exercises };
+      const newExercises = { ...state.exercisesBySectionId };
 
       // Find the section containing this exercise
-      for (const [sectionId, exercises] of Object.entries(state.exercises)) {
+      for (const [sectionId, exercises] of Object.entries(state.exercisesBySectionId)) {
         const exerciseIndex = exercises.findIndex(e => e.id === id);
         if (exerciseIndex !== -1) {
           newExercises[sectionId] = exercises.map((e) =>
@@ -61,15 +80,15 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
         }
       }
 
-      return { exercises: newExercises };
+      return { exercisesBySectionId: newExercises };
     });
   },
 
   syncUpdateExercise: async (id) => {
-    let exercise: ExerciseRow | undefined;
+    let exercise: LocalExercise | undefined;
 
     // Find the exercise in any section
-    for (const exercises of Object.values(get().exercises)) {
+    for (const exercises of Object.values(get().exercisesBySectionId)) {
       exercise = exercises.find(e => e.id === id);
       if (exercise) break;
     }
@@ -78,7 +97,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     const { id: _, created_at, ...updatePayload } = exercise;
 
-    const { error } = await supabase.from('exercises').update(updatePayload).eq('id', id);
+    const { error } = await updateExercise(id, updatePayload);
 
     if (error) {
       console.error('Failed to sync exercise update:', error);
@@ -88,27 +107,26 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     return { error: null };
   },
 
-  addExerciseLocal: (exercise) => {
+  addExerciseLocal: async (exercise: NewExercise) => {
     const id = uuidv4();
     const now = new Date().toISOString();
 
-    const newExercise: ExerciseRow = {
+    const newExercise: LocalExercise = {
       id,
-      created_by: exercise.created_by,
       name: exercise.name ?? null,
       section_id: exercise.section_id,
       goal_tempo: exercise.goal_tempo ?? null,
       filepath: exercise.filepath ?? null,
-      sort_position: exercise.sort_position ?? null,
+      order: exercise.order ?? null,
       created_at: now,
       updated_at: now,
     };
 
     set((state) => ({
-      exercises: {
-        ...state.exercises,
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
         [exercise.section_id]: [
-          ...(state.exercises[exercise.section_id] || []),
+          ...(state.exercisesBySectionId[exercise.section_id] || []),
           newExercise,
         ],
       },
@@ -117,11 +135,11 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
   },
 
   syncAddExercise: async (id) => {
-    let localExercise: ExerciseRow | undefined;
+    let localExercise: LocalExercise | undefined;
     let sectionId: string | undefined;
 
     // Find the exercise and its section
-    for (const [section, exercises] of Object.entries(get().exercises)) {
+    for (const [section, exercises] of Object.entries(get().exercisesBySectionId)) {
       localExercise = exercises.find(e => e.id === id);
       if (localExercise) {
         sectionId = section;
@@ -131,11 +149,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     if (!localExercise || !sectionId) return { error: null };
 
-    const { data, error } = await supabase
-      .from('exercises')
-      .insert(localExercise)
-      .select()
-      .single();
+    const { data, error } = await insertExercise(localExercise);
 
     if (error) {
       console.error('Sync failed', error);
@@ -143,9 +157,9 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     }
 
     set((state) => ({
-      exercises: {
-        ...state.exercises,
-        [sectionId!]: state.exercises[sectionId!].map((e) =>
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
+        [sectionId!]: state.exercisesBySectionId[sectionId!].map((e) =>
           e.id === id ? data : e
         ),
       },

@@ -1,8 +1,9 @@
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { ListItemCard } from '@/components/shared/ListItemCard';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { DraftSessionItem } from '@/types/session';
-import { Pressable, Text, View } from 'react-native';
-import { ThemedIcon } from '../icons/themed-icon';
+import { Text, View } from 'react-native';
 
 interface CurrentSessionItemsProps {
   sessionItems: DraftSessionItem[];
@@ -15,7 +16,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
   function renderEmptyState() {
     return (
-      <View className="p-4 bg-slate-50 rounded-md">
+      <View className="p-4 bg-slate-2000 rounded-xl">
         <Text className="text-slate-500">No items selected yet. Add items from below.</Text>
       </View>
     );
@@ -30,44 +31,41 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
       const artist = artists.find((a) => a.id === song.artist_id);
 
       return (
-        <View
+        <ListItemCard
           key={item.id}
-          className="flex-row items-start justify-between p-4 bg-slate-50 rounded-md mb-3"
-        >
-          <View className="flex-1 mr-2">
-            <Text className="font-medium">{song.name}</Text>
-            {artist && <Text className="text-sm text-slate-500">{artist.name}</Text>}
-          </View>
-          <Pressable onPress={() => onRemoveItem(item.id)}>
-            <ThemedIcon name="X" size={20} />
-          </Pressable>
-        </View>
+          title={song.name}
+          subtitle={artist?.name}
+          subtitleIcon={<ThemedIcon name="MicVocal" size={16} color="black" />}
+          leftElement={<ThemedIcon name="Music" size={24} />}
+          rightElement={<ThemedIcon name="X" size={28} />}
+          onRemove={() => onRemoveItem(item.id)}
+          isAdded={true}
+        />
       );
     }
 
     // Handle exercise items
     if (item.type === 'exercise' && item.exercise) {
+      const bookName = item.exercise.section?.book?.name?.length > 28
+        ? item.exercise.section.book.name.slice(0, 28) + '...'
+        : item.exercise.section?.book?.name;
+      const sectionName = item.exercise.section?.name?.length > 28
+        ? item.exercise.section.name.slice(0, 28) + '...'
+        : item.exercise.section?.name;
+
       return (
-        <View
+        <ListItemCard
           key={item.id}
-          className="flex-row items-start justify-between p-4 bg-slate-50 rounded-md mb-3"
-        >
-          <View className="flex-1 mr-2">
-            <Text className="font-medium">{item.exercise.name}</Text>
-            {item.exercise.section?.book && (
-              <Text className="text-sm text-slate-500">{item.exercise.section.book.name}</Text>
-            )}
-            {item.exercise.section && (
-              <Text className="text-sm text-slate-500">{item.exercise.section.name}</Text>
-            )}
-            {item.tempo && (
-              <Text className="text-sm text-slate-500">Goal: {item.tempo} BPM</Text>
-            )}
-          </View>
-          <Pressable onPress={() => onRemoveItem(item.id)}>
-            <ThemedIcon name="X" size={20} />
-          </Pressable>
-        </View>
+          title={`Exercise ${item.exercise.name}`}
+          subtitle={bookName}
+          subtitleIcon={bookName ? <ThemedIcon name="BookOpen" size={16} color="black" /> : undefined}
+          description={sectionName}
+          descriptionIcon={sectionName ? <ThemedIcon name="Bookmark" size={16} color="black" /> : undefined}
+          leftElement={<ThemedIcon name="Dumbbell" size={24} />}
+          rightElement={<ThemedIcon name="X" size={28} />}
+          onRemove={() => onRemoveItem(item.id)}
+          isAdded={true}
+        />
       );
     }
 
@@ -76,8 +74,8 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
   return (
     <View>
-      <Text className="text-xl font-heading-bold mb-2">Selected Items</Text>
-      <View className="flex-1 px-4 mb-60">
+      <Text className="text-2xl font-heading-bold mb-2">Session Items</Text>
+      <View className="flex-1 px-4 mb-60 gap-y-4">
         {sessionItems.length === 0 ? renderEmptyState() : sessionItems.map(renderSessionItem)}
       </View>
     </View>

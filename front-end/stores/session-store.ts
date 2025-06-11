@@ -1,8 +1,7 @@
-import { supabase } from '@/lib/supabase';
+import { deleteSession, fetchRecentSessionsWithItems, fetchSessionDetail, fetchSessions, insertSession, insertSessionItems } from '@/lib/supabase/session';
 import {
   DraftSession,
-  SessionInsert,
-  SessionItemInsert,
+  LocalSessionItem,
   SessionWithCountsRow,
   SessionWithItems
 } from '@/types/session';
@@ -18,17 +17,13 @@ type SessionsState = {
   fetchRecentSessionsWithItems: (limit: number) => Promise<void>;
 };
 
-
 export const useSessionsStore = create<SessionsState>((set, get) => ({
   sessions: [],
   sessionsWithItems: [],
   sessionDetailMap: {},
 
   fetchSessions: async () => {
-    const { data, error } = await supabase
-      .from('sessions_with_items')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await fetchSessions();
     if (error) {
       console.error('Fetch failed', error);
       return;
@@ -37,29 +32,7 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
   },
 
   fetchRecentSessionsWithItems: async (limit) => {
-    const { data, error } = await supabase
-      .from('sessions_with_items')
-      .select(
-        `
-        *,
-        session_items (
-          *,
-          song:song_id (
-            *,
-            artist:artist_id (*)
-          ),
-          exercise:exercise_id (
-            *,
-            section:section_id (
-              *,
-              book:book_id (*)
-            )
-          )
-        )
-      `
-      )
-      .order('created_at', { ascending: false })
-      .limit(limit);
+    const { data, error } = await fetchRecentSessionsWithItems(limit);
 
     if (error) {
       console.error('Failed to fetch sessions with items', error);
@@ -77,29 +50,7 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     const existing = get().sessionDetailMap[sessionId];
     if (existing) return;
 
-    const { data, error } = await supabase
-      .from('sessions_with_items')
-      .select(
-        `
-      *,
-      session_items (
-        *,
-        song:song_id (
-          *,
-          artist:artist_id (*)
-        ),
-        exercise:exercise_id (
-          *,
-          section:section_id (
-            *,
-            book:book_id (*)
-          )
-        )
-      )
-    `
-      )
-      .eq('id', sessionId)
-      .single();
+    const { data, error } = await fetchSessionDetail(sessionId);
 
     if (error) {
       console.error('Failed to fetch session detail', error);
@@ -115,24 +66,10 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
   },
 
   insertSession: async (draft: DraftSession) => {
-    const userId = (await supabase.auth.getUser()).data.user?.id;
-    if (!userId) throw new Error('User not authenticated');
-
     const now = new Date().toISOString();
 
-    const sessionInsert: SessionInsert = {
-      id: draft.id,
-      created_by: userId,
-      created_at: now,
-      updated_at: now,
-      duration: draft.duration,
-      notes: draft.notes,
-    };
     // Insert the session
-    const { error: sessionError } = await supabase
-      .from('sessions')
-      .insert(sessionInsert)
-
+    const { error: sessionError } = await insertSession(draft);
 
     if (sessionError) {
       console.error('Failed to insert session', sessionError);
@@ -140,28 +77,23 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     }
 
     // Insert session items
-    const sessionItemInserts: SessionItemInsert[] = draft.items.map((item, index) => ({
-      id: item.id,
+    const validSessionItems = draft.items.filter((item) => item.tempo !== null);
+    const sessionItemInserts: LocalSessionItem[] = validSessionItems.map((item, index) => ({
+      ...item,
       session_id: draft.id,
-      created_by: userId,
       created_at: now,
       updated_at: now,
       position: index,
-      notes: item.notes,
-      tempo: item.tempo,
-      song_id: item.type === 'song' ? item.song?.id : null,
-      exercise_id: item.type === 'exercise' ? item.exercise?.id : null,
-      type: item.type,
+      song_id: item.song?.id ?? null,
+      exercise_id: item.exercise?.id ?? null,
     }));
 
-    const { error: itemsError } = await supabase
-      .from('session_items')
-      .insert(sessionItemInserts);
+    const { error: itemsError } = await insertSessionItems(sessionItemInserts);
 
     if (itemsError) {
       console.error('Failed to insert session items', itemsError);
       // Cleanup the session since items failed
-      await supabase.from('sessions').delete().eq('id', draft.id);
+      await deleteSession(draft.id);
       throw new Error('Failed to insert session items');
     }
 

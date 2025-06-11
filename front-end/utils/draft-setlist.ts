@@ -1,7 +1,9 @@
-import { BookWithCountsRow } from "@/stores/book-store";
-import { SectionWithCountsRow } from "@/stores/section-store";
-import { ArtistRow, ExerciseRow, SongRow } from "@/types/session";
+import { LocalArtist } from "@/types/artist";
+import { BookWithCountsRow } from "@/types/book";
+import { LocalExercise } from "@/types/exercise";
+import { SectionWithCountsRow } from "@/types/section";
 import { DraftSetlist, DraftSetlistItem, SetlistItemWithNested, SetlistWithItems } from '@/types/setlist';
+import { LocalSong } from "@/types/song";
 import { v4 as uuidv4 } from 'uuid';
 
 export function setlistItemToDraftSetlistItem(item: SetlistItemWithNested): DraftSetlistItem {
@@ -36,7 +38,7 @@ export function setlistItemToDraftSetlistItem(item: SetlistItemWithNested): Draf
   throw new Error('Invalid setlist item');
 }
 
-export function songRowToDraftSetlistItem(song: SongRow, artist?: ArtistRow): DraftSetlistItem {
+export function songRowToDraftSetlistItem(song: LocalSong, artist?: LocalArtist): DraftSetlistItem {
   return {
     id: uuidv4(),
     type: 'song',
@@ -52,7 +54,7 @@ export function songRowToDraftSetlistItem(song: SongRow, artist?: ArtistRow): Dr
 }
 
 export function exerciseToDraftSetlistItem(
-  exercise: ExerciseRow,
+  exercise: LocalExercise,
   section: SectionWithCountsRow,
   book: BookWithCountsRow
 ): DraftSetlistItem {

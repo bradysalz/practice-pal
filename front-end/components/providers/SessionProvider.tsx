@@ -1,34 +1,68 @@
 import { supabase } from '@/lib/supabase';
 import type { Session } from '@supabase/supabase-js';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 
-const SessionContext = createContext<Session | null | undefined>(undefined);
-export const useSession = () => useContext(SessionContext);
+// Define the shape of the context value
+interface SessionContextType {
+  session: Session | null | undefined;
+  isLoading: boolean; // Add this
+}
 
-export function SessionProvider({ children }: { children: React.ReactNode }) {
+// Initialize context with a default value that matches the interface
+const SessionContext = createContext<SessionContextType | undefined>(undefined);
+
+export const useSession = () => {
+  const context = useContext(SessionContext);
+  if (context === undefined) {
+    throw new Error('useSession must be used within a SessionProvider');
+  }
+  return context;
+};
+
+export function SessionProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true); // Explicitly track loading state
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    async function getInitialSession() {
+      setIsLoading(true); // Start loading
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        setSession(initialSession);
+      } catch (error) {
+        console.error("Error fetching initial session:", error);
+        setSession(null); // Ensure session is null on error
+      } finally {
+        setIsLoading(false); // End loading
+      }
+    }
+
+    getInitialSession();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+      setSession(currentSession);
+      setIsLoading(false); // Also set loading to false on subsequent changes
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => listener.subscription.unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
-  if (session === undefined) {
+  // Use useMemo to prevent unnecessary re-renders of children
+  const contextValue = useMemo(() => ({
+    session,
+    isLoading,
+  }), [session, isLoading]);
+
+  if (isLoading) { // Use the explicit isLoading state for rendering the loading indicator
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Loading session...</Text>
-        <ActivityIndicator />
+        <ActivityIndicator size="large" />
       </View>
     );
   }
 
-  return <SessionContext.Provider value={session}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={contextValue}>{children}</SessionContext.Provider>;
 }

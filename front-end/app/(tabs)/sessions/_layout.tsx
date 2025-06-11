@@ -13,31 +13,9 @@ export default function SessionsStack() {
         }}
       />
       <Stack.Screen
-        name="[id]"
-        options={{
-          title: 'Session Details',
-          headerShown: true,
-          headerShadowVisible: false,
-        }}
-      />
-      <Stack.Screen
         name="make-session"
         options={{
           title: 'Create Session',
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="add-item-to-session"
-        options={{
-          title: 'Add Item',
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="active-session"
-        options={{
-          title: 'Active Session',
           headerShown: false,
         }}
       />

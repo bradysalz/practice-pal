@@ -9,7 +9,7 @@ export default function AccountScreen() {
   return (
     <RequireAuth>
       <View style={{ flex: 1, padding: 16 }}>
-        <Account session={session!} />
+        <Account session={session?.session!} />
       </View>
     </RequireAuth>
   );

@@ -1,9 +1,9 @@
-// components/RequireAuth.tsx
 import { useSession } from '@/components/providers/SessionProvider';
 import { Redirect } from 'expo-router';
+import React, { PropsWithChildren } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
-export function RequireAuth({ children }: { children: React.ReactNode }) {
+export function RequireAuth({ children }: PropsWithChildren) {
   const session = useSession();
 
   if (session === null) {
@@ -15,7 +15,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!session?.user) {
+  if (!session?.session?.user) {
     // Redirect to sign-in
     return <Redirect href="/" />;
   }

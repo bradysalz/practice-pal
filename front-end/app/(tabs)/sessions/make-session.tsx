@@ -45,7 +45,7 @@ export default function MakeSessionPage() {
           {/* Add Items Button */}
           <Pressable
             className="flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80"
-            onPress={() => router.push('/sessions/add-item-to-session')}
+            onPress={() => router.push('/session-detail/add-item-to-session')}
           >
             <Plus size={20} className="mr-2 text-slate-900" />
             <Text className="text-slate-900 font-semibold text-lg">Add Items</Text>
@@ -54,7 +54,7 @@ export default function MakeSessionPage() {
           {/* Start Practice Button */}
           <Pressable
             className="flex-1 flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
-            onPress={() => router.push('/sessions/active-session')}
+            onPress={() => router.push('/session-detail/active-session')}
           >
             <Play size={20} color="white" className="mr-2" />
             <Text className="text-white font-semibold text-lg">Start</Text>
