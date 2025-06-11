@@ -9,17 +9,17 @@ type SessionRow = Database['public']['Tables']['sessions']['Row'];
 
 export type SessionItemWithNested = SessionItemRow & {
   song:
-    | (SongRow & {
-        artist: ArtistRow | null;
-      })
-    | null;
+  | (SongRow & {
+    artist: ArtistRow | null;
+  })
+  | null;
   exercise:
-    | (ExerciseRow & {
-        section: SectionRow & {
-          book: BookRow;
-        };
-      })
-    | null;
+  | (ExerciseRow & {
+    section: SectionRow & {
+      book: BookRow;
+    };
+  })
+  | null;
 };
 
 // Local exercise details for display
@@ -67,7 +67,7 @@ export type DraftSessionItem = {
   // one of these is defined based on `type`
   exercise?: {
     id: string;
-    name: string | null;
+    name: string;
     section: {
       id: string;
       name: string;
