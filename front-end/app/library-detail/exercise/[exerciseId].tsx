@@ -15,7 +15,7 @@ export default function ExerciseDetailPage() {
   // Stores
   const books = useBooksStore((state) => state.books);
   const sections = useSectionsStore((state) => state.sections);
-  const exercisesBySectionId = useExercisesStore((state) => state.exercisesBySectionId);
+  const exercisesById = useExercisesStore((state) => state.exercisesById);
   const sessionItemsByExercise = useSessionItemsStore((state) => state.sessionItemsByExercise);
 
   // Fetch
@@ -26,12 +26,16 @@ export default function ExerciseDetailPage() {
   // Update
   const updateExerciseLocal = useExercisesStore((state) => state.updateExerciseLocal);
   const syncUpdateExercise = useExercisesStore((state) => state.syncUpdateExercise);
+  const fetchExerciseById = useExercisesStore((state) => state.fetchExerciseById);
 
   useEffect(() => {
+    fetchExerciseById(exerciseId);
     fetchSessionItemByExerciseId(exerciseId);
-  }, [fetchSessionItemByExerciseId, exerciseId]);
+  }, [fetchExerciseById, fetchSessionItemByExerciseId, exerciseId]);
 
-  const exercise = Object.values(exercisesBySectionId).flat().find((e) => e.id === exerciseId)
+  console.log('exercisesById', exercisesById);
+  console.log('exerciseId', exerciseId);
+  const exercise = exercisesById[exerciseId];
   const section = sections.find((s) => s.id === exercise?.section_id);
   const book = books.find((b) => b.id === section?.book_id);
 

@@ -77,17 +77,15 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     }
 
     // Insert session items
-    const sessionItemInserts: LocalSessionItem[] = draft.items.map((item, index) => ({
-      id: item.id,
+    const validSessionItems = draft.items.filter((item) => item.tempo !== null);
+    const sessionItemInserts: LocalSessionItem[] = validSessionItems.map((item, index) => ({
+      ...item,
       session_id: draft.id,
       created_at: now,
       updated_at: now,
       position: index,
-      notes: item.notes,
-      tempo: item.tempo,
-      song_id: item.type === 'song' ? item.song?.id ?? null : null,
-      exercise_id: item.type === 'exercise' ? item.exercise?.id ?? null : null,
-      type: item.type,
+      song_id: item.song?.id ?? null,
+      exercise_id: item.exercise?.id ?? null,
     }));
 
     const { error: itemsError } = await insertSessionItems(sessionItemInserts);

@@ -2,13 +2,13 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useSessionItemsStore } from '@/stores/session-item-store';
 import { router } from 'expo-router';
 import { ChevronDown } from 'lucide-react-native';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 interface SessionItemCardProps {
   name: string;
-  source: string;
+  source: ReactNode;
   tempo: string;
   onTempoChange: (value: string) => void;
   itemId: string;
@@ -94,7 +94,7 @@ export function ActiveSessionItemCard({
             <View className="flex-row justify-between items-center">
               <View className="flex-1">
                 <Text className="text-xl font-bold mb-1">{name}</Text>
-                <Text className="text-slate-500 text-base">{source}</Text>
+                {source}
               </View>
 
               <View className="flex-row items-center gap-x-2">

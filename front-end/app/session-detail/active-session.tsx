@@ -5,7 +5,7 @@ import { useSessionItemsStore } from '@/stores/session-item-store';
 import { useSessionsStore } from '@/stores/session-store';
 import { DraftSessionItem } from '@/types/session';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -136,15 +136,34 @@ export default function ActiveSessionPage() {
     return '';
   };
 
-  const getItemSource = (item: DraftSessionItem) => {
+  const getItemSource = (item: DraftSessionItem): ReactNode => {
     if (item.type === 'exercise' && item.exercise) {
-      return item.exercise.section
-        ? `${item.exercise.section.book?.name || ''} / ${item.exercise.section.name}`
-        : 'Exercise';
+      const sectionName = item.exercise.section?.name || '';
+      const bookName = item.exercise.section?.book?.name || '';
+      return (
+        <View className="gap-y-1">
+          {bookName && <View className="flex-row items-center gap-x-2">
+            <ThemedIcon name="BookOpen" size={16} color="slate" />
+            <Text className="text-slate-500 text-base">{bookName}</Text>
+          </View>}
+          {sectionName && <View className="flex-row items-center gap-x-2">
+            <ThemedIcon name="Bookmark" size={16} color="slate" />
+            <Text className="text-slate-500 text-base">{sectionName}</Text>
+          </View>}
+        </View>
+      );
     } else if (item.type === 'song' && item.song) {
-      return item.song.artist?.name || 'Song';
+      const artistName = item.song.artist?.name || '';
+      return (
+        <View className="gap-y-1">
+          {artistName && <View className="flex-row items-center gap-x-2">
+            <ThemedIcon name="MicVocal" size={16} color="slate" />
+            <Text className="text-slate-500 text-base">{artistName}</Text>
+          </View>}
+        </View>
+      );
     }
-    return '';
+    return <></>;
   };
 
   return (
@@ -203,10 +222,17 @@ export default function ActiveSessionPage() {
 
       {/* End Session Button */}
       <View
-        className="bg-white border-t border-slate-200"
+        className="bg-white border-t border-slate-200 flex-row justify-between "
       >
         <Pressable
-          className="mx-4 my-4 flex-row items-center justify-center bg-red-500 rounded-xl py-4 active:opacity-80"
+          className="mx-4 my-4 flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80"
+          onPress={() => router.push('/session-detail/add-item-to-session')}
+        >
+          <ThemedIcon name="Plus" size={20} color="black" />
+          <Text className="text-slate-900 font-semibold text-lg">Add Item</Text>
+        </Pressable>
+        <Pressable
+          className="mx-4 my-4 flex-1 flex-row items-center justify-center bg-red-500 rounded-xl py-4 active:opacity-80"
           onPress={handleEndSession}
         >
           <ThemedIcon name="Check" size={20} color="white" className="mr-2" />

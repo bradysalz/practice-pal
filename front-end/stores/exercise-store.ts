@@ -1,4 +1,4 @@
-import { fetchExercisesBySection, insertExercise, updateExercise } from '@/lib/supabase/exercise';
+import { fetchExerciseById, fetchExercisesBySection, insertExercise, updateExercise } from '@/lib/supabase/exercise';
 import { LocalExercise, NewExercise } from '@/types/exercise';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,15 +6,18 @@ import { create } from 'zustand';
 
 
 type ExercisesState = {
+  exercisesById: Record<string, LocalExercise>;
   exercisesBySectionId: Record<string, LocalExercise[]>;
   addExerciseLocal: (exercise: NewExercise) => Promise<string>;
   syncAddExercise: (tempId: string) => Promise<{ error: PostgrestError | null }>;
   updateExerciseLocal: (id: string, updates: Partial<LocalExercise>) => void;
   syncUpdateExercise: (id: string) => Promise<{ error: PostgrestError | null }>;
   fetchExercisesBySection: (section_id: string, force?: boolean) => Promise<void>;
+  fetchExerciseById: (id: string) => Promise<void>;
 };
 
 export const useExercisesStore = create<ExercisesState>((set, get) => ({
+  exercisesById: {},
   exercisesBySectionId: {},
 
   fetchExercisesBySection: async (section_id, force = false) => {
@@ -34,6 +37,30 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
         [section_id]: data as LocalExercise[],
+      },
+    }));
+  },
+
+  fetchExerciseById: async (id) => {
+    const { data, error } = await fetchExerciseById(id);
+
+    if (error) {
+      console.error('Fetch failed', error);
+      return;
+    }
+
+    set((state) => ({
+      exercisesById: {
+        ...state.exercisesById,
+        [id]: data as LocalExercise,
+      },
+
+      exercisesBySectionId: {
+        ...state.exercisesBySectionId,
+        [data.section_id]: [
+          ...(state.exercisesBySectionId[data.section_id] || []),
+          data as LocalExercise,
+        ],
       },
     }));
   },
