@@ -77,7 +77,7 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           data={filteredData as any[]}
           xKey="timestamp"
           yKeys={['tempo', 'goal_tempo']}
-          domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
+          domainPadding={{ left: 40, right: 40, top: 60, bottom: 10 }}
           xAxis={{
             font,
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
