@@ -63,6 +63,7 @@
     "jest-expo": "~53.0.5",
     "lucide-react-native": "^0.509.0",
     "nativewind": "^4.1.23",
+    "prettier": "^3.5.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.3",
