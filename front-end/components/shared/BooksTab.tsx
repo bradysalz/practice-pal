@@ -6,8 +6,6 @@ import { useSectionsStore } from '@/stores/section-store';
 import { BookWithCountsRow } from '@/types/book';
 import { LocalExercise } from '@/types/exercise';
 import { SectionWithCountsRow } from '@/types/section';
-import { exerciseToDraftSessionItem } from '@/utils/draft-session';
-import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
 import {
   createSessionExerciseItem,
   createSetlistExerciseItem,
