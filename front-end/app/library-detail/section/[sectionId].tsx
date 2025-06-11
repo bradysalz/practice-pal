@@ -2,11 +2,11 @@ import { HighlightBar } from '@/components/shared/HighlightBar';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { Separator } from '@/components/shared/Separator';
 import { Progress } from '@/components/ui/progress';
-import { SectionStat } from '@/lib/supabase/stat';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useStatStore } from '@/stores/stat-store';
+import { SectionStatRow } from '@/types/stats';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
@@ -39,11 +39,11 @@ export default function SectionDetailPage() {
     loadExercises();
   }, [fetchExercisesBySection, sectionId, fetchSectionStats]);
 
-  const book = books.find((b) => b.id === section?.book_id);
   const section = sections.find((s) => s.id === sectionId);
+  const book = books.find((b) => b.id === section?.book_id);
   const usefulExercises = exercises[sectionId]?.sort((a, b) => a.order - b.order) || [];
 
-  const sectionStat: SectionStat = sectionStats[sectionId] || {
+  const sectionStat: SectionStatRow = sectionStats[sectionId] || {
     section_id: sectionId,
     goal_reached_exercises: 0,
     played_exercises: 0,
@@ -65,8 +65,7 @@ export default function SectionDetailPage() {
     router.push(`/library-forms/edit-section/${sectionId}`);
   };
 
-  if (!book) return <Text>Book not found</Text>;
-  if (!section) return <Text>Section not found</Text>;
+  if (!section || !book) return <Text>Section not found</Text>;
 
   return (
     <View className="flex-1 p-4">

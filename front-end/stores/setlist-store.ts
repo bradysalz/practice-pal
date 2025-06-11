@@ -3,7 +3,6 @@ import {
   deleteSetlistItems,
   fetchSetlistById,
   fetchSetlists,
-  getCurrentUserId,
   insertSetlist,
   insertSetlistItems,
   updateSetlist,
@@ -44,14 +43,11 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
 
   updateSetlist: async (setlist: DraftSetlist) => {
     const now = new Date().toISOString();
-    const userId = await getCurrentUserId();
-    if (!userId) throw new Error('User not authenticated');
 
     const setlistUpdate: SetlistUpdate = {
       name: setlist.name,
       description: setlist.description,
       updated_at: now,
-      created_by: userId,
     };
 
     // Step 1: Update the setlist
@@ -71,7 +67,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 3: Insert updated items
-    const setlistItemInserts: SetlistItemInsert[] = setlist.items.map((item, index) => ({
+    const setlistItemInserts: Partial<SetlistItemInsert>[] = setlist.items.map((item, index) => ({
       id: uuidv4(), // Generate new IDs for items
       setlist_id: setlist.id,
       type: item.type,
@@ -80,7 +76,6 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
       position: index,
       updated_at: now,
       created_at: now,
-      created_by: userId,
     }));
 
     const { error: insertError } = await insertSetlistItems(setlistItemInserts);
@@ -109,15 +104,12 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
 
   insertSetlist: async (draft: DraftSetlist) => {
     const now = new Date().toISOString();
-    const userId = await getCurrentUserId();
-    if (!userId) throw new Error('User not authenticated');
 
     // Step 1: Insert the setlist
-    const setlistInsert: SetlistInsert = {
+    const setlistInsert: Partial<SetlistInsert> = {
       id: draft.id,
       name: draft.name,
       description: draft.description,
-      created_by: userId,
       created_at: now,
       updated_at: now,
     };
@@ -130,14 +122,13 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 2: Insert items
-    const setlistItemInserts: SetlistItemInsert[] = draft.items.map((item, index) => ({
+    const setlistItemInserts: Partial<SetlistItemInsert>[] = draft.items.map((item, index) => ({
       id: uuidv4(),
       setlist_id: draft.id,
       type: item.type,
       song_id: item.type === 'song' ? item.song?.id : null,
       exercise_id: item.type === 'exercise' ? item.exercise?.id : null,
       position: index,
-      created_by: userId,
       created_at: now,
       updated_at: now,
     }));

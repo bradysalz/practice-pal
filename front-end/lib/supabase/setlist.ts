@@ -35,8 +35,9 @@ export async function fetchSetlistById(id: string) {
     .single();
 }
 
-export async function insertSetlist(setlist: SetlistInsert) {
-  return supabase.from('setlists').insert(setlist);
+export async function insertSetlist(setlist: Partial<SetlistInsert>) {
+  const userId = await getCurrentUserId();
+  return supabase.from('setlists').insert({ ...setlist, created_by: userId });
 }
 
 export async function updateSetlist(id: string, updates: SetlistUpdate) {
@@ -51,8 +52,12 @@ export async function deleteSetlistItems(setlistId: string) {
   return supabase.from('setlist_items').delete().eq('setlist_id', setlistId);
 }
 
-export async function insertSetlistItems(items: SetlistItemInsert[]) {
-  return supabase.from('setlist_items').insert(items);
+export async function insertSetlistItems(items: Partial<SetlistItemInsert>[]) {
+  const userId = await getCurrentUserId();
+
+  return supabase
+    .from('setlist_items')
+    .insert(items.map((item) => ({ ...item, created_by: userId })));
 }
 
 export async function fetchSetlistItems(setlistId: string) {
@@ -66,5 +71,3 @@ export async function fetchSetlistItems(setlistId: string) {
 export async function insertSetlistItem(item: SetlistItemRow) {
   return supabase.from('setlist_items').insert(item).select().single();
 }
-
-export { getCurrentUserId };

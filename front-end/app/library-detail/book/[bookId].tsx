@@ -4,10 +4,10 @@ import { Separator } from '@/components/shared/Separator';
 import { StatBox } from '@/components/shared/StatBox';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { BookStat } from '@/lib/supabase/stat';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useStatStore } from '@/stores/stat-store';
+import { BookStatRow } from '@/types/stats';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import React, { useEffect } from 'react';
@@ -30,7 +30,7 @@ export default function BookDetailPage() {
     .filter((section) => section.book_id === bookId)
     .sort((a, b) => a.order - b.order);
 
-  const bookStat: BookStat = bookStats[bookId] || {
+  const bookStat: BookStatRow = bookStats[bookId] || {
     book_id: bookId,
     goal_reached_exercises: 0,
     played_exercises: 0,

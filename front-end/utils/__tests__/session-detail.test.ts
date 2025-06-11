@@ -31,7 +31,6 @@ const mockItems: DraftSessionItem[] = [
 
 const mockDraft: DraftSession = {
   id: 'draft1',
-  notes: null,
   duration: null,
   items: mockItems,
 };

@@ -1,9 +1,9 @@
 import { Database } from '@/types/supabase';
+import { NonNullableFields } from '@/types/util';
 
 export type SectionRow = Database['public']['Tables']['sections']['Row'];
-export type SectionWithCountsRow = SectionRow & {
-  exercise_count: number;
-};
+type SectionWithCountsPrivate = Database['public']['Views']['section_with_counts']['Row'];
+export type SectionWithCountsRow = NonNullableFields<SectionWithCountsPrivate>;
 
 export type SectionInsert = Database['public']['Tables']['sections']['Insert'];
 export type LocalSection = Omit<SectionInsert, 'created_by'> & {

@@ -11,9 +11,14 @@ import { CartesianChart, Line, Scatter, useChartPressState } from 'victory-nativ
 interface ItemProgressGraphProps {
   data: ItemProgressPoint[];
   use_percent: boolean;
+  total_items: number;
 }
 
-export default function ItemProgressGraph({ data, use_percent }: ItemProgressGraphProps) {
+export default function ItemProgressGraph({
+  data,
+  use_percent,
+  total_items,
+}: ItemProgressGraphProps) {
   const font = useFont(require('@/assets/fonts/Inter-VariableFont_opsz,wght.ttf'), 14);
 
   const playedKey = use_percent ? 'percent_played' : 'played';
@@ -87,9 +92,9 @@ export default function ItemProgressGraph({ data, use_percent }: ItemProgressGra
           yKeys={[playedKey, atGoalKey]}
           domain={{
             x: [cutoffDate, now],
-            y: use_percent ? [0, 100] : undefined,
+            y: use_percent ? [0, 90] : [0, total_items * 1.1],
           }}
-          domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
+          domainPadding={{ left: 40, right: 40, top: 60, bottom: 10 }}
           xAxis={{
             font,
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
@@ -97,7 +102,6 @@ export default function ItemProgressGraph({ data, use_percent }: ItemProgressGra
           }}
           yAxis={[
             {
-              tickCount: 5,
               font,
               formatYLabel: (label: number) => {
                 if (use_percent) {

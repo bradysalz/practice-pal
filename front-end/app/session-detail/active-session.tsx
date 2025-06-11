@@ -79,7 +79,6 @@ export default function ActiveSessionPage() {
   };
 
   const handleEndSession = async () => {
-    console.log('handleEndSession', draftSession);
     const finalDraft = applyTemposToDraft(draftSession, tempos, elapsedTime);
 
     try {

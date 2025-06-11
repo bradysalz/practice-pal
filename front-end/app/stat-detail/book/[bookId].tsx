@@ -66,7 +66,11 @@ export default function BookStatsPage() {
             />
           </View>
         </View>
-        <ItemProgressGraph data={data} use_percent={use_percent} />
+        <ItemProgressGraph
+          data={data}
+          use_percent={use_percent}
+          total_items={book.exercise_count}
+        />
       </View>
     );
   };

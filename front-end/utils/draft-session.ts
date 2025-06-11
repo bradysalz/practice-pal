@@ -54,7 +54,6 @@ export function exerciseToDraftSessionItem(
 export function createNewDraft(): DraftSession {
   return {
     id: uuidv4(),
-    notes: null,
     duration: null,
     items: [],
   };
@@ -100,8 +99,6 @@ export function createDraftFromSession(session: SessionWithItems): DraftSession 
 
   return {
     id: session.id,
-
-    notes: session.notes,
     duration: session.duration,
     items: draftItems,
   };

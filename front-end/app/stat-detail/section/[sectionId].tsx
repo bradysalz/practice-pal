@@ -29,12 +29,12 @@ export default function SectionStatsPage() {
   }, [fetchSectionStatsOverTime, sectionId, setIsLoading]);
 
   const data = sectionStatsOverTime[sectionId]?.map((item) => ({
-    timestamp: item.date ? new Date(item.date).getTime() : 0,
-    percent_at_goal: item.percent_at_goal || 0,
-    percent_played: item.percent_played || 0,
-    played: item.played || 0,
-    at_goal: item.at_goal || 0,
-    total: item.total || 0,
+    timestamp: new Date(item.date).getTime(),
+    percent_at_goal: item.percent_at_goal,
+    percent_played: item.percent_played,
+    played: item.played,
+    at_goal: item.at_goal,
+    total: item.total,
   })) as ItemProgressPoint[];
 
   if (!book || !section) {
@@ -71,7 +71,11 @@ export default function SectionStatsPage() {
             />
           </View>
         </View>
-        <ItemProgressGraph data={data} use_percent={use_percent} />
+        <ItemProgressGraph
+          data={data}
+          use_percent={use_percent}
+          total_items={section.exercise_count}
+        />
       </View>
     );
   };

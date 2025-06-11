@@ -58,7 +58,7 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
       return (
         <ListItemCard
           key={item.id}
-          title={`Exercise ${item.exercise.name}`}
+          title={item.exercise.name}
           subtitle={bookName}
           subtitleIcon={
             bookName ? <ThemedIcon name="BookOpen" size={16} color="black" /> : undefined

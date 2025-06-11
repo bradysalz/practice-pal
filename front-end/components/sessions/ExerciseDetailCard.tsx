@@ -10,7 +10,6 @@ function ExerciseAtTempoRow({ exercise }: { exercise: ExerciseWithSession }) {
   const goal = exercise.goal_tempo ?? null;
   const notes = exercise.session.notes ?? null;
   const showStar = tempo != null && goal != null && tempo >= goal;
-  console.log(exercise.name);
 
   // TODO: maybe move to ThemedIcon
   return (

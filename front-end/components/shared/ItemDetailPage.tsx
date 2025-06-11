@@ -80,6 +80,7 @@ export default function ItemDetailPage({
               .map((item) => ({
                 timestamp: item.created_at ? new Date(item.created_at).getTime() : 0,
                 tempo: item.tempo!, // already filtered out nulls
+                goal_tempo: Number(goalTempo),
               }))}
           />
 
