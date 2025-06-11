@@ -11,6 +11,7 @@
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "gen:types": "npx supabase gen types typescript --linked > $(git rev-parse --show-toplevel)/front-end/types/supabase.ts",
     "gen:data": "node scripts/data-gen.js"
   },
