@@ -7,14 +7,14 @@ import { exerciseToDraftSessionItem } from '@/utils/draft-session';
 import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
 
 export function filterByName<T extends { name?: string }>(items: T[], query: string): T[] {
-  return items.filter(item => item.name?.toLowerCase().includes(query.toLowerCase()));
+  return items.filter((item) => item.name?.toLowerCase().includes(query.toLowerCase()));
 }
 
 export function isExerciseInDraft(
   exerciseId: string,
   mode: 'session' | 'setlist',
   draftSession: DraftSession | null,
-  draftSetlist: DraftSetlist | null,
+  draftSetlist: DraftSetlist | null
 ): boolean {
   if (mode === 'session' && draftSession) {
     return draftSession.items.some(
@@ -32,7 +32,7 @@ export function isExerciseInDraft(
 export function createSessionExerciseItem(
   exercise: LocalExercise,
   section: SectionWithCountsRow,
-  book: BookWithCountsRow,
+  book: BookWithCountsRow
 ): DraftSessionItem {
   return exerciseToDraftSessionItem(exercise, section, book);
 }
@@ -40,27 +40,23 @@ export function createSessionExerciseItem(
 export function createSetlistExerciseItem(
   exercise: LocalExercise,
   section: SectionWithCountsRow,
-  book: BookWithCountsRow,
+  book: BookWithCountsRow
 ): DraftSetlistItem {
   return exerciseToDraftSetlistItem(exercise, section, book);
 }
 
 export function findSessionExerciseItemId(
   draft: DraftSession,
-  exerciseId: string,
+  exerciseId: string
 ): string | undefined {
-  const item = draft.items.find(
-    (i) => i.type === 'exercise' && i.exercise?.id === exerciseId,
-  );
+  const item = draft.items.find((i) => i.type === 'exercise' && i.exercise?.id === exerciseId);
   return item?.id;
 }
 
 export function findSetlistExerciseItemId(
   draft: DraftSetlist,
-  exerciseId: string,
+  exerciseId: string
 ): string | undefined {
-  const item = draft.items.find(
-    (i) => i.type === 'exercise' && i.exercise?.id === exerciseId,
-  );
+  const item = draft.items.find((i) => i.type === 'exercise' && i.exercise?.id === exerciseId);
   return item?.id;
 }

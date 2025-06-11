@@ -7,17 +7,25 @@ export function formatTime(seconds: number): string {
 }
 
 export function initializeTempos(items: DraftSessionItem[]): Record<string, string> {
-  return Object.fromEntries(items.map(item => [item.id, item.tempo?.toString() || '']));
+  return Object.fromEntries(items.map((item) => [item.id, item.tempo?.toString() || '']));
 }
 
-export function updateDraftItemTempo(items: DraftSessionItem[], itemId: string, text: string): DraftSessionItem[] {
-  return items.map(item =>
+export function updateDraftItemTempo(
+  items: DraftSessionItem[],
+  itemId: string,
+  text: string
+): DraftSessionItem[] {
+  return items.map((item) =>
     item.id === itemId ? { ...item, tempo: text ? parseInt(text, 10) || null : null } : item
   );
 }
 
-export function applyTemposToDraft(draft: DraftSession, tempos: Record<string, string>, elapsed: number): DraftSession {
-  const items = draft.items.map(item => {
+export function applyTemposToDraft(
+  draft: DraftSession,
+  tempos: Record<string, string>,
+  elapsed: number
+): DraftSession {
+  const items = draft.items.map((item) => {
     const current = tempos[item.id];
     return { ...item, tempo: current ? parseInt(current, 10) || null : null };
   });

@@ -1,10 +1,10 @@
-import { LocalArtist } from "@/types/artist";
-import { BookWithCountsRow } from "@/types/book";
-import { LocalExercise } from "@/types/exercise";
-import { SectionWithCountsRow } from "@/types/section";
-import { DraftSession, DraftSessionItem, SessionWithItems } from "@/types/session";
-import { SetlistItemWithNested } from "@/types/setlist";
-import { LocalSong } from "@/types/song";
+import { LocalArtist } from '@/types/artist';
+import { BookWithCountsRow } from '@/types/book';
+import { LocalExercise } from '@/types/exercise';
+import { SectionWithCountsRow } from '@/types/section';
+import { DraftSession, DraftSessionItem, SessionWithItems } from '@/types/session';
+import { SetlistItemWithNested } from '@/types/setlist';
+import { LocalSong } from '@/types/song';
 import { v4 as uuidv4 } from 'uuid';
 
 export function songRowToDraftSessionItem(song: LocalSong, artist?: LocalArtist): DraftSessionItem {
@@ -16,11 +16,13 @@ export function songRowToDraftSessionItem(song: LocalSong, artist?: LocalArtist)
     song: {
       id: song.id,
       name: song.name,
-      artist: artist ? {
-        id: artist.id,
-        name: artist.name,
-      } : undefined,
-    }
+      artist: artist
+        ? {
+            id: artist.id,
+            name: artist.name,
+          }
+        : undefined,
+    },
   };
 }
 
@@ -43,9 +45,9 @@ export function exerciseToDraftSessionItem(
         book: {
           id: book.id,
           name: book.name,
-        }
-      }
-    }
+        },
+      },
+    },
   };
 }
 
@@ -73,9 +75,9 @@ export function createDraftFromSession(session: SessionWithItems): DraftSession 
         name: item.song.name,
         artist: item.song.artist
           ? {
-            id: item.song.artist.id,
-            name: item.song.artist.name,
-          }
+              id: item.song.artist.id,
+              name: item.song.artist.name,
+            }
           : undefined,
       };
     } else if (item.type === 'exercise' && item.exercise) {
@@ -88,7 +90,7 @@ export function createDraftFromSession(session: SessionWithItems): DraftSession 
           book: {
             id: item.exercise.section.book.id,
             name: item.exercise.section.book.name,
-          }
+          },
         },
       };
     }
@@ -119,9 +121,9 @@ export function setlistItemToDraftSessionItem(item: SetlistItemWithNested): Draf
       name: item.song.name || '',
       artist: item.song.artist
         ? {
-          id: item.song.artist.id,
-          name: item.song.artist.name,
-        }
+            id: item.song.artist.id,
+            name: item.song.artist.name,
+          }
         : undefined,
     };
   } else if (item.type === 'exercise' && item.exercise?.section?.book) {
@@ -134,8 +136,8 @@ export function setlistItemToDraftSessionItem(item: SetlistItemWithNested): Draf
         book: {
           id: item.exercise.section.book.id,
           name: item.exercise.section.book.name || '',
-        }
-      }
+        },
+      },
     };
   }
 

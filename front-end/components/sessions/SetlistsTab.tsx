@@ -29,9 +29,11 @@ export function SetlistsTab({ searchQuery }: SetlistsTabProps) {
     if (isAdded) return;
 
     // Convert setlist items to draft session items
-    const newItems = setlist.setlist_items.map((item) => {
-      return setlistItemToDraftSessionItem(item);
-    }).filter(item => item !== null);
+    const newItems = setlist.setlist_items
+      .map((item) => {
+        return setlistItemToDraftSessionItem(item);
+      })
+      .filter((item) => item !== null);
 
     // Only add items that aren't already in the session
     newItems.forEach((item) => {
@@ -39,8 +41,12 @@ export function SetlistsTab({ searchQuery }: SetlistsTabProps) {
 
       const isItemAlreadyInSession = draftSession.items.some(
         (existingItem) =>
-          (item.type === 'song' && existingItem.type === 'song' && existingItem.song?.id === item.song?.id) ||
-          (item.type === 'exercise' && existingItem.type === 'exercise' && existingItem.exercise?.id === item.exercise?.id)
+          (item.type === 'song' &&
+            existingItem.type === 'song' &&
+            existingItem.song?.id === item.song?.id) ||
+          (item.type === 'exercise' &&
+            existingItem.type === 'exercise' &&
+            existingItem.exercise?.id === item.exercise?.id)
       );
 
       if (!isItemAlreadyInSession) {
@@ -59,8 +65,12 @@ export function SetlistsTab({ searchQuery }: SetlistsTabProps) {
     setlist.setlist_items.forEach((setlistItem) => {
       const itemToRemove = draftSession.items.find(
         (item) =>
-          (setlistItem.type === 'song' && item.type === 'song' && item.song?.id === setlistItem.song?.id) ||
-          (setlistItem.type === 'exercise' && item.type === 'exercise' && item.exercise?.id === setlistItem.exercise?.id)
+          (setlistItem.type === 'song' &&
+            item.type === 'song' &&
+            item.song?.id === setlistItem.song?.id) ||
+          (setlistItem.type === 'exercise' &&
+            item.type === 'exercise' &&
+            item.exercise?.id === setlistItem.exercise?.id)
       );
       if (itemToRemove) {
         removeItemFromDraft(itemToRemove.id);
@@ -76,8 +86,12 @@ export function SetlistsTab({ searchQuery }: SetlistsTabProps) {
     const addedItems = setlist.setlist_items.filter((item) =>
       draftSession.items.some(
         (draftItem) =>
-          (item.type === 'song' && draftItem.type === 'song' && draftItem.song?.id === item.song?.id) ||
-          (item.type === 'exercise' && draftItem.type === 'exercise' && draftItem.exercise?.id === item.exercise?.id)
+          (item.type === 'song' &&
+            draftItem.type === 'song' &&
+            draftItem.song?.id === item.song?.id) ||
+          (item.type === 'exercise' &&
+            draftItem.type === 'exercise' &&
+            draftItem.exercise?.id === item.exercise?.id)
       )
     ).length;
 

@@ -67,11 +67,7 @@ export default function LibraryPage() {
             </View>
           </View>
 
-          <ReusableTabView
-            tabs={LIBRARY_TABS}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          >
+          <ReusableTabView tabs={LIBRARY_TABS} activeTab={activeTab} onTabChange={setActiveTab}>
             <TabsContent value="books">
               {filteredBooks.length > 0 ? (
                 filteredBooks.map((book) => (

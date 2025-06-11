@@ -1,9 +1,13 @@
-import { fetchExerciseById, fetchExercisesBySection, insertExercise, updateExercise } from '@/lib/supabase/exercise';
+import {
+  fetchExerciseById,
+  fetchExercisesBySection,
+  insertExercise,
+  updateExercise,
+} from '@/lib/supabase/exercise';
 import { LocalExercise, NewExercise } from '@/types/exercise';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
-
 
 type ExercisesState = {
   exercisesById: Record<string, LocalExercise>;
@@ -71,7 +75,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
       // Find the section containing this exercise
       for (const [sectionId, exercises] of Object.entries(state.exercisesBySectionId)) {
-        const exerciseIndex = exercises.findIndex(e => e.id === id);
+        const exerciseIndex = exercises.findIndex((e) => e.id === id);
         if (exerciseIndex !== -1) {
           newExercises[sectionId] = exercises.map((e) =>
             e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
@@ -89,7 +93,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     // Find the exercise in any section
     for (const exercises of Object.values(get().exercisesBySectionId)) {
-      exercise = exercises.find(e => e.id === id);
+      exercise = exercises.find((e) => e.id === id);
       if (exercise) break;
     }
 
@@ -140,7 +144,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
     // Find the exercise and its section
     for (const [section, exercises] of Object.entries(get().exercisesBySectionId)) {
-      localExercise = exercises.find(e => e.id === id);
+      localExercise = exercises.find((e) => e.id === id);
       if (localExercise) {
         sectionId = section;
         break;
@@ -159,9 +163,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     set((state) => ({
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
-        [sectionId!]: state.exercisesBySectionId[sectionId!].map((e) =>
-          e.id === id ? data : e
-        ),
+        [sectionId!]: state.exercisesBySectionId[sectionId!].map((e) => (e.id === id ? data : e)),
       },
     }));
 

@@ -22,8 +22,8 @@ export default function AddBookPage() {
     {
       name: '',
       exerciseCount: 1,
-      exerciseNaming: 'numeric'
-    }
+      exerciseNaming: 'numeric',
+    },
   ]);
 
   const getExerciseNames = (sectionData: SectionFormData): string[] => {
@@ -48,8 +48,8 @@ export default function AddBookPage() {
       {
         name: '',
         exerciseCount: 1,
-        exerciseNaming: 'numeric'
-      }
+        exerciseNaming: 'numeric',
+      },
     ]);
   };
 
@@ -89,7 +89,7 @@ export default function AddBookPage() {
     } finally {
       setIsSaving(false);
     }
-  }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white p-4 mr-2">

@@ -1,7 +1,17 @@
-import { fetchBookStatsByBookId, fetchBookStatsOverTime, fetchSectionStatsBySectionId, fetchSectionStatsOverTime } from "@/lib/supabase/stat";
-import { BookStatOverTimeRow, BookStatRow, SectionStatOverTimeRow, SectionStatRow } from "@/types/stats";
-import { toBookStat, toSectionStat } from "@/utils/stat-helpers";
-import { create } from "zustand";
+import {
+  fetchBookStatsByBookId,
+  fetchBookStatsOverTime,
+  fetchSectionStatsBySectionId,
+  fetchSectionStatsOverTime,
+} from '@/lib/supabase/stat';
+import {
+  BookStatOverTimeRow,
+  BookStatRow,
+  SectionStatOverTimeRow,
+  SectionStatRow,
+} from '@/types/stats';
+import { toBookStat, toSectionStat } from '@/utils/stat-helpers';
+import { create } from 'zustand';
 
 type StatStore = {
   bookStats: Record<string, BookStatRow>;

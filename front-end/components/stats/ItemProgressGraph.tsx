@@ -1,33 +1,27 @@
-import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ItemProgressPoint, TimeRange } from "@/types/stats";
-import { filterProgressData } from "@/utils/item-progress";
-import { formatDateByRange } from "@/utils/stats";
-import { useFont } from "@shopify/react-native-skia";
-import React, { useMemo, useState } from "react";
-import { Text, View } from "react-native";
-import { CartesianChart, Line, Scatter, useChartPressState } from "victory-native";
-
-
-
+import { ActiveValueIndicator } from '@/components/stats/ActiveValueIndicator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ItemProgressPoint, TimeRange } from '@/types/stats';
+import { filterProgressData } from '@/utils/item-progress';
+import { formatDateByRange } from '@/utils/stats';
+import { useFont } from '@shopify/react-native-skia';
+import React, { useMemo, useState } from 'react';
+import { Text, View } from 'react-native';
+import { CartesianChart, Line, Scatter, useChartPressState } from 'victory-native';
 
 interface ItemProgressGraphProps {
   data: ItemProgressPoint[];
   use_percent: boolean;
 }
 
-export default function ItemProgressGraph({
-  data,
-  use_percent
-}: ItemProgressGraphProps) {
-  const font = useFont(require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"), 14);
+export default function ItemProgressGraph({ data, use_percent }: ItemProgressGraphProps) {
+  const font = useFont(require('@/assets/fonts/Inter-VariableFont_opsz,wght.ttf'), 14);
 
   const playedKey = use_percent ? 'percent_played' : 'played';
   const atGoalKey = use_percent ? 'percent_at_goal' : 'at_goal';
 
   const { state, isActive } = useChartPressState({
     x: 0,
-    y: { [playedKey]: 0, [atGoalKey]: 0 }
+    y: { [playedKey]: 0, [atGoalKey]: 0 },
   });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
@@ -36,7 +30,6 @@ export default function ItemProgressGraph({
     () => filterProgressData(data, timeRange, now),
     [data, timeRange, now]
   );
-
 
   if (!font) {
     return null;
@@ -94,7 +87,7 @@ export default function ItemProgressGraph({
           yKeys={[playedKey, atGoalKey]}
           domain={{
             x: [cutoffDate, now],
-            y: use_percent ? [0, 100] : undefined
+            y: use_percent ? [0, 100] : undefined,
           }}
           domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
           xAxis={{
@@ -102,16 +95,18 @@ export default function ItemProgressGraph({
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
             tickCount: filteredData.length <= 2 ? 1 : 4,
           }}
-          yAxis={[{
-            tickCount: 5,
-            font,
-            formatYLabel: (label: number) => {
-              if (use_percent) {
-                return `${Math.round(label)}%`;
-              }
-              return Math.round(label).toString();
+          yAxis={[
+            {
+              tickCount: 5,
+              font,
+              formatYLabel: (label: number) => {
+                if (use_percent) {
+                  return `${Math.round(label)}%`;
+                }
+                return Math.round(label).toString();
+              },
             },
-          }]}
+          ]}
           chartPressState={state as any}
           renderOutside={({ chartBounds }) => {
             if (isActive) {
@@ -123,40 +118,25 @@ export default function ItemProgressGraph({
                   yValue={state.y[playedKey].value}
                   y2Position={state.y[atGoalKey].position}
                   y2Value={state.y[atGoalKey].value}
-                  textColor={"black"}
-                  lineColor={"black"}
-                  indicatorColor={"#ef4444"}
-                  indicatorColor2={"#3b82f6"}
+                  textColor={'black'}
+                  lineColor={'black'}
+                  indicatorColor={'#ef4444'}
+                  indicatorColor2={'#3b82f6'}
                   bottom={chartBounds.bottom}
                   top={chartBounds.top}
                   label="Played"
                   label2="At Goal"
-                />)
+                />
+              );
             }
           }}
         >
           {({ points }) => (
             <View>
-              <Line
-                points={points[playedKey]}
-                color="#ef4444"
-                strokeWidth={3}
-              />
-              <Scatter
-                points={points[playedKey]}
-                color="#ef4444"
-                radius={5}
-              />
-              <Line
-                points={points[atGoalKey]}
-                color="#3b82f6"
-                strokeWidth={3}
-              />
-              <Scatter
-                points={points[atGoalKey]}
-                color="#3b82f6"
-                radius={5}
-              />
+              <Line points={points[playedKey]} color="#ef4444" strokeWidth={3} />
+              <Scatter points={points[playedKey]} color="#ef4444" radius={5} />
+              <Line points={points[atGoalKey]} color="#3b82f6" strokeWidth={3} />
+              <Scatter points={points[atGoalKey]} color="#3b82f6" radius={5} />
             </View>
           )}
         </CartesianChart>

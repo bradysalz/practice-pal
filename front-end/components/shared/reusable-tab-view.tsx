@@ -7,7 +7,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming
+  withTiming,
 } from 'react-native-reanimated';
 
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
@@ -15,11 +15,12 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export type TabValue = 'books' | 'songs' | 'setlists';
 
-const TAB_METADATA: Record<TabValue, { label: string; icon: 'BookOpen' | 'Music' | 'ListMusic' }> = {
-  books: { label: 'Books', icon: 'BookOpen' },
-  songs: { label: 'Songs', icon: 'Music' },
-  setlists: { label: 'Setlists', icon: 'ListMusic' },
-} as const;
+const TAB_METADATA: Record<TabValue, { label: string; icon: 'BookOpen' | 'Music' | 'ListMusic' }> =
+  {
+    books: { label: 'Books', icon: 'BookOpen' },
+    songs: { label: 'Songs', icon: 'Music' },
+    setlists: { label: 'Setlists', icon: 'ListMusic' },
+  } as const;
 
 interface ReusableTabViewProps {
   tabs: readonly TabValue[];
@@ -34,20 +35,23 @@ export function ReusableTabView({ tabs, activeTab, onTabChange, children }: Reus
   const activeIndex = tabs.indexOf(activeTab);
   const slideOffset = useSharedValue(0);
 
-  const handleTabChange = useCallback((newIndex: number, direction: number) => {
-    if (newIndex >= 0 && newIndex < tabs.length) {
-      // Set the initial offset based on swipe direction
-      slideOffset.value = 1.25 * screenWidth * -direction;
+  const handleTabChange = useCallback(
+    (newIndex: number, direction: number) => {
+      if (newIndex >= 0 && newIndex < tabs.length) {
+        // Set the initial offset based on swipe direction
+        slideOffset.value = 1.25 * screenWidth * -direction;
 
-      // Trigger the tab change
-      onTabChange(tabs[newIndex]);
+        // Trigger the tab change
+        onTabChange(tabs[newIndex]);
 
-      // Animate to final position
-      slideOffset.value = withTiming(0, {
-        duration: 500
-      });
-    }
-  }, [tabs, onTabChange, screenWidth, slideOffset]);
+        // Animate to final position
+        slideOffset.value = withTiming(0, {
+          duration: 500,
+        });
+      }
+    },
+    [tabs, onTabChange, screenWidth, slideOffset]
+  );
 
   const panGesture = Gesture.Pan()
     .activeOffsetX([-10, 10])
@@ -72,16 +76,13 @@ export function ReusableTabView({ tabs, activeTab, onTabChange, children }: Reus
       translateX.value = withSpring(0, {
         velocity: velocity,
         stiffness: 100,
-        damping: 40
+        damping: 40,
       });
     });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        { translateX: translateX.value },
-        { translateX: slideOffset.value }
-      ],
+      transform: [{ translateX: translateX.value }, { translateX: slideOffset.value }],
     };
   });
 
@@ -99,14 +100,20 @@ export function ReusableTabView({ tabs, activeTab, onTabChange, children }: Reus
           {tabs.map((tabValue) => {
             const { label, icon } = TAB_METADATA[tabValue];
             return (
-              <TabsTrigger key={tabValue} value={tabValue} className={`flex-1 border-b-4 ${activeTab === tabValue ? 'border-orange-500' : 'border-b-2 border-slate-300 bg-slate-50'}`}>
+              <TabsTrigger
+                key={tabValue}
+                value={tabValue}
+                className={`flex-1 border-b-4 ${activeTab === tabValue ? 'border-orange-500' : 'border-b-2 border-slate-300 bg-slate-50'}`}
+              >
                 <View className={`py-1 flex-row items-center justify-center gap-x-2`}>
                   <ThemedIcon
                     name={icon}
                     size={28}
                     color={activeTab === tabValue ? 'orange-500' : '#6B7280'}
                   />
-                  <Text className={`text-2xl ${activeTab === tabValue ? 'text-orange-500' : 'text-gray-500'}`}>
+                  <Text
+                    className={`text-2xl ${activeTab === tabValue ? 'text-orange-500' : 'text-gray-500'}`}
+                  >
                     {label}
                   </Text>
                 </View>

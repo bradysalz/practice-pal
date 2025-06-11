@@ -1,4 +1,3 @@
-
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { deleteArtist, updateArtist } from '@/lib/supabase/artist';
@@ -7,7 +6,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
 
 export default function EditArtistPage() {
   const { artistId } = useLocalSearchParams<{ artistId: string }>();
@@ -38,22 +36,26 @@ export default function EditArtistPage() {
     await fetchArtists();
     setIsSaving(false);
     router.navigate(`/library-detail/artist/${artistId}`);
-  }
+  };
 
   const handleDeleteArtist = async () => {
-    Alert.alert('Delete', `Are you sure you want to delete this artist? This will remove this artist, but not delete any songs.`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          await deleteArtist(artistId);
-          await fetchArtists();
-          router.navigate(`/library`);
-        }
-      },
-    ]);
-  }
+    Alert.alert(
+      'Delete',
+      `Are you sure you want to delete this artist? This will remove this artist, but not delete any songs.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteArtist(artistId);
+            await fetchArtists();
+            router.navigate(`/library`);
+          },
+        },
+      ]
+    );
+  };
 
   if (!artist) {
     return <Text>Artist not found</Text>;

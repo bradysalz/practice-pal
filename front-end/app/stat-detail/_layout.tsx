@@ -6,13 +6,13 @@ export default function SessionDetailLayout() {
       <Stack.Screen
         name="book/[bookId]"
         options={{
-          title: 'Book Stats'
+          title: 'Book Stats',
         }}
       />
       <Stack.Screen
         name="section/[sectionId]"
         options={{
-          title: 'Section Stats'
+          title: 'Section Stats',
         }}
       />
     </Stack>

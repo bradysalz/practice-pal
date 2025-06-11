@@ -14,7 +14,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 export type EditableSection = {
   id?: string;
   name?: string;
-}
+};
 
 export default function EditBookPage() {
   const { bookId } = useLocalSearchParams<{ bookId: string }>();
@@ -37,10 +37,12 @@ export default function EditBookPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setSectionForms(usefulSectionsFromStore.map(section => ({
-      id: section.id,
-      name: section.name,
-    })));
+    setSectionForms(
+      usefulSectionsFromStore.map((section) => ({
+        id: section.id,
+        name: section.name,
+      }))
+    );
     // only run on page load
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -58,62 +60,63 @@ export default function EditBookPage() {
     }
 
     // Handle sections - split into new and existing sections
-    const sectionsToInsert = sectionForms.filter(section => !section.id);
-    const sectionsToUpdate = sectionForms.filter(section => section.id);
+    const sectionsToInsert = sectionForms.filter((section) => !section.id);
+    const sectionsToUpdate = sectionForms.filter((section) => section.id);
 
     // Find sections that were deleted (exist in original sections but not in sectionForms)
-    const currentSectionIds = new Set(sectionForms.map(s => s.id).filter(Boolean));
+    const currentSectionIds = new Set(sectionForms.map((s) => s.id).filter(Boolean));
     const deletedSectionIds = usefulSectionsFromStore
-      .map(s => s.id)
-      .filter(id => !currentSectionIds.has(id));
+      .map((s) => s.id)
+      .filter((id) => !currentSectionIds.has(id));
 
     await Promise.all([
       // Insert new sections
       sectionsToInsert.length > 0 && insertSections(bookId, sectionsToInsert),
       // Update existing sections
-      ...sectionsToUpdate.map(section =>
+      ...sectionsToUpdate.map((section) =>
         updateSection(section.id!, { name: section.name || '' })
       ),
       // Delete removed sections
-      deletedSectionIds.length > 0 && deleteSections(deletedSectionIds)
+      deletedSectionIds.length > 0 && deleteSections(deletedSectionIds),
     ]);
 
     setIsSaving(false);
     router.navigate(`/library-detail/book/${bookId}`);
-  }
+  };
 
   const handleDeleteBook = async () => {
-    Alert.alert('Delete', `Are you sure you want to delete the entire book, sections, and exercises?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          await deleteBook(bookId);
-          await Promise.all([
-            fetchBooks(),
-            fetchSections()
-          ]);
-          router.navigate(`/library`);
-        }
-      },
-    ]);
-  }
+    Alert.alert(
+      'Delete',
+      `Are you sure you want to delete the entire book, sections, and exercises?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteBook(bookId);
+            await Promise.all([fetchBooks(), fetchSections()]);
+            router.navigate(`/library`);
+          },
+        },
+      ]
+    );
+  };
 
   const handleAddSection = () => {
     setHasChanges(true);
     setSectionForms([...sectionForms, { name: '' }]);
-  }
+  };
 
   const handleUpdateSection = (index: number, section: EditableSection) => {
     setHasChanges(true);
-    setSectionForms(sectionForms.map((s, i) => i === index ? section : s));
-  }
+    setSectionForms(sectionForms.map((s, i) => (i === index ? section : s)));
+  };
 
   const handleDeleteSection = (index: number) => {
     setHasChanges(true);
     setSectionForms(sectionForms.filter((_, i) => i !== index));
-  }
+  };
 
   if (!book) {
     return <Text>Book not found</Text>;
@@ -183,8 +186,7 @@ export default function EditBookPage() {
             <Text className="text-white text-xl font-medium">Save Book</Text>
           )}
         </Pressable>
-      </ScrollView >
-    </View >
-
+      </ScrollView>
+    </View>
   );
 }

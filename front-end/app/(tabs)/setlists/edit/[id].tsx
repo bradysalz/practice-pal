@@ -25,16 +25,11 @@ export default function EditSetlistPage() {
   const { updateSetlist, insertSetlist } = useSetlistsStore();
 
   const draftSetlist = useDraftSetlistsStore((state) => state.draftSetlist);
-  const {
-    setDraftSetlist,
-    clearDraftSetlist,
-    removeItemFromDraft,
-    reorderDraftItems,
-  } = useDraftSetlistsStore();
+  const { setDraftSetlist, clearDraftSetlist, removeItemFromDraft, reorderDraftItems } =
+    useDraftSetlistsStore();
 
   // Initialize draft on mount
   useEffect(() => {
-
     clearDraftSetlist();
 
     if (setlistId === 'new') {
@@ -83,11 +78,7 @@ export default function EditSetlistPage() {
       router.push('/setlists');
     } catch (error) {
       console.error('Failed to save setlist:', error);
-      Alert.alert(
-        'Error',
-        'Failed to save setlist. Please try again.',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Error', 'Failed to save setlist. Please try again.', [{ text: 'OK' }]);
     }
   };
 
@@ -95,11 +86,7 @@ export default function EditSetlistPage() {
     return (
       <View className="flex-1 items-center justify-center p-4">
         <Text className="text-red-500">Loading setlist...</Text>
-        <Button
-          variant="outline"
-          onPress={() => router.push('/setlists')}
-          className="mt-4"
-        >
+        <Button variant="outline" onPress={() => router.push('/setlists')} className="mt-4">
           <Text>Go Back to Setlists</Text>
         </Button>
       </View>
@@ -153,11 +140,8 @@ export default function EditSetlistPage() {
         />
       </View>
 
-
       {/* Bottom Buttons */}
-      <View
-        className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200"
-      >
+      <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200">
         <View className="flex-row gap-x-4 m-4">
           {/* Add Items Button */}
           <Pressable
@@ -179,6 +163,6 @@ export default function EditSetlistPage() {
           </Pressable>
         </View>
       </View>
-    </View >
+    </View>
   );
 }

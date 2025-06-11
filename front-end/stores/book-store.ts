@@ -17,5 +17,5 @@ export const useBooksStore = create<BooksState>((set) => ({
       return;
     }
     set({ books: data as BookWithCountsRow[] });
-  }
+  },
 }));

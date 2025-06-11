@@ -11,7 +11,8 @@ export function fuzzySearchArtists(artists: LocalArtist[], query: string): Local
     shouldSort: true,
     includeScore: true,
   });
-  return fuse.search(query)
-    .filter(result => result.score && result.score < 0.6)
-    .map(result => result.item);
+  return fuse
+    .search(query)
+    .filter((result) => result.score && result.score < 0.6)
+    .map((result) => result.item);
 }

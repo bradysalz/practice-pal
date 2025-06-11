@@ -75,7 +75,7 @@ export default function EditSongPage() {
       // Update song with new name and artist
       await updateSong(songId, {
         name: songName,
-        artist_id: artistId
+        artist_id: artistId,
       });
 
       if (needsArtistFetch) {
@@ -91,7 +91,7 @@ export default function EditSongPage() {
     } finally {
       setIsSaving(false);
     }
-  }
+  };
 
   const handleDeleteSong = async () => {
     Alert.alert('Delete', `Are you sure you want to delete this song?`, [
@@ -103,10 +103,10 @@ export default function EditSongPage() {
           await deleteSong(songId);
           await fetchSongs();
           router.push(`/library`);
-        }
+        },
       },
     ]);
-  }
+  };
 
   const filteredArtists = getFilteredArtists();
 

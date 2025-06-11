@@ -10,7 +10,7 @@ import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ExerciseDetailPage() {
-  const { exerciseId } = useLocalSearchParams<{ exerciseId: string; }>();
+  const { exerciseId } = useLocalSearchParams<{ exerciseId: string }>();
 
   // Stores
   const books = useBooksStore((state) => state.books);

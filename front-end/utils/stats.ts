@@ -1,4 +1,4 @@
-import { TimeRange, Timestamped } from "@/types/stats";
+import { TimeRange, Timestamped } from '@/types/stats';
 
 /**
  * Formats a date string based on the selected time range and data context
@@ -7,7 +7,11 @@ import { TimeRange, Timestamped } from "@/types/stats";
  * @param data - Array of data points used for context in 'all' range
  * @returns Formatted date string
  */
-export function formatDateByRange<T extends Timestamped>(epochMillis: number, timeRange: TimeRange, data: T[]): string {
+export function formatDateByRange<T extends Timestamped>(
+  epochMillis: number,
+  timeRange: TimeRange,
+  data: T[]
+): string {
   const date = new Date(epochMillis);
 
   switch (timeRange) {
@@ -23,7 +27,8 @@ export function formatDateByRange<T extends Timestamped>(epochMillis: number, ti
     case 'all':
       const firstDate = new Date(data[0].timestamp);
       const lastDate = new Date(data[data.length - 1].timestamp);
-      const monthsDiff = (lastDate.getFullYear() - firstDate.getFullYear()) * 12 +
+      const monthsDiff =
+        (lastDate.getFullYear() - firstDate.getFullYear()) * 12 +
         (lastDate.getMonth() - firstDate.getMonth());
 
       if (monthsDiff > 12) {

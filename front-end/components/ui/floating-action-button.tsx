@@ -23,7 +23,7 @@ export function FloatingActionButton({ href, onPress }: FloatingActionButtonProp
       onPress={handlePress}
       className="absolute bottom-6 right-6 bg-primary rounded-full w-16 h-16 items-center justify-center shadow-lg"
     >
-      <ThemedIcon name='Plus' size={28} />
+      <ThemedIcon name="Plus" size={28} />
     </Pressable>
   );
 }

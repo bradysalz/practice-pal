@@ -9,7 +9,7 @@ export async function insertFullBookRPC(bookData: BookUploadData): Promise<strin
     book_name: bookData.bookName,
     book_author: bookData.bookAuthor,
     sections: bookData.sections,
-    user_id: userId
+    user_id: userId,
   });
 
   if (error) {
@@ -24,16 +24,9 @@ export async function fetchBooks() {
 }
 
 export async function updateBook(bookId: string, updates: Partial<BookRow>) {
-  return supabase
-    .from("books")
-    .update(updates)
-    .eq("id", bookId);
+  return supabase.from('books').update(updates).eq('id', bookId);
 }
 
-
 export async function deleteBook(id: string) {
-  return supabase
-    .from("books")
-    .delete()
-    .eq("id", id);
+  return supabase.from('books').delete().eq('id', id);
 }

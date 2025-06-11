@@ -15,7 +15,11 @@ import {
 describe('books-tab utils', () => {
   test('filterByName filters items by query', () => {
     const items = [{ name: 'Alpha' }, { name: 'Beta' }, { name: 'Gamma' }];
-    expect(filterByName(items, 'a')).toEqual([{ name: 'Alpha' }, { name: 'Beta' }, { name: 'Gamma' }]);
+    expect(filterByName(items, 'a')).toEqual([
+      { name: 'Alpha' },
+      { name: 'Beta' },
+      { name: 'Gamma' },
+    ]);
   });
 
   test('isExerciseInDraft detects exercise in session or setlist', () => {
@@ -24,7 +28,17 @@ describe('books-tab utils', () => {
       notes: null,
       duration: null,
       items: [
-        { id: 'a', type: 'exercise', notes: null, tempo: null, exercise: { id: 'ex1', name: '', section: { id: 's', name: '', book: { id: 'b', name: '' } } } },
+        {
+          id: 'a',
+          type: 'exercise',
+          notes: null,
+          tempo: null,
+          exercise: {
+            id: 'ex1',
+            name: '',
+            section: { id: 's', name: '', book: { id: 'b', name: '' } },
+          },
+        },
       ],
     };
     const setlist: DraftSetlist = { id: '2', name: null, description: null, items: [] };
@@ -33,9 +47,35 @@ describe('books-tab utils', () => {
   });
 
   test('create and find session exercise item', () => {
-    const book: BookWithCountsRow = { id: 'b', name: 'Book', author: '', created_at: '', created_by: '', updated_at: '', exercise_count: 0 };
-    const section: SectionWithCountsRow = { id: 's', name: 'Sec', book_id: 'b', created_at: '', created_by: '', updated_at: '', exercise_count: 0, order: 1 };
-    const exercise: LocalExercise = { id: 'ex1', name: 'Ex', section_id: 's', created_at: '', updated_at: '', filepath: null, goal_tempo: null, order: 1 };
+    const book: BookWithCountsRow = {
+      id: 'b',
+      name: 'Book',
+      author: '',
+      created_at: '',
+      created_by: '',
+      updated_at: '',
+      exercise_count: 0,
+    };
+    const section: SectionWithCountsRow = {
+      id: 's',
+      name: 'Sec',
+      book_id: 'b',
+      created_at: '',
+      created_by: '',
+      updated_at: '',
+      exercise_count: 0,
+      order: 1,
+    };
+    const exercise: LocalExercise = {
+      id: 'ex1',
+      name: 'Ex',
+      section_id: 's',
+      created_at: '',
+      updated_at: '',
+      filepath: null,
+      goal_tempo: null,
+      order: 1,
+    };
     const draft: DraftSession = { id: '1', notes: null, duration: null, items: [] };
     const item = createSessionExerciseItem(exercise, section, book);
     const updated: DraftSession = { ...draft, items: [item] };
@@ -43,9 +83,35 @@ describe('books-tab utils', () => {
   });
 
   test('create and find setlist exercise item', () => {
-    const book: BookWithCountsRow = { id: 'b', name: 'Book', author: '', created_at: '', created_by: '', updated_at: '', exercise_count: 0 };
-    const section: SectionWithCountsRow = { id: 's', name: 'Sec', book_id: 'b', created_at: '', created_by: '', updated_at: '', exercise_count: 0, order: 1 };
-    const exercise: LocalExercise = { id: 'ex1', name: 'Ex', section_id: 's', created_at: '', updated_at: '', filepath: null, goal_tempo: null, order: 1 };
+    const book: BookWithCountsRow = {
+      id: 'b',
+      name: 'Book',
+      author: '',
+      created_at: '',
+      created_by: '',
+      updated_at: '',
+      exercise_count: 0,
+    };
+    const section: SectionWithCountsRow = {
+      id: 's',
+      name: 'Sec',
+      book_id: 'b',
+      created_at: '',
+      created_by: '',
+      updated_at: '',
+      exercise_count: 0,
+      order: 1,
+    };
+    const exercise: LocalExercise = {
+      id: 'ex1',
+      name: 'Ex',
+      section_id: 's',
+      created_at: '',
+      updated_at: '',
+      filepath: null,
+      goal_tempo: null,
+      order: 1,
+    };
     const draft: DraftSetlist = { id: '1', name: null, description: null, items: [] };
     const item = createSetlistExerciseItem(exercise, section, book);
     const updated: DraftSetlist = { ...draft, items: [item] };

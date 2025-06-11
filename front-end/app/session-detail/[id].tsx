@@ -37,10 +37,14 @@ export default function PracticeSessionDetailPage() {
         options={{
           headerTitle: () => (
             <View className="flex-row items-center justify-between w-full pr-4">
-              <Text className="text-2xl font-bold">{formatTimestampToDate(session.created_at)}</Text>
+              <Text className="text-2xl font-bold">
+                {formatTimestampToDate(session.created_at)}
+              </Text>
               <View className="flex-row items-center">
                 <ThemedIcon name="Clock" style={{ marginRight: 6 }} />
-                <Text className="text-lg text-slate-700">{formatToMinutes(session.duration!)} min</Text>
+                <Text className="text-lg text-slate-700">
+                  {formatToMinutes(session.duration!)} min
+                </Text>
               </View>
             </View>
           ),

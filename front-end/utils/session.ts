@@ -2,10 +2,7 @@ import { ArtistRow } from '@/types/artist';
 import { BookRow } from '@/types/book';
 import { ExerciseRow } from '@/types/exercise';
 import { SectionRow } from '@/types/section';
-import {
-  SessionItemRow,
-  SessionItemWithNested
-} from '@/types/session';
+import { SessionItemRow, SessionItemWithNested } from '@/types/session';
 import { SongRow } from '@/types/song';
 
 export type ExerciseWithSession = ExerciseRow & {

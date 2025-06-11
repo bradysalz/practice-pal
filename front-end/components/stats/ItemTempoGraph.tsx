@@ -1,22 +1,19 @@
-import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ItemTempoPoint, TimeRange } from "@/types/stats";
-import { filterProgressData } from "@/utils/item-progress";
-import { formatDateByRange } from "@/utils/stats";
-import { useFont } from "@shopify/react-native-skia";
-import React, { useMemo, useState } from "react";
-import { Text, View } from "react-native";
-import { CartesianChart, Line, Scatter, useChartPressState } from "victory-native";
-
+import { ActiveValueIndicator } from '@/components/stats/ActiveValueIndicator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ItemTempoPoint, TimeRange } from '@/types/stats';
+import { filterProgressData } from '@/utils/item-progress';
+import { formatDateByRange } from '@/utils/stats';
+import { useFont } from '@shopify/react-native-skia';
+import React, { useMemo, useState } from 'react';
+import { Text, View } from 'react-native';
+import { CartesianChart, Line, Scatter, useChartPressState } from 'victory-native';
 
 interface ItemTempoGraphProps {
   data: ItemTempoPoint[];
 }
 
-
-
 export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
-  const font = useFont(require("@/assets/fonts/Inter-VariableFont_opsz,wght.ttf"), 14);
+  const font = useFont(require('@/assets/fonts/Inter-VariableFont_opsz,wght.ttf'), 14);
   const { state, isActive } = useChartPressState({ x: 0, y: { tempo: 0 } });
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
@@ -79,18 +76,20 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
           // this is realistically just ItemTempoPoint[] but I can't figure out how to type it
           data={filteredData as any[]}
           xKey="timestamp"
-          yKeys={["tempo"]}
+          yKeys={['tempo']}
           domainPadding={{ left: 40, right: 40, top: 40, bottom: 10 }}
           xAxis={{
             font,
             formatXLabel: (value) => formatDateByRange(value, timeRange, filteredData),
-            tickCount: filteredData.length <= 2 ? 2 : 4
+            tickCount: filteredData.length <= 2 ? 2 : 4,
           }}
-          yAxis={[{
-            tickCount: 5,
-            font,
-            formatYLabel: (value: number) => `${Math.round(value)}`
-          }]}
+          yAxis={[
+            {
+              tickCount: 5,
+              font,
+              formatYLabel: (value: number) => `${Math.round(value)}`,
+            },
+          ]}
           domain={{
             x: [cutoffDate, now],
           }}
@@ -103,28 +102,21 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
                   yPosition={state.y.tempo.position}
                   xValue={state.x.value}
                   yValue={state.y.tempo.value}
-                  textColor={"black"}
-                  lineColor={"black"}
-                  indicatorColor={"#ef4444"}
+                  textColor={'black'}
+                  lineColor={'black'}
+                  indicatorColor={'#ef4444'}
                   bottom={chartBounds.bottom}
                   top={chartBounds.top}
                   label="Tempo"
-                />)
+                />
+              );
             }
           }}
         >
           {({ points }) => (
             <View>
-              <Line
-                points={points.tempo}
-                color="#ef4444"
-                strokeWidth={3}
-              />
-              <Scatter
-                points={points.tempo}
-                color="#ef4444"
-                radius={5}
-              />
+              <Line points={points.tempo} color="#ef4444" strokeWidth={3} />
+              <Scatter points={points.tempo} color="#ef4444" radius={5} />
             </View>
           )}
         </CartesianChart>

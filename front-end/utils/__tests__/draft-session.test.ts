@@ -3,7 +3,7 @@ import {
   createNewDraft,
   exerciseToDraftSessionItem,
   setlistItemToDraftSessionItem,
-  songRowToDraftSessionItem
+  songRowToDraftSessionItem,
 } from '@/utils/draft-session';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -15,7 +15,7 @@ import {
   mockSession,
   mockSetlistItemWithExercise,
   mockSetlistItemWithSong,
-  mockSong
+  mockSong,
 } from './mock-data';
 
 // Mock uuid to return predictable values
@@ -37,9 +37,9 @@ describe('draft-session utils', () => {
           name: 'Test Song',
           artist: {
             id: '1',
-            name: 'Test Artist'
-          }
-        }
+            name: 'Test Artist',
+          },
+        },
       });
     });
 
@@ -54,8 +54,8 @@ describe('draft-session utils', () => {
         tempo: null,
         song: {
           id: '1',
-          name: 'Test Song'
-        }
+          name: 'Test Song',
+        },
       });
     });
   });
@@ -78,10 +78,10 @@ describe('draft-session utils', () => {
             name: 'Test Section',
             book: {
               id: '1',
-              name: 'Test Book'
-            }
-          }
-        }
+              name: 'Test Book',
+            },
+          },
+        },
       });
     });
   });
@@ -94,7 +94,7 @@ describe('draft-session utils', () => {
         id: MOCK_UUID,
         notes: null,
         duration: null,
-        items: []
+        items: [],
       });
     });
   });
@@ -118,9 +118,9 @@ describe('draft-session utils', () => {
               name: 'So What',
               artist: {
                 id: 'artist1',
-                name: 'Miles Davis'
-              }
-            }
+                name: 'Miles Davis',
+              },
+            },
           },
           {
             id: MOCK_UUID,
@@ -135,12 +135,12 @@ describe('draft-session utils', () => {
                 name: 'Section 1',
                 book: {
                   id: 'book1',
-                  name: 'Stick Control'
-                }
-              }
-            }
-          }
-        ]
+                  name: 'Stick Control',
+                },
+              },
+            },
+          },
+        ],
       });
     });
   });
@@ -159,9 +159,9 @@ describe('draft-session utils', () => {
           name: 'Test Song',
           artist: {
             id: '1',
-            name: 'Test Artist'
-          }
-        }
+            name: 'Test Artist',
+          },
+        },
       });
     });
 
@@ -181,10 +181,10 @@ describe('draft-session utils', () => {
             name: 'Test Section',
             book: {
               id: '1',
-              name: 'Test Book'
-            }
-          }
-        }
+              name: 'Test Book',
+            },
+          },
+        },
       });
     });
   });

@@ -50,14 +50,16 @@ export default function SectionDetailPage() {
     total_exercises: 1,
   };
 
-  const playedProgress = Math.floor((sectionStat.played_exercises || 0) / (sectionStat.total_exercises || 1) * 100);
-  const goalProgress = Math.floor((sectionStat.goal_reached_exercises || 0) / (sectionStat.total_exercises || 1) * 100);
-
+  const playedProgress = Math.floor(
+    ((sectionStat.played_exercises || 0) / (sectionStat.total_exercises || 1)) * 100
+  );
+  const goalProgress = Math.floor(
+    ((sectionStat.goal_reached_exercises || 0) / (sectionStat.total_exercises || 1)) * 100
+  );
 
   const handleExercisePress = (exerciseId: string) => {
     router.push(`/library-detail/exercise/${exerciseId}`);
   };
-
 
   const handleEditSection = () => {
     router.push(`/library-forms/edit-section/${sectionId}`);
@@ -66,12 +68,16 @@ export default function SectionDetailPage() {
   if (!book) return <Text>Book not found</Text>;
   if (!section) return <Text>Section not found</Text>;
 
-
   return (
     <View className="flex-1 p-4">
       <View className="gap-y-4 mb-4">
         <HighlightBar type="book" name={book.name} />
-        <HighlightBar type="section" name={section.name} showEditIcon={true} onPressEdit={handleEditSection} />
+        <HighlightBar
+          type="section"
+          name={section.name}
+          showEditIcon={true}
+          onPressEdit={handleEditSection}
+        />
       </View>
 
       <Pressable onPress={() => router.push(`/stat-detail/section/${sectionId}`)}>
@@ -107,7 +113,6 @@ export default function SectionDetailPage() {
       <Separator color="slate" />
       <Text className="text-2xl font-semibold my-4">Exercises</Text>
 
-
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" />
@@ -127,6 +132,5 @@ export default function SectionDetailPage() {
         </ScrollView>
       )}
     </View>
-
   );
 }

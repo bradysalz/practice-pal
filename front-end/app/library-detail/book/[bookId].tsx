@@ -26,8 +26,9 @@ export default function BookDetailPage() {
 
   const book = useBooksStore((state) => state.books.find((book) => book.id === bookId));
   const sections = useSectionsStore((state) => state.sections);
-  const usefulSections = sections.filter((section) => section.book_id === bookId)
-    .sort((a, b) => (a.order) - (b.order));
+  const usefulSections = sections
+    .filter((section) => section.book_id === bookId)
+    .sort((a, b) => a.order - b.order);
 
   const bookStat: BookStat = bookStats[bookId] || {
     book_id: bookId,
@@ -35,8 +36,12 @@ export default function BookDetailPage() {
     played_exercises: 0,
     total_exercises: 1,
   };
-  const playedProgress = Math.floor((bookStat.played_exercises || 0) / (bookStat.total_exercises || 1) * 100);
-  const goalProgress = Math.floor((bookStat.goal_reached_exercises || 0) / (bookStat.total_exercises || 1) * 100);
+  const playedProgress = Math.floor(
+    ((bookStat.played_exercises || 0) / (bookStat.total_exercises || 1)) * 100
+  );
+  const goalProgress = Math.floor(
+    ((bookStat.goal_reached_exercises || 0) / (bookStat.total_exercises || 1)) * 100
+  );
 
   const handleEditBook = () => {
     router.push(`/library-forms/edit-book/${bookId}`);
@@ -47,7 +52,12 @@ export default function BookDetailPage() {
   return (
     <View className="flex-1 p-4">
       <View className="flex-row items-center justify-between">
-        <HighlightBar type="book" name={book.name} showEditIcon={true} onPressEdit={handleEditBook} />
+        <HighlightBar
+          type="book"
+          name={book.name}
+          showEditIcon={true}
+          onPressEdit={handleEditBook}
+        />
       </View>
 
       <View className="mt-4 flex-row gap-x-4 mb-4">
@@ -88,7 +98,6 @@ export default function BookDetailPage() {
       <Separator color="slate" />
       <Text className="text-2xl font-semibold my-4">Sections</Text>
       <ScrollView className="rounded-lg">
-
         {usefulSections.map((section) => {
           return (
             <ListItemCard

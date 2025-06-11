@@ -1,11 +1,7 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ExerciseNamingType, SectionFormData } from '@/types/book';
-import {
-  updateCustomName,
-  updateExerciseCount,
-  updateNamingType,
-} from '@/utils/section-form';
+import { updateCustomName, updateExerciseCount, updateNamingType } from '@/utils/section-form';
 import { ChevronDown } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -53,9 +49,7 @@ export function SectionForm({ section, onUpdate, onDelete, index }: SectionFormP
           <CardHeader className="p-4 pb-3 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <View className="flex-row justify-between items-center">
               <View className="flex-1">
-                <Text className="text-xl font-bold">
-                  {section.name || `Section ${index + 1}`}
-                </Text>
+                <Text className="text-xl font-bold">{section.name || `Section ${index + 1}`}</Text>
               </View>
               <Animated.View style={chevronStyle}>
                 <ChevronDown size={24} className="text-slate-600" />
@@ -104,36 +98,42 @@ export function SectionForm({ section, onUpdate, onDelete, index }: SectionFormP
                   <View className="flex-row gap-x-2">
                     <Pressable
                       onPress={() => handleNamingTypeChange('alpha')}
-                      className={`flex-1 py-2 px-2 rounded-xl ${section.exerciseNaming === 'alpha' ? 'bg-primary' : 'bg-slate-200'
-                        }`}
+                      className={`flex-1 py-2 px-2 rounded-xl ${
+                        section.exerciseNaming === 'alpha' ? 'bg-primary' : 'bg-slate-200'
+                      }`}
                     >
                       <Text
-                        className={`text-center text-lg  ${section.exerciseNaming === 'alpha' ? 'text-white' : 'text-black'
-                          }`}
+                        className={`text-center text-lg  ${
+                          section.exerciseNaming === 'alpha' ? 'text-white' : 'text-black'
+                        }`}
                       >
                         A, B, C
                       </Text>
                     </Pressable>
                     <Pressable
                       onPress={() => handleNamingTypeChange('numeric')}
-                      className={`flex-1 py-2 px-2 rounded-xl ${section.exerciseNaming === 'numeric' ? 'bg-primary' : 'bg-slate-200'
-                        }`}
+                      className={`flex-1 py-2 px-2 rounded-xl ${
+                        section.exerciseNaming === 'numeric' ? 'bg-primary' : 'bg-slate-200'
+                      }`}
                     >
                       <Text
-                        className={`text-center text-lg  ${section.exerciseNaming === 'numeric' ? 'text-white' : 'text-black'
-                          }`}
+                        className={`text-center text-lg  ${
+                          section.exerciseNaming === 'numeric' ? 'text-white' : 'text-black'
+                        }`}
                       >
                         1, 2, 3
                       </Text>
                     </Pressable>
                     <Pressable
                       onPress={() => handleNamingTypeChange('custom')}
-                      className={`flex-1 py-2 px-2 rounded-xl ${section.exerciseNaming === 'custom' ? 'bg-primary' : 'bg-slate-200'
-                        }`}
+                      className={`flex-1 py-2 px-2 rounded-xl ${
+                        section.exerciseNaming === 'custom' ? 'bg-primary' : 'bg-slate-200'
+                      }`}
                     >
                       <Text
-                        className={`text-center text-lg  ${section.exerciseNaming === 'custom' ? 'text-white' : 'text-black'
-                          }`}
+                        className={`text-center text-lg  ${
+                          section.exerciseNaming === 'custom' ? 'text-white' : 'text-black'
+                        }`}
                       >
                         Custom
                       </Text>

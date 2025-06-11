@@ -13,19 +13,19 @@ export default () => ({
   newArchEnabled: true,
   ios: {
     bundleIdentifier: 'com.bradysalz.practicepal',
-    supportsTablet: true
+    supportsTablet: true,
   },
   android: {
     package: 'com.bradysalz.practicepal',
     versionCode: 1,
     adaptiveIcon: {
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
     },
-    edgeToEdgeEnabled: true
+    edgeToEdgeEnabled: true,
   },
   web: {
     bundler: 'metro',
-    favicon: './assets/images/favicon.png'
+    favicon: './assets/images/favicon.png',
   },
   plugins: [
     'expo-router',
@@ -36,18 +36,18 @@ export default () => ({
         image: './assets/images/splash-icon.png',
         imageWidth: 200,
         resizeMode: 'contain',
-        backgroundColor: '#ffffff'
-      }
-    ]
+        backgroundColor: '#ffffff',
+      },
+    ],
   ],
   experiments: {
-    typedRoutes: true
+    typedRoutes: true,
   },
   extra: {
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseKey: process.env.SUPABASE_ANON_KEY,
     eas: {
-      projectId: '1d2b2f30-1119-49a5-80d8-2eee63d8f252'
-    }
+      projectId: '1d2b2f30-1119-49a5-80d8-2eee63d8f252',
+    },
   },
 });

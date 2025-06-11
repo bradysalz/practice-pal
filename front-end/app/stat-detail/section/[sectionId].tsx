@@ -1,20 +1,22 @@
-import NotFound from "@/app/+not-found";
-import { HighlightBar } from "@/components/shared/HighlightBar";
-import ItemProgressGraph from "@/components/stats/ItemProgressGraph";
-import { useBooksStore } from "@/stores/book-store";
-import { useSectionsStore } from "@/stores/section-store";
-import { useStatStore } from "@/stores/stat-store";
-import { ItemProgressPoint } from "@/types/stats";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, Switch, Text, View } from "react-native";
+import NotFound from '@/app/+not-found';
+import { HighlightBar } from '@/components/shared/HighlightBar';
+import ItemProgressGraph from '@/components/stats/ItemProgressGraph';
+import { useBooksStore } from '@/stores/book-store';
+import { useSectionsStore } from '@/stores/section-store';
+import { useStatStore } from '@/stores/stat-store';
+import { ItemProgressPoint } from '@/types/stats';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Switch, Text, View } from 'react-native';
 
 export default function SectionStatsPage() {
   const { sectionId } = useLocalSearchParams<{ sectionId: string }>();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [use_percent, setUsePercent] = useState<boolean>(true);
-  const section = useSectionsStore((state) => state.sections.find((section) => section.id === sectionId));
+  const section = useSectionsStore((state) =>
+    state.sections.find((section) => section.id === sectionId)
+  );
   const book = useBooksStore((state) => state.books.find((book) => book.id === section?.book_id));
   const { fetchSectionStatsOverTime, sectionStatsOverTime } = useStatStore();
 
@@ -26,7 +28,7 @@ export default function SectionStatsPage() {
     fetchData();
   }, [fetchSectionStatsOverTime, sectionId, setIsLoading]);
 
-  const data = sectionStatsOverTime[sectionId]?.map(item => ({
+  const data = sectionStatsOverTime[sectionId]?.map((item) => ({
     timestamp: item.date ? new Date(item.date).getTime() : 0,
     percent_at_goal: item.percent_at_goal || 0,
     percent_played: item.percent_played || 0,
@@ -70,13 +72,9 @@ export default function SectionStatsPage() {
           </View>
         </View>
         <ItemProgressGraph data={data} use_percent={use_percent} />
-      </View >
+      </View>
     );
-  }
+  };
 
-  return (
-    <View className="flex-1 p-4 gap-y-4">
-      {renderContent()}
-    </View>
-  );
+  return <View className="flex-1 p-4 gap-y-4">{renderContent()}</View>;
 }

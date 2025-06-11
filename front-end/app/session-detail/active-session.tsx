@@ -26,7 +26,9 @@ export default function ActiveSessionPage() {
 
   // Get the fetch functions from the store using the hook to ensure re-renders
   const fetchSessionItemBySongId = useSessionItemsStore((state) => state.fetchSessionItemBySongId);
-  const fetchSessionItemByExerciseId = useSessionItemsStore((state) => state.fetchSessionItemByExerciseId);
+  const fetchSessionItemByExerciseId = useSessionItemsStore(
+    (state) => state.fetchSessionItemByExerciseId
+  );
 
   // Fetch session items for each item in the draft session
   useEffect(() => {
@@ -69,7 +71,6 @@ export default function ActiveSessionPage() {
     return null;
   }
 
-
   // Handle tempo changes
   const handleTempoChange = (id: string, text: string) => {
     setTempos((prev) => ({ ...prev, [id]: text }));
@@ -89,32 +90,36 @@ export default function ActiveSessionPage() {
     }
   };
 
-
-
   const getItemSource = (item: DraftSessionItem): ReactNode => {
     if (item.type === 'exercise' && item.exercise) {
       const sectionName = item.exercise.section?.name || '';
       const bookName = item.exercise.section?.book?.name || '';
       return (
         <View className="gap-y-1">
-          {bookName && <View className="flex-row items-center gap-x-2">
-            <ThemedIcon name="BookOpen" size={16} color="slate" />
-            <Text className="text-slate-500 text-base">{bookName}</Text>
-          </View>}
-          {sectionName && <View className="flex-row items-center gap-x-2">
-            <ThemedIcon name="Bookmark" size={16} color="slate" />
-            <Text className="text-slate-500 text-base">{sectionName}</Text>
-          </View>}
+          {bookName && (
+            <View className="flex-row items-center gap-x-2">
+              <ThemedIcon name="BookOpen" size={16} color="slate" />
+              <Text className="text-slate-500 text-base">{bookName}</Text>
+            </View>
+          )}
+          {sectionName && (
+            <View className="flex-row items-center gap-x-2">
+              <ThemedIcon name="Bookmark" size={16} color="slate" />
+              <Text className="text-slate-500 text-base">{sectionName}</Text>
+            </View>
+          )}
         </View>
       );
     } else if (item.type === 'song' && item.song) {
       const artistName = item.song.artist?.name || '';
       return (
         <View className="gap-y-1">
-          {artistName && <View className="flex-row items-center gap-x-2">
-            <ThemedIcon name="MicVocal" size={16} color="slate" />
-            <Text className="text-slate-500 text-base">{artistName}</Text>
-          </View>}
+          {artistName && (
+            <View className="flex-row items-center gap-x-2">
+              <ThemedIcon name="MicVocal" size={16} color="slate" />
+              <Text className="text-slate-500 text-base">{artistName}</Text>
+            </View>
+          )}
         </View>
       );
     }
@@ -124,15 +129,11 @@ export default function ActiveSessionPage() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header Timer */}
-      <View
-        className="w-full border-b border-slate-200"
-      >
+      <View className="w-full border-b border-slate-200">
         <View className="px-4 py-4 flex-row justify-between items-center">
           <View>
             <Text className="text-2xl font-bold">Let&apos;s Play!</Text>
-            <Text className="text-base text-slate-500">
-              {draftSession.items.length} items
-            </Text>
+            <Text className="text-base text-slate-500">{draftSession.items.length} items</Text>
           </View>
           <View className="flex-row items-center gap-x-4">
             <Text className="text-3xl font-mono">{formatTime(elapsedTime)}</Text>
@@ -165,9 +166,9 @@ export default function ActiveSessionPage() {
               exerciseDetails={
                 item.type === 'exercise' && item.exercise?.section
                   ? {
-                    bookId: item.exercise.section.book.id,
-                    sectionId: item.exercise.section.id,
-                  }
+                      bookId: item.exercise.section.book.id,
+                      sectionId: item.exercise.section.id,
+                    }
                   : undefined
               }
             />
@@ -176,9 +177,7 @@ export default function ActiveSessionPage() {
       </View>
 
       {/* End Session Button */}
-      <View
-        className="bg-white border-t border-slate-200 flex-row justify-between "
-      >
+      <View className="bg-white border-t border-slate-200 flex-row justify-between ">
         <Pressable
           className="mx-4 my-4 flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80"
           onPress={() => router.push('/session-detail/add-item-to-session')}

@@ -1,4 +1,3 @@
-
 import { useArtistsStore } from '@/stores/artist-store';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
@@ -65,18 +64,14 @@ export function SongsTab({ mode, searchQuery = '' }: SongsTabProps) {
 
   const isSongAdded = (song: LocalSong) => {
     if (mode === 'session' && draftSession) {
-      return draftSession.items.some(
-        (item) => item.type === 'song' && item.song?.id === song.id
-      );
+      return draftSession.items.some((item) => item.type === 'song' && item.song?.id === song.id);
     } else if (mode === 'setlist' && draftSetlist) {
-      return draftSetlist.items.some(
-        (item) => item.type === 'song' && item.song?.id === song.id
-      );
+      return draftSetlist.items.some((item) => item.type === 'song' && item.song?.id === song.id);
     }
     return false;
   };
 
-  const filteredSongs = songs.filter(song => {
+  const filteredSongs = songs.filter((song) => {
     const artist = artists.find((a) => a.id === song.artist_id);
     const songName = song.name?.toLowerCase() || '';
     const artistName = artist?.name?.toLowerCase() || '';

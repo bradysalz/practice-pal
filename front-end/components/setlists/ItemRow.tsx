@@ -33,9 +33,15 @@ const ItemContent = ({ item }: ItemContentProps) => {
 
   return (
     <View className="flex-row items-center flex-1 min-w-0">
-      {item.type === 'exercise' ? <ThemedIcon name="Dumbbell" size={20} /> : <ThemedIcon name="Music" size={20} />}
+      {item.type === 'exercise' ? (
+        <ThemedIcon name="Dumbbell" size={20} />
+      ) : (
+        <ThemedIcon name="Music" size={20} />
+      )}
       <View className="flex-1 min-w-0 ml-2">
-        <Text className="font-normal text-lg" numberOfLines={3}>{displayItem(item)}</Text>
+        <Text className="font-normal text-lg" numberOfLines={3}>
+          {displayItem(item)}
+        </Text>
       </View>
     </View>
   );

@@ -1,4 +1,8 @@
-import { fetchSessionItemsByExercise, fetchSessionItemsBySession, fetchSessionItemsBySong } from '@/lib/supabase/session';
+import {
+  fetchSessionItemsByExercise,
+  fetchSessionItemsBySession,
+  fetchSessionItemsBySong,
+} from '@/lib/supabase/session';
 import { LocalSessionItem, NewSessionItem, SessionItemRow } from '@/types/session';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
@@ -93,5 +97,5 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
     }));
 
     return id;
-  }
+  },
 }));

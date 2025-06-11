@@ -21,7 +21,13 @@ const iconMap: Record<ItemType, IconName> = {
   song: 'Music',
 };
 
-export function HighlightBar({ type, name, showRightArrow = false, showEditIcon = false, onPressEdit }: HighlightBarProps) {
+export function HighlightBar({
+  type,
+  name,
+  showRightArrow = false,
+  showEditIcon = false,
+  onPressEdit,
+}: HighlightBarProps) {
   return (
     <View className="flex-row items-center justify-between bg-orange-100 p-2">
       <Pressable onPress={onPressEdit} className="flex-row items-center flex-1">
@@ -33,6 +39,5 @@ export function HighlightBar({ type, name, showRightArrow = false, showEditIcon 
         {showEditIcon && <ThemedIcon name="Edit" size={28} color="red-500" />}
       </Pressable>
     </View>
-
   );
 }

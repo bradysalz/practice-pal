@@ -3,10 +3,7 @@ import { ArtistRow, LocalArtist } from '@/types/artist';
 import { getCurrentUserId } from './shared';
 
 export async function fetchArtists() {
-  return supabase
-    .from('artists')
-    .select('*')
-    .order('name', { ascending: true });
+  return supabase.from('artists').select('*').order('name', { ascending: true });
 }
 
 export async function insertArtist(artist: LocalArtist) {
@@ -20,15 +17,9 @@ export async function insertArtist(artist: LocalArtist) {
 }
 
 export async function updateArtist(id: string, updates: Partial<ArtistRow>) {
-  return supabase
-    .from('artists')
-    .update(updates)
-    .eq('id', id);
+  return supabase.from('artists').update(updates).eq('id', id);
 }
 
 export async function deleteArtist(id: string) {
-  return supabase
-    .from('artists')
-    .delete()
-    .eq('id', id);
+  return supabase.from('artists').delete().eq('id', id);
 }
