@@ -23,11 +23,7 @@ export default function AddItemScreen() {
           className="px-3 py-2 border border-slate-300 rounded-xl bg-white mb-6"
         />
 
-        <ReusableTabView
-          tabs={ADD_ITEM_TABS}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        >
+        <ReusableTabView tabs={ADD_ITEM_TABS} activeTab={activeTab} onTabChange={setActiveTab}>
           <TabsContent value="books">
             <BooksTab mode="setlist" />
           </TabsContent>

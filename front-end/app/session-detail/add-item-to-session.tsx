@@ -22,10 +22,7 @@ export default function AddItemToSessionScreen() {
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView
-        className="flex-1 px-4"
-        style={{ paddingTop: insets.top + 16 }}
-      >
+      <ScrollView className="flex-1 px-4" style={{ paddingTop: insets.top + 16 }}>
         {/* Search */}
         <TextInput
           placeholder="Search..."
@@ -34,11 +31,7 @@ export default function AddItemToSessionScreen() {
           className="px-3 py-2 border border-slate-300 rounded-xl bg-white mb-6"
         />
 
-        <ReusableTabView
-          tabs={SESSION_TABS}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        >
+        <ReusableTabView tabs={SESSION_TABS} activeTab={activeTab} onTabChange={setActiveTab}>
           <TabsContent value="setlists">
             <SetlistsTab searchQuery={searchQuery} />
           </TabsContent>

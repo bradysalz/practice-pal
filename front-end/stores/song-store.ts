@@ -67,7 +67,7 @@ export const useSongsStore = create<SongsState>((set, get) => ({
   },
 
   syncUpdateSong: async (id) => {
-    const song = get().songs.find(s => s.id === id);
+    const song = get().songs.find((s) => s.id === id);
     if (!song) return { error: null };
 
     const { id: _, created_at, ...updatePayload } = song;

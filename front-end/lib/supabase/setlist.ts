@@ -36,36 +36,23 @@ export async function fetchSetlistById(id: string) {
 }
 
 export async function insertSetlist(setlist: SetlistInsert) {
-  return supabase
-    .from('setlists')
-    .insert(setlist);
+  return supabase.from('setlists').insert(setlist);
 }
 
 export async function updateSetlist(id: string, updates: SetlistUpdate) {
-  return supabase
-    .from('setlists')
-    .update(updates)
-    .eq('id', id);
+  return supabase.from('setlists').update(updates).eq('id', id);
 }
 
 export async function deleteSetlist(id: string) {
-  return supabase
-    .from('setlists')
-    .delete()
-    .eq('id', id);
+  return supabase.from('setlists').delete().eq('id', id);
 }
 
 export async function deleteSetlistItems(setlistId: string) {
-  return supabase
-    .from('setlist_items')
-    .delete()
-    .eq('setlist_id', setlistId);
+  return supabase.from('setlist_items').delete().eq('setlist_id', setlistId);
 }
 
 export async function insertSetlistItems(items: SetlistItemInsert[]) {
-  return supabase
-    .from('setlist_items')
-    .insert(items);
+  return supabase.from('setlist_items').insert(items);
 }
 
 export async function fetchSetlistItems(setlistId: string) {
@@ -77,11 +64,7 @@ export async function fetchSetlistItems(setlistId: string) {
 }
 
 export async function insertSetlistItem(item: SetlistItemRow) {
-  return supabase
-    .from('setlist_items')
-    .insert(item)
-    .select()
-    .single();
+  return supabase.from('setlist_items').insert(item).select().single();
 }
 
 export { getCurrentUserId };

@@ -1,10 +1,7 @@
 import { SessionDetailCardWrapper } from '@/components/sessions/SessionDetailCardWrapper';
 import { Separator } from '@/components/ui/separator';
 import { SessionItemWithNested } from '@/types/session';
-import {
-  ExerciseWithSession,
-  groupExercisesByBookAndSectionWithSession,
-} from '@/utils/session';
+import { ExerciseWithSession, groupExercisesByBookAndSectionWithSession } from '@/utils/session';
 
 import { Text, View } from 'react-native';
 

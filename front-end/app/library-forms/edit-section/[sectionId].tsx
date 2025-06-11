@@ -16,7 +16,7 @@ export type EditableExercise = {
   id?: string;
   name?: string;
   order: number;
-}
+};
 
 export default function EditSectionPage() {
   const { sectionId } = useLocalSearchParams<{ sectionId: string }>();
@@ -37,11 +37,13 @@ export default function EditSectionPage() {
   const fetchSections = useSectionsStore((state) => state.fetchSections);
 
   useEffect(() => {
-    setExerciseForms(exercises.map(exercise => ({
-      id: exercise.id,
-      name: exercise.name || '',
-      order: exercise.order,
-    })));
+    setExerciseForms(
+      exercises.map((exercise) => ({
+        id: exercise.id,
+        name: exercise.name || '',
+        order: exercise.order,
+      }))
+    );
     // only run on page load
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -59,29 +61,29 @@ export default function EditSectionPage() {
     }
 
     // Handle exercises - split into new and existing exercises
-    const exercisesToInsert = exerciseForms.filter(exercise => !exercise.id);
-    const exercisesToUpdate = exerciseForms.filter(exercise => exercise.id);
+    const exercisesToInsert = exerciseForms.filter((exercise) => !exercise.id);
+    const exercisesToUpdate = exerciseForms.filter((exercise) => exercise.id);
 
     // Find exercises that were deleted (exist in original exercises but not in exerciseForms)
-    const currentExerciseIds = new Set(exerciseForms.map(e => e.id).filter(Boolean));
+    const currentExerciseIds = new Set(exerciseForms.map((e) => e.id).filter(Boolean));
     const deletedExerciseIds = exercises
-      .map(e => e.id)
-      .filter(id => !currentExerciseIds.has(id));
+      .map((e) => e.id)
+      .filter((id) => !currentExerciseIds.has(id));
 
     await Promise.all([
       // Insert new exercises
       exercisesToInsert.length > 0 && insertExercises(sectionId, exercisesToInsert),
       // Update existing exercises
-      ...exercisesToUpdate.map(exercise =>
+      ...exercisesToUpdate.map((exercise) =>
         updateExercise(exercise.id!, { name: exercise.name || '' })
       ),
       // Delete removed sections
-      deletedExerciseIds.length > 0 && deleteExercises(deletedExerciseIds)
+      deletedExerciseIds.length > 0 && deleteExercises(deletedExerciseIds),
     ]);
 
     setIsSaving(false);
     router.navigate(`/library-detail/section/${sectionId}`);
-  }
+  };
 
   const handleDeleteSection = async () => {
     Alert.alert('Delete', `Are you sure you want to delete this section and all its exercises?`, [
@@ -93,26 +95,25 @@ export default function EditSectionPage() {
           await deleteSections([sectionId]);
           await fetchSections();
           router.navigate(`/library-detail/book/${section?.book_id}`);
-        }
+        },
       },
     ]);
-  }
-
+  };
 
   const handleAddExercise = () => {
     setHasChanges(true);
     setExerciseForms([...exerciseForms, { name: '', order: exerciseForms.length }]);
-  }
+  };
 
   const handleUpdateExercise = (index: number, exercise: EditableExercise) => {
     setHasChanges(true);
-    setExerciseForms(exerciseForms.map((e, i) => i === index ? exercise : e));
-  }
+    setExerciseForms(exerciseForms.map((e, i) => (i === index ? exercise : e)));
+  };
 
   const handleDeleteExercise = (index: number) => {
     setHasChanges(true);
     setExerciseForms(exerciseForms.filter((_, i) => i !== index));
-  }
+  };
 
   if (!section) {
     return <Text>Section not found</Text>;
@@ -154,7 +155,9 @@ export default function EditSectionPage() {
                 <InputWithDelete
                   key={index}
                   name={exercise.name}
-                  onNameChange={(value) => handleUpdateExercise(index, { ...exercise, name: value })}
+                  onNameChange={(value) =>
+                    handleUpdateExercise(index, { ...exercise, name: value })
+                  }
                   onDelete={() => handleDeleteExercise(index)}
                 />
               ))}

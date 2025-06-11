@@ -1,5 +1,20 @@
-import { deleteSetlist, deleteSetlistItems, fetchSetlistById, fetchSetlists, getCurrentUserId, insertSetlist, insertSetlistItems, updateSetlist } from '@/lib/supabase/setlist';
-import { DraftSetlist, SetlistInsert, SetlistItemInsert, SetlistUpdate, SetlistWithItems } from '@/types/setlist';
+import {
+  deleteSetlist,
+  deleteSetlistItems,
+  fetchSetlistById,
+  fetchSetlists,
+  getCurrentUserId,
+  insertSetlist,
+  insertSetlistItems,
+  updateSetlist,
+} from '@/lib/supabase/setlist';
+import {
+  DraftSetlist,
+  SetlistInsert,
+  SetlistItemInsert,
+  SetlistUpdate,
+  SetlistWithItems,
+} from '@/types/setlist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 

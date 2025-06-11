@@ -8,12 +8,9 @@ const MOCK_DATA: ItemTempoPoint[] = Array.from({ length: 40 }, (_, i) => {
   const date = new Date(2024, Math.floor(i / 2), i % 2 ? 15 : 1); // Spread 2 points per month
   return {
     timestamp: date.getTime(),
-    tempo: 60 + Math.random() * i // Random tempo between 60 and 100
+    tempo: 60 + Math.random() * i, // Random tempo between 60 and 100
   };
 });
-
-
-
 
 export default function StatsScreen() {
   return (

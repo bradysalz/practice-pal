@@ -25,5 +25,5 @@ export function InputWithDelete({ name, onNameChange, onDelete }: InputWithDelet
         <ThemedIcon name="Trash2" size={24} />
       </Pressable>
     </View>
-  )
+  );
 }

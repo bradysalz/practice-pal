@@ -12,9 +12,7 @@ export default function SongDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const songId = id;
 
-  const fetchSessionItemBySongId = useSessionItemsStore(
-    (state) => state.fetchSessionItemBySongId
-  );
+  const fetchSessionItemBySongId = useSessionItemsStore((state) => state.fetchSessionItemBySongId);
 
   useEffect(() => {
     fetchSessionItemBySongId(songId);
@@ -45,7 +43,12 @@ export default function SongDetailPage() {
   return (
     <ScrollView className="flex-1 p-4">
       <View className="gap-y-4 mb-4">
-        <HighlightBar type="song" name={song.name} showEditIcon={true} onPressEdit={handleEditSong} />
+        <HighlightBar
+          type="song"
+          name={song.name}
+          showEditIcon={true}
+          onPressEdit={handleEditSong}
+        />
         {artist && (
           <Pressable onPress={() => handleBackToArtist(artist.id)}>
             <HighlightBar type="artist" name={artist.name} showRightArrow={true} />

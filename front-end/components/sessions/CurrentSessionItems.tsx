@@ -46,21 +46,27 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
     // Handle exercise items
     if (item.type === 'exercise' && item.exercise) {
-      const bookName = item.exercise.section?.book?.name?.length > 28
-        ? item.exercise.section.book.name.slice(0, 28) + '...'
-        : item.exercise.section?.book?.name;
-      const sectionName = item.exercise.section?.name?.length > 28
-        ? item.exercise.section.name.slice(0, 28) + '...'
-        : item.exercise.section?.name;
+      const bookName =
+        item.exercise.section?.book?.name?.length > 28
+          ? item.exercise.section.book.name.slice(0, 28) + '...'
+          : item.exercise.section?.book?.name;
+      const sectionName =
+        item.exercise.section?.name?.length > 28
+          ? item.exercise.section.name.slice(0, 28) + '...'
+          : item.exercise.section?.name;
 
       return (
         <ListItemCard
           key={item.id}
           title={`Exercise ${item.exercise.name}`}
           subtitle={bookName}
-          subtitleIcon={bookName ? <ThemedIcon name="BookOpen" size={16} color="black" /> : undefined}
+          subtitleIcon={
+            bookName ? <ThemedIcon name="BookOpen" size={16} color="black" /> : undefined
+          }
           description={sectionName}
-          descriptionIcon={sectionName ? <ThemedIcon name="Bookmark" size={16} color="black" /> : undefined}
+          descriptionIcon={
+            sectionName ? <ThemedIcon name="Bookmark" size={16} color="black" /> : undefined
+          }
           leftElement={<ThemedIcon name="Dumbbell" size={24} />}
           rightElement={<ThemedIcon name="X" size={28} />}
           onRemove={() => onRemoveItem(item.id)}

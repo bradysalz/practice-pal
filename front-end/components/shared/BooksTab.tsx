@@ -77,18 +77,10 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     if (!selectedSection || !selectedBook) return;
 
     if (mode === 'session' && draftSession) {
-      const item = createSessionExerciseItem(
-        exercise,
-        selectedSection,
-        selectedBook
-      );
+      const item = createSessionExerciseItem(exercise, selectedSection, selectedBook);
       addSessionItem(item);
     } else if (mode === 'setlist' && draftSetlist) {
-      const item = createSetlistExerciseItem(
-        exercise,
-        selectedSection,
-        selectedBook
-      );
+      const item = createSetlistExerciseItem(exercise, selectedSection, selectedBook);
       addSetlistItem(item);
     }
   };
@@ -145,7 +137,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
   }
 
   if (viewMode === 'book' && selectedBook) {
-    const bookSections = sections.filter(section => section.book_id === selectedBook.id);
+    const bookSections = sections.filter((section) => section.book_id === selectedBook.id);
     const filteredSections = filterByName(bookSections, searchQuery);
 
     return (

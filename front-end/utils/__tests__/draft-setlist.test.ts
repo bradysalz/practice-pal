@@ -3,7 +3,7 @@ import {
   createNewDraft,
   exerciseToDraftSetlistItem,
   setlistItemToDraftSetlistItem,
-  songRowToDraftSetlistItem
+  songRowToDraftSetlistItem,
 } from '@/utils/draft-setlist';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -15,7 +15,7 @@ import {
   mockSetlist,
   mockSetlistItemWithExercise,
   mockSetlistItemWithSong,
-  mockSong
+  mockSong,
 } from './mock-data';
 
 // Mock uuid to return predictable values
@@ -32,8 +32,8 @@ describe('draft-setlist utils', () => {
         type: 'song',
         song: {
           id: '1',
-          name: 'Test Song'
-        }
+          name: 'Test Song',
+        },
       });
     });
 
@@ -51,10 +51,10 @@ describe('draft-setlist utils', () => {
             name: 'Test Section',
             book: {
               id: '1',
-              name: 'Test Book'
-            }
-          }
-        }
+              name: 'Test Book',
+            },
+          },
+        },
       });
     });
   });
@@ -71,9 +71,9 @@ describe('draft-setlist utils', () => {
           name: 'Test Song',
           artist: {
             id: '1',
-            name: 'Test Artist'
-          }
-        }
+            name: 'Test Artist',
+          },
+        },
       });
     });
   });
@@ -93,10 +93,10 @@ describe('draft-setlist utils', () => {
             name: 'Test Section',
             book: {
               id: '1',
-              name: 'Test Book'
-            }
-          }
-        }
+              name: 'Test Book',
+            },
+          },
+        },
       });
     });
   });
@@ -109,7 +109,7 @@ describe('draft-setlist utils', () => {
         id: MOCK_UUID,
         name: null,
         description: null,
-        items: []
+        items: [],
       });
     });
   });
@@ -131,9 +131,9 @@ describe('draft-setlist utils', () => {
               name: 'Test Song',
               artist: {
                 id: '1',
-                name: 'Test Artist'
-              }
-            }
+                name: 'Test Artist',
+              },
+            },
           },
           {
             id: MOCK_UUID,
@@ -146,12 +146,12 @@ describe('draft-setlist utils', () => {
                 name: 'Test Section',
                 book: {
                   id: '1',
-                  name: 'Test Book'
-                }
-              }
-            }
-          }
-        ]
+                  name: 'Test Book',
+                },
+              },
+            },
+          },
+        ],
       });
     });
   });

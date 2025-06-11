@@ -14,7 +14,7 @@ export function Checkbox({ isChecked, onCheck, onUncheck }: CheckboxProps) {
         size={24}
         fillColor="#f97316" // orange-200
         unFillColor="#FFFFFF"
-        iconStyle={{ borderColor: "#f97316" }}
+        iconStyle={{ borderColor: '#f97316' }}
         innerIconStyle={{ borderWidth: 2 }}
         onPress={(isChecked: boolean) => {
           if (isChecked) {

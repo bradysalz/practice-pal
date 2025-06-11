@@ -32,7 +32,7 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
   });
 
   return (
-    <View className='my-3 border-l-4 border-l-orange-500 rounded-xl' >
+    <View className="my-3 border-l-4 border-l-orange-500 rounded-xl">
       <Card className="rounded-xl overflow-hidden shadow">
         <Pressable onPress={handleCardClick}>
           <CardHeader className="p-4 pb-2 bg-slate-100 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
@@ -76,8 +76,7 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
               )}
 
               {/* Separator between books and songs, need both to be non-empty */}
-              {(bookMap.size > 0 && songMap.size > 0) &&
-                <Separator className="mb-4" />}
+              {bookMap.size > 0 && songMap.size > 0 && <Separator className="mb-4" />}
 
               {/* Songs Subheader */}
               {songMap.size > 0 && (
@@ -108,6 +107,6 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
           </CardContent>
         )}
       </Card>
-    </View >
+    </View>
   );
 }

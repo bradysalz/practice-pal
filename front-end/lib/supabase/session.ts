@@ -21,10 +21,7 @@ const SESSION_WITH_ITEMS_QUERY = `
 `;
 
 export async function fetchSessions() {
-  return supabase
-    .from('sessions_with_items')
-    .select('*')
-    .order('created_at', { ascending: false });
+  return supabase.from('sessions_with_items').select('*').order('created_at', { ascending: false });
 }
 
 export async function fetchRecentSessionsWithItems(limit: number) {
@@ -45,9 +42,7 @@ export async function fetchSessionDetail(sessionId: string) {
 
 export async function insertSession(session: DraftSession) {
   const userId = await getCurrentUserId();
-  return supabase
-    .from('sessions')
-    .insert({ ...session, created_by: userId });
+  return supabase.from('sessions').insert({ ...session, created_by: userId });
 }
 
 export async function insertSessionItems(items: LocalSessionItem[]) {
@@ -58,31 +53,19 @@ export async function insertSessionItems(items: LocalSessionItem[]) {
 }
 
 export async function deleteSession(sessionId: string) {
-  return supabase
-    .from('sessions')
-    .delete()
-    .eq('id', sessionId);
+  return supabase.from('sessions').delete().eq('id', sessionId);
 }
 
 export async function fetchSessionItemsBySession(sessionId: string) {
-  return supabase
-    .from('session_items')
-    .select('*')
-    .eq('session_id', sessionId);
+  return supabase.from('session_items').select('*').eq('session_id', sessionId);
 }
 
 export async function fetchSessionItemsByExercise(exerciseId: string) {
-  return supabase
-    .from('session_items')
-    .select('*')
-    .eq('exercise_id', exerciseId);
+  return supabase.from('session_items').select('*').eq('exercise_id', exerciseId);
 }
 
 export async function fetchSessionItemsBySong(songId: string) {
-  return supabase
-    .from('session_items')
-    .select('*')
-    .eq('song_id', songId);
+  return supabase.from('session_items').select('*').eq('song_id', songId);
 }
 
 export async function insertSessionItem(item: LocalSessionItem) {

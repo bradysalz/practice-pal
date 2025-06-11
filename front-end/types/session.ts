@@ -8,14 +8,18 @@ import { Database } from '@/types/supabase';
 type SessionRow = Database['public']['Tables']['sessions']['Row'];
 
 export type SessionItemWithNested = SessionItemRow & {
-  song: (SongRow & {
-    artist: ArtistRow | null;
-  }) | null;
-  exercise: (ExerciseRow & {
-    section: SectionRow & {
-      book: BookRow;
-    }
-  }) | null;
+  song:
+    | (SongRow & {
+        artist: ArtistRow | null;
+      })
+    | null;
+  exercise:
+    | (ExerciseRow & {
+        section: SectionRow & {
+          book: BookRow;
+        };
+      })
+    | null;
 };
 
 // Local exercise details for display
@@ -52,7 +56,6 @@ export type SessionWithCountsRow = SessionRow & {
 export type SessionWithItems = SessionWithCountsRow & {
   session_items: SessionItemWithNested[];
 };
-
 
 // Manual create types for local sessions
 export type DraftSessionItem = {
@@ -94,7 +97,6 @@ export type DraftSession = {
 export type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
 export type SessionUpdate = Database['public']['Tables']['sessions']['Update'];
 export type SessionItemUpdate = Database['public']['Tables']['session_items']['Update'];
-
 
 export type SessionItemRow = Database['public']['Tables']['session_items']['Row'];
 export type SessionItemInsert = Database['public']['Tables']['session_items']['Insert'];

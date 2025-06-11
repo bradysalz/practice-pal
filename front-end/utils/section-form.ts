@@ -9,11 +9,16 @@ export function updateExerciseCount(
   return {
     ...section,
     exerciseCount: count,
-    customExerciseNames: Array(count).fill('').map((_, i) => currentNames[i] || ''),
+    customExerciseNames: Array(count)
+      .fill('')
+      .map((_, i) => currentNames[i] || ''),
   };
 }
 
-export function updateNamingType(section: SectionFormData, type: ExerciseNamingType): SectionFormData {
+export function updateNamingType(
+  section: SectionFormData,
+  type: ExerciseNamingType
+): SectionFormData {
   return {
     ...section,
     exerciseNaming: type,

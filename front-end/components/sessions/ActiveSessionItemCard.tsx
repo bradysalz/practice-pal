@@ -26,7 +26,7 @@ export function ActiveSessionItemCard({
   onTempoChange,
   itemId,
   itemType,
-  exerciseDetails
+  exerciseDetails,
 }: SessionItemCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [notes, setNotes] = useState('');
@@ -40,14 +40,15 @@ export function ActiveSessionItemCard({
   const getLastTempo = () => {
     if (!itemId) return null;
 
-    const items = itemType === 'exercise'
-      ? sessionItemsByExercise[itemId] || []
-      : sessionItemsBySong[itemId] || [];
+    const items =
+      itemType === 'exercise'
+        ? sessionItemsByExercise[itemId] || []
+        : sessionItemsBySong[itemId] || [];
 
     // Sort by created_at in descending order and find the first item with a tempo
     const lastItem = [...items]
       .sort((a, b) => new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime())
-      .find(item => item.tempo !== null);
+      .find((item) => item.tempo !== null);
 
     return lastItem?.tempo || null;
   };
@@ -72,10 +73,9 @@ export function ActiveSessionItemCard({
     const shouldBeFullOpacity = isExpanded || tempoFocused;
     return {
       opacity: withTiming(isCompleted && !shouldBeFullOpacity ? 0.4 : 1, { duration: 300 }),
-      borderLeftColor: withTiming(
-        isCompleted && !shouldBeFullOpacity ? '#64748b' : '#ef4444',
-        { duration: 300 }
-      ),
+      borderLeftColor: withTiming(isCompleted && !shouldBeFullOpacity ? '#64748b' : '#ef4444', {
+        duration: 300,
+      }),
     };
   });
 
@@ -131,7 +131,9 @@ export function ActiveSessionItemCard({
                     </Text>
                   </View>
                   <View className="flex-row items-center">
-                    <Text className="text-base font-semibold underline text-orange-500">View full history</Text>
+                    <Text className="text-base font-semibold underline text-orange-500">
+                      View full history
+                    </Text>
                   </View>
                 </View>
               </Pressable>

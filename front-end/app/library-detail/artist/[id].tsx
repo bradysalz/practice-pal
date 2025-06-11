@@ -31,7 +31,12 @@ export default function ArtistDetailPage() {
   return (
     <View className="flex-1 p-4">
       <View className="gap-y-4 mb-4">
-        <HighlightBar type="artist" name={artist.name} showEditIcon={true} onPressEdit={handleEditArtist} />
+        <HighlightBar
+          type="artist"
+          name={artist.name}
+          showEditIcon={true}
+          onPressEdit={handleEditArtist}
+        />
       </View>
       <View className="flex-row gap-x-4 mb-4">
         <StatBox label="Songs" value={filteredSongs.length} />

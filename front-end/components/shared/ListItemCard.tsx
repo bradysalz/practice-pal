@@ -50,15 +50,11 @@ export function ListItemCard({
           onPress?.();
         }
       }}
-      className={isClickable ? "active:opacity-80" : undefined}
+      className={isClickable ? 'active:opacity-80' : undefined}
       {...viewProps}
     >
       <View className="flex-row items-center justify-between p-4 bg-slate-100 rounded-xl border-2 border-slate-300">
-        {leftElement && (
-          <View className="mr-3">
-            {leftElement}
-          </View>
-        )}
+        {leftElement && <View className="mr-3">{leftElement}</View>}
         <View className="flex-1">
           <Text className="font-medium text-xl">{title}</Text>
           {subtitle && (
@@ -80,17 +76,9 @@ export function ListItemCard({
             </View>
           )}
         </View>
-        {rightElement && (
-          <View className="ml-3">
-            {rightElement}
-          </View>
-        )}
+        {rightElement && <View className="ml-3">{rightElement}</View>}
         {showCheckbox && (
-          <Checkbox
-            isChecked={isAdded ?? false}
-            onCheck={onAdd}
-            onUncheck={onRemove}
-          />
+          <Checkbox isChecked={isAdded ?? false} onCheck={onAdd} onUncheck={onRemove} />
         )}
       </View>
     </Pressable>

@@ -5,12 +5,11 @@ export type SectionStatRow = Database['public']['Views']['section_stats_view']['
 export type BookStatOverTimeRow = Database['public']['Views']['book_progress_history']['Row'];
 export type SectionStatOverTimeRow = Database['public']['Views']['section_progress_history']['Row'];
 
-
 export type TimeRange = 'week' | 'month' | 'year' | 'all';
 
 export type Timestamped = {
   timestamp: number;
-}
+};
 
 export interface ItemTempoPoint extends Timestamped {
   tempo: number;

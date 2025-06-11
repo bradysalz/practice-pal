@@ -2,18 +2,12 @@ import { supabase } from '@/lib/supabase';
 import { LocalSong, SongRow } from '@/types/song';
 import { getCurrentUserId } from './shared';
 
-
 export async function fetchSongs() {
-  return supabase
-    .from('songs')
-    .select('*');
+  return supabase.from('songs').select('*');
 }
 
 export async function fetchSongsByArtist(artistId: string) {
-  return supabase
-    .from('songs')
-    .select('*, artist:artists(id, name)')
-    .eq('artist_id', artistId);
+  return supabase.from('songs').select('*, artist:artists(id, name)').eq('artist_id', artistId);
 }
 
 export async function insertSong(song: LocalSong) {
@@ -26,15 +20,9 @@ export async function insertSong(song: LocalSong) {
 }
 
 export async function updateSong(id: string, updates: Partial<SongRow>) {
-  return supabase
-    .from('songs')
-    .update(updates)
-    .eq('id', id);
+  return supabase.from('songs').update(updates).eq('id', id);
 }
 
 export async function deleteSong(id: string) {
-  return supabase
-    .from('songs')
-    .delete()
-    .eq('id', id);
+  return supabase.from('songs').delete().eq('id', id);
 }

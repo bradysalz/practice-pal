@@ -29,12 +29,12 @@ export const SetlistCard = ({ setlist, onEdit, onDelete }: Props) => {
   };
 
   // Count songs and exercises
-  const songCount = setlist.setlist_items.filter(item => item.type === 'song').length;
-  const exerciseCount = setlist.setlist_items.filter(item => item.type === 'exercise').length;
+  const songCount = setlist.setlist_items.filter((item) => item.type === 'song').length;
+  const exerciseCount = setlist.setlist_items.filter((item) => item.type === 'exercise').length;
 
   // Group items by type
-  const songs = setlist.setlist_items.filter(item => item.type === 'song');
-  const exercises = setlist.setlist_items.filter(item => item.type === 'exercise');
+  const songs = setlist.setlist_items.filter((item) => item.type === 'song');
+  const exercises = setlist.setlist_items.filter((item) => item.type === 'exercise');
 
   return (
     <View className="rounded-xl my-3 border-l-4 border-l-slate-700 overflow-hidden">
@@ -51,7 +51,9 @@ export const SetlistCard = ({ setlist, onEdit, onDelete }: Props) => {
 
             {/* Description + Stats */}
             <View>
-              {setlist.description && <Text className="text-slate-500 text-base mb-2">{setlist.description}</Text>}
+              {setlist.description && (
+                <Text className="text-slate-500 text-base mb-2">{setlist.description}</Text>
+              )}
               <View className="flex-row items-center gap-x-2">
                 <Badge className="flex-row items-center gap-1 bg-orange-100 border-orange-200">
                   <ThemedIcon name="Dumbbell" size={20} />
@@ -87,9 +89,7 @@ export const SetlistCard = ({ setlist, onEdit, onDelete }: Props) => {
             )}
 
             {/* Separator if both sections exist */}
-            {exercises.length > 0 && songs.length > 0 && (
-              <Separator className="mb-4" />
-            )}
+            {exercises.length > 0 && songs.length > 0 && <Separator className="mb-4" />}
 
             {/* Songs Section */}
             {songs.length > 0 && (
@@ -102,7 +102,8 @@ export const SetlistCard = ({ setlist, onEdit, onDelete }: Props) => {
                   <View key={index} className="flex-row justify-left items-center">
                     <Text className="text-lg">• </Text>
                     <Text className="text-lg">
-                      {item.song?.name}{item.song?.artist?.name ? ` - ${item.song.artist.name}` : ''}
+                      {item.song?.name}
+                      {item.song?.artist?.name ? ` - ${item.song.artist.name}` : ''}
                     </Text>
                   </View>
                 ))}

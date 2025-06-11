@@ -18,7 +18,7 @@ export const mockArtist: ArtistRow = {
   name: 'Test Artist',
   created_at: BASE_TIMESTAMP,
   created_by: 'user1',
-  updated_at: BASE_TIMESTAMP
+  updated_at: BASE_TIMESTAMP,
 };
 
 // Miles Davis artist for session tests
@@ -27,7 +27,7 @@ export const mockMilesDavis: ArtistRow = {
   name: 'Miles Davis',
   created_at: BASE_TIMESTAMP,
   created_by: 'user1',
-  updated_at: BASE_TIMESTAMP
+  updated_at: BASE_TIMESTAMP,
 };
 
 // Book mock data
@@ -38,7 +38,7 @@ export const mockBook: BookWithCountsRow = {
   created_at: BASE_TIMESTAMP,
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
-  exercise_count: 1
+  exercise_count: 1,
 };
 
 // Stick Control book for session tests
@@ -49,7 +49,7 @@ export const mockStickControl: BookWithCountsRow = {
   created_at: BASE_TIMESTAMP,
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
-  exercise_count: 1
+  exercise_count: 1,
 };
 
 // Section mock data
@@ -61,7 +61,7 @@ export const mockSection: SectionWithCountsRow = {
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
   exercise_count: 1,
-  order: 1
+  order: 1,
 };
 
 // Stickings section for session tests
@@ -73,7 +73,7 @@ export const mockStickingsSection: SectionWithCountsRow = {
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
   exercise_count: 1,
-  order: 1
+  order: 1,
 };
 
 // Exercise mock data
@@ -86,7 +86,7 @@ export const mockExercise: ExerciseRow = {
   updated_at: BASE_TIMESTAMP,
   filepath: null,
   goal_tempo: null,
-  order: 1
+  order: 1,
 };
 
 // Exercise 1 for session tests
@@ -99,7 +99,7 @@ export const mockExercise1: ExerciseRow = {
   updated_at: BASE_TIMESTAMP,
   filepath: null,
   goal_tempo: null,
-  order: 1
+  order: 1,
 };
 
 // Song mock data
@@ -109,7 +109,7 @@ export const mockSong: LocalSong = {
   artist_id: '1',
   created_at: BASE_TIMESTAMP,
   updated_at: BASE_TIMESTAMP,
-  goal_tempo: null
+  goal_tempo: null,
 };
 
 // So What song for session tests
@@ -119,7 +119,7 @@ export const mockSoWhat: LocalSong = {
   artist_id: 'artist1',
   created_at: BASE_TIMESTAMP,
   updated_at: BASE_TIMESTAMP,
-  goal_tempo: null
+  goal_tempo: null,
 };
 
 // Session item with exercise mock data
@@ -140,9 +140,9 @@ export const mockSessionItemWithExercise: SessionItemWithNested = {
     ...mockExercise1,
     section: {
       ...mockStickingsSection,
-      book: mockStickControl
-    }
-  }
+      book: mockStickControl,
+    },
+  },
 };
 
 // Session item with song mock data
@@ -166,7 +166,7 @@ export const mockSessionItemWithSong: SessionItemWithNested = {
     updated_at: BASE_TIMESTAMP,
     goal_tempo: null,
   },
-  exercise: null
+  exercise: null,
 };
 
 // Complete session mock data
@@ -179,7 +179,7 @@ export const mockSession: SessionWithItems = {
   updated_at: BASE_TIMESTAMP,
   song_count: 1,
   exercise_count: 1,
-  session_items: [mockSessionItemWithSong, mockSessionItemWithExercise]
+  session_items: [mockSessionItemWithSong, mockSessionItemWithExercise],
 };
 
 // Setlist item with song mock data
@@ -201,7 +201,7 @@ export const mockSetlistItemWithSong: SetlistItemWithNested = {
     updated_at: BASE_TIMESTAMP,
     goal_tempo: null,
   },
-  exercise: null
+  exercise: null,
 };
 
 // Setlist item with exercise mock data
@@ -220,9 +220,9 @@ export const mockSetlistItemWithExercise: SetlistItemWithNested = {
     ...mockExercise,
     section: {
       ...mockSection,
-      book: mockBook
-    }
-  }
+      book: mockBook,
+    },
+  },
 };
 
 // Complete setlist mock data
@@ -235,5 +235,5 @@ export const mockSetlist: SetlistWithItems = {
   updated_at: BASE_TIMESTAMP,
   song_count: 1,
   exercise_count: 1,
-  setlist_items: [mockSetlistItemWithSong, mockSetlistItemWithExercise]
+  setlist_items: [mockSetlistItemWithSong, mockSetlistItemWithExercise],
 };

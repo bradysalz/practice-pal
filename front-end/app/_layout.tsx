@@ -6,7 +6,11 @@ import { SessionProvider } from '@/components/providers/SessionProvider';
 import { NAV_THEME } from '@/lib/constants';
 import { useColorScheme } from '@/lib/useColorScheme';
 import { Inter_400Regular, Inter_700Bold, useFonts as useInter } from '@expo-google-fonts/inter';
-import { SpaceGrotesk_400Regular, SpaceGrotesk_700Bold, useFonts as useSpaceGrotesk } from '@expo-google-fonts/space-grotesk';
+import {
+  SpaceGrotesk_400Regular,
+  SpaceGrotesk_700Bold,
+  useFonts as useSpaceGrotesk,
+} from '@expo-google-fonts/space-grotesk';
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { SplashScreen, Stack } from 'expo-router';
@@ -25,7 +29,7 @@ const DARK_THEME: Theme = {
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary
+  ErrorBoundary,
 } from 'expo-router';
 
 export default function RootLayout() {

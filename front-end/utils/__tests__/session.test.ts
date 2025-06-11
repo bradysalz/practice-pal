@@ -7,7 +7,7 @@ describe('getBookAndSongNamesFromSession', () => {
       mockSessionItemWithExercise,
       mockSessionItemWithSong,
       // Add a duplicate song item to test deduplication
-      mockSessionItemWithSong
+      mockSessionItemWithSong,
     ];
 
     const { bookMap, songMap } = getBookAndSongNamesFromSession(mockItems);

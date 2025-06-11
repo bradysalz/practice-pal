@@ -27,7 +27,6 @@ export default function LibraryDetailLayout() {
         }}
       />
 
-
       {/* Songs by an Arists */}
       <Stack.Screen
         name="artist/[id]"

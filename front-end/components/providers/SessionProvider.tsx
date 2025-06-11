@@ -28,10 +28,12 @@ export function SessionProvider({ children }: PropsWithChildren) {
     async function getInitialSession() {
       setIsLoading(true); // Start loading
       try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        const {
+          data: { session: initialSession },
+        } = await supabase.auth.getSession();
         setSession(initialSession);
       } catch (error) {
-        console.error("Error fetching initial session:", error);
+        console.error('Error fetching initial session:', error);
         setSession(null); // Ensure session is null on error
       } finally {
         setIsLoading(false); // End loading
@@ -41,7 +43,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
     getInitialSession();
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, currentSession) => {
       setSession(currentSession);
       setIsLoading(false); // Also set loading to false on subsequent changes
     });
@@ -50,12 +54,16 @@ export function SessionProvider({ children }: PropsWithChildren) {
   }, []);
 
   // Use useMemo to prevent unnecessary re-renders of children
-  const contextValue = useMemo(() => ({
-    session,
-    isLoading,
-  }), [session, isLoading]);
+  const contextValue = useMemo(
+    () => ({
+      session,
+      isLoading,
+    }),
+    [session, isLoading]
+  );
 
-  if (isLoading) { // Use the explicit isLoading state for rendering the loading indicator
+  if (isLoading) {
+    // Use the explicit isLoading state for rendering the loading indicator
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Loading session...</Text>

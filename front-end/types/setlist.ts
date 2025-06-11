@@ -11,26 +11,25 @@ type BookRow = Database['public']['Tables']['books']['Row'];
 
 export type SetlistItemWithNested = SetlistItemRow & {
   song:
-  | (SongRow & {
-    artist: ArtistRow | null;
-  })
-  | null;
-  exercise:
-  | (ExerciseRow & {
-    section:
-    | (SectionRow & {
-      book: BookRow | null;
-    })
+    | (SongRow & {
+        artist: ArtistRow | null;
+      })
     | null;
-  })
-  | null;
+  exercise:
+    | (ExerciseRow & {
+        section:
+          | (SectionRow & {
+              book: BookRow | null;
+            })
+          | null;
+      })
+    | null;
 };
 // Manually build the View row
 export type SetlistWithCountsRow = SetlistRow & {
   song_count: number;
   exercise_count: number;
 };
-
 
 // Manual create types for local setlists
 export type DraftSetlistItem = {
@@ -67,12 +66,10 @@ export type DraftSetlist = {
   items: DraftSetlistItem[];
 };
 
-
 export type SetlistInsert = Database['public']['Tables']['setlists']['Insert'];
 export type SetlistUpdate = Database['public']['Tables']['setlists']['Update'];
 export type SetlistWithItems = SetlistWithCountsRow & {
   setlist_items: SetlistItemWithNested[];
 };
-
 
 export type SetlistItemInsert = Database['public']['Tables']['setlist_items']['Insert'];

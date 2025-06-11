@@ -37,14 +37,14 @@ export default function AddSongPage() {
       distance: 100, // How far to search for matches
       minMatchCharLength: 1,
       shouldSort: true, // Sort by score
-      includeScore: true
+      includeScore: true,
     });
 
     const results = fuse.search(artistQuery);
     // Filter out low-quality matches (high scores mean less relevant)
     return results
-      .filter(result => result.score && result.score < 0.6)
-      .map(result => result.item);
+      .filter((result) => result.score && result.score < 0.6)
+      .map((result) => result.item);
   }, [artistQuery, artists]);
 
   const handleSelectArtist = (artistName: string) => {
@@ -95,8 +95,7 @@ export default function AddSongPage() {
 
       if (needsArtistFetch) {
         Promise.all([fetchArtists(), fetchSongs()]);
-      }
-      else {
+      } else {
         await fetchSongs();
       }
 

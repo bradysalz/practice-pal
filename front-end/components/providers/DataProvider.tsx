@@ -25,7 +25,7 @@ export function DataProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     // 1. Wait for the session to finish loading
     if (isSessionLoading) {
-      console.log("DataProvider: Session is still loading, waiting...");
+      console.log('DataProvider: Session is still loading, waiting...');
       return;
     }
 
@@ -33,14 +33,16 @@ export function DataProvider({ children }: PropsWithChildren) {
     async function loadInitialData() {
       if (!session?.user) {
         // If there's no user, and session is done loading,
-        console.log("DataProvider: No user found after session load. Skipping user-specific data fetch.");
+        console.log(
+          'DataProvider: No user found after session load. Skipping user-specific data fetch.'
+        );
         setIsDataLoading(false);
         return;
       }
 
       // If user exists, proceed with fetching data
       try {
-        console.log("DataProvider: Session loaded and user found. Starting data fetch...");
+        console.log('DataProvider: Session loaded and user found. Starting data fetch...');
         setIsDataLoading(true); // Ensure loading state is true while fetching
         await Promise.all([
           fetchBooks(),
@@ -51,7 +53,7 @@ export function DataProvider({ children }: PropsWithChildren) {
           fetchSessions(),
           fetchRecentSessions(10),
         ]);
-        console.log("DataProvider: All initial data fetched successfully.");
+        console.log('DataProvider: All initial data fetched successfully.');
       } catch (error) {
         console.error('DataProvider: Failed to load initial data:', error);
         // You might want to show an error state here or retry

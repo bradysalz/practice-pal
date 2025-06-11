@@ -51,9 +51,7 @@ export const useDraftSetlistsStore = create<DraftSetlistsState>((set, get) => ({
     set({
       draftSetlist: {
         ...current,
-        items: current.items.map((item) =>
-          item.id === updatedItem.id ? updatedItem : item
-        ),
+        items: current.items.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
       },
     });
   },

@@ -1,13 +1,13 @@
-import { ThemedIcon } from "@/components/icons/ThemedIcon";
-import { ListItemCard } from "@/components/shared/ListItemCard";
-import { Separator } from "@/components/shared/Separator";
-import ItemTempoGraph from "@/components/stats/ItemTempoGraph";
-import { useSessionsStore } from "@/stores/session-store";
-import { LocalSessionItem } from "@/types/session";
-import { formatTimestampToDate } from "@/utils/date-time";
-import { router } from "expo-router";
-import { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { ListItemCard } from '@/components/shared/ListItemCard';
+import { Separator } from '@/components/shared/Separator';
+import ItemTempoGraph from '@/components/stats/ItemTempoGraph';
+import { useSessionsStore } from '@/stores/session-store';
+import { LocalSessionItem } from '@/types/session';
+import { formatTimestampToDate } from '@/utils/date-time';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
 
 interface ItemDetailPageProps {
   sessionItems: LocalSessionItem[];
@@ -22,7 +22,7 @@ export default function ItemDetailPage({
   itemId,
   initialGoalTempo,
   onUpdateLocal,
-  onSyncUpdate
+  onSyncUpdate,
 }: ItemDetailPageProps) {
   const allSessions = useSessionsStore((state) => state.sessions);
   const sessionMap = new Map(allSessions.map((s) => [s.id, s]));
@@ -74,12 +74,14 @@ export default function ItemDetailPage({
           <Separator color="red" />
 
           {/* Graph */}
-          <ItemTempoGraph data={sessionItems
-            .filter(item => item.tempo !== null)
-            .map((item) => ({
-              timestamp: item.created_at ? new Date(item.created_at).getTime() : 0,
-              tempo: item.tempo!, // already filtered out nulls
-            }))} />
+          <ItemTempoGraph
+            data={sessionItems
+              .filter((item) => item.tempo !== null)
+              .map((item) => ({
+                timestamp: item.created_at ? new Date(item.created_at).getTime() : 0,
+                tempo: item.tempo!, // already filtered out nulls
+              }))}
+          />
 
           <Separator color="red" />
 
@@ -110,8 +112,7 @@ export default function ItemDetailPage({
           <Text className="text-2xl font-semibold my-4">Sessions</Text>
           <Text className="text-gray-500 italic">No sessions logged yet.</Text>
         </View>
-      )
-      }
-    </View >
+      )}
+    </View>
   );
 }

@@ -1,5 +1,11 @@
 import { TimeRange } from '@/types/stats';
-import { calculateCutoffDate, formatDate, formatTimestampToDate, formatToMinutes, isValidDate } from '@/utils/date-time';
+import {
+  calculateCutoffDate,
+  formatDate,
+  formatTimestampToDate,
+  formatToMinutes,
+  isValidDate,
+} from '@/utils/date-time';
 
 describe('formatToMinutes', () => {
   it('rounds up to nearest minute', () => {

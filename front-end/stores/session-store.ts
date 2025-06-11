@@ -1,9 +1,16 @@
-import { deleteSession, fetchRecentSessionsWithItems, fetchSessionDetail, fetchSessions, insertSession, insertSessionItems } from '@/lib/supabase/session';
+import {
+  deleteSession,
+  fetchRecentSessionsWithItems,
+  fetchSessionDetail,
+  fetchSessions,
+  insertSession,
+  insertSessionItems,
+} from '@/lib/supabase/session';
 import {
   DraftSession,
   LocalSessionItem,
   SessionWithCountsRow,
-  SessionWithItems
+  SessionWithItems,
 } from '@/types/session';
 import { create } from 'zustand';
 
