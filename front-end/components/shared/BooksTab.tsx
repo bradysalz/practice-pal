@@ -8,6 +8,14 @@ import { LocalExercise } from '@/types/exercise';
 import { SectionWithCountsRow } from '@/types/section';
 import { exerciseToDraftSessionItem } from '@/utils/draft-session';
 import { exerciseToDraftSetlistItem } from '@/utils/draft-setlist';
+import {
+  createSessionExerciseItem,
+  createSetlistExerciseItem,
+  findSessionExerciseItemId,
+  findSetlistExerciseItemId,
+  filterByName,
+  isExerciseInDraft,
+} from '@/utils/books-tab';
 import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, Text, View } from 'react-native';
 import { ThemedIcon } from '../icons/ThemedIcon';
@@ -71,39 +79,29 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     if (!selectedSection || !selectedBook) return;
 
     if (mode === 'session' && draftSession) {
-      addSessionItem(
-        exerciseToDraftSessionItem(
-          exercise,
-          selectedSection,
-          selectedBook
-        )
+      const item = createSessionExerciseItem(
+        exercise,
+        selectedSection,
+        selectedBook
       );
+      addSessionItem(item);
     } else if (mode === 'setlist' && draftSetlist) {
-      addSetlistItem(
-        exerciseToDraftSetlistItem(
-          exercise,
-          selectedSection,
-          selectedBook
-        )
+      const item = createSetlistExerciseItem(
+        exercise,
+        selectedSection,
+        selectedBook
       );
+      addSetlistItem(item);
     }
   };
 
   const handleRemoveExercise = (exercise: LocalExercise) => {
     if (mode === 'session' && draftSession) {
-      const itemToRemove = draftSession.items.find(
-        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
-      );
-      if (itemToRemove) {
-        removeSessionItem(itemToRemove.id);
-      }
+      const id = findSessionExerciseItemId(draftSession, exercise.id);
+      if (id) removeSessionItem(id);
     } else if (mode === 'setlist' && draftSetlist) {
-      const itemToRemove = draftSetlist.items.find(
-        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
-      );
-      if (itemToRemove) {
-        removeSetlistItem(itemToRemove.id);
-      }
+      const id = findSetlistExerciseItemId(draftSetlist, exercise.id);
+      if (id) removeSetlistItem(id);
     }
   };
 
@@ -119,23 +117,12 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
   };
 
   const isExerciseAdded = (exercise: LocalExercise) => {
-    if (mode === 'session' && draftSession) {
-      return draftSession.items.some(
-        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
-      );
-    } else if (mode === 'setlist' && draftSetlist) {
-      return draftSetlist.items.some(
-        (item) => item.type === 'exercise' && item.exercise?.id === exercise.id
-      );
-    }
-    return false;
+    return isExerciseInDraft(exercise.id, mode, draftSession, draftSetlist);
   };
 
   if (viewMode === 'section' && selectedSection && selectedBook) {
     const sectionExercises = exercises[selectedSection.id] || [];
-    const filteredExercises = sectionExercises.filter(exercise =>
-      exercise.name?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredExercises = filterByName(sectionExercises, searchQuery);
 
     return (
       <View className="gap-y-4 mt-4">
@@ -161,9 +148,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
 
   if (viewMode === 'book' && selectedBook) {
     const bookSections = sections.filter(section => section.book_id === selectedBook.id);
-    const filteredSections = bookSections.filter(section =>
-      section.name?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredSections = filterByName(bookSections, searchQuery);
 
     return (
       <View className="gap-y-4 mt-4">
@@ -190,9 +175,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     );
   }
 
-  const filteredBooks = books.filter(book =>
-    book.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredBooks = filterByName(books, searchQuery);
 
   return (
     <View className="gap-y-4 mt-4">

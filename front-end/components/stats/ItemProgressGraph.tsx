@@ -1,8 +1,8 @@
 import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ItemProgressPoint, TimeRange } from "@/types/stats";
-import { calculateCutoffDate } from "@/utils/date-time";
 import { formatDateByRange } from "@/utils/stats";
+import { filterProgressData } from "@/utils/item-progress";
 import { useFont } from "@shopify/react-native-skia";
 import React, { useMemo, useState } from "react";
 import { Text, View } from "react-native";
@@ -32,21 +32,10 @@ export default function ItemProgressGraph({
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const now = Date.now();
-  const cutoffDate =
-    timeRange === 'all' && data.length > 0
-      ? Math.min(...data.map(point => point.timestamp))
-      : calculateCutoffDate(timeRange).getTime();
-
-  const filteredData = useMemo(() => {
-    return data
-      .filter(point => point.timestamp >= cutoffDate)
-      .filter(point => point.timestamp <= now)
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .map(point => ({
-        ...point,
-        timestamp: point.timestamp, // optional, if no transformation needed
-      }));
-  }, [data, cutoffDate, now]);
+  const { filtered: filteredData, cutoffDate } = useMemo(
+    () => filterProgressData(data, timeRange, now),
+    [data, timeRange, now]
+  );
 
 
   if (!font) {

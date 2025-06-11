@@ -1,6 +1,11 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ExerciseNamingType, SectionFormData } from '@/types/book';
+import {
+  updateCustomName,
+  updateExerciseCount,
+  updateNamingType,
+} from '@/utils/section-form';
 import { ChevronDown } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -26,30 +31,19 @@ export function SectionForm({ section, onUpdate, onDelete, index }: SectionFormP
   });
 
   const handleExerciseCountChange = (value: string) => {
-    const count = parseInt(value) || 0;
-    onUpdate({
-      ...section,
-      exerciseCount: count,
-      customExerciseNames: Array(count).fill('').map((_, i) => customNames[i] || '')
-    });
+    const updated = updateExerciseCount(section, value, customNames);
+    onUpdate(updated);
   };
 
   const handleNamingTypeChange = (type: ExerciseNamingType) => {
-    onUpdate({
-      ...section,
-      exerciseNaming: type,
-      customExerciseNames: type === 'custom' ? Array(section.exerciseCount).fill('') : undefined
-    });
+    const updated = updateNamingType(section, type);
+    onUpdate(updated);
   };
 
   const handleCustomNameChange = (index: number, value: string) => {
-    const newNames = [...customNames];
-    newNames[index] = value;
-    setCustomNames(newNames);
-    onUpdate({
-      ...section,
-      customExerciseNames: newNames
-    });
+    const { names, section: updated } = updateCustomName(section, customNames, index, value);
+    setCustomNames(names);
+    onUpdate(updated);
   };
 
   return (
