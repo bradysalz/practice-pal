@@ -14,7 +14,7 @@ import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-nati
 
 export default function SectionDetailPage() {
   const router = useRouter();
-  const { bookId, sectionId } = useLocalSearchParams<{ bookId: string; sectionId: string }>();
+  const { sectionId } = useLocalSearchParams<{ sectionId: string }>();
   const [isLoading, setIsLoading] = useState(true);
 
   const books = useBooksStore((state) => state.books);
@@ -39,7 +39,7 @@ export default function SectionDetailPage() {
     loadExercises();
   }, [fetchExercisesBySection, sectionId, fetchSectionStats]);
 
-  const book = books.find((b) => b.id === bookId);
+  const book = books.find((b) => b.id === section?.book_id);
   const section = sections.find((s) => s.id === sectionId);
   const usefulExercises = exercises[sectionId]?.sort((a, b) => a.order - b.order) || [];
 
@@ -55,7 +55,7 @@ export default function SectionDetailPage() {
 
 
   const handleExercisePress = (exerciseId: string) => {
-    router.push(`/library-detail/book/${bookId}/section/${sectionId}/exercise/${exerciseId}`);
+    router.push(`/library-detail/exercise/${exerciseId}`);
   };
 
 
