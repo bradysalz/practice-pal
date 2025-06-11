@@ -39,8 +39,8 @@ export default function SectionDetailPage() {
     loadExercises();
   }, [fetchExercisesBySection, sectionId, fetchSectionStats]);
 
-  const book = books.find((b) => b.id === section?.book_id);
   const section = sections.find((s) => s.id === sectionId);
+  const book = books.find((b) => b.id === section?.book_id);
   const usefulExercises = exercises[sectionId]?.sort((a, b) => a.order - b.order) || [];
 
   const sectionStat: SectionStat = sectionStats[sectionId] || {
@@ -65,8 +65,7 @@ export default function SectionDetailPage() {
     router.push(`/library-forms/edit-section/${sectionId}`);
   };
 
-  if (!book) return <Text>Book not found</Text>;
-  if (!section) return <Text>Section not found</Text>;
+  if (!section || !book) return <Text>Section not found</Text>;
 
   return (
     <View className="flex-1 p-4">

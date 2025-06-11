@@ -62,7 +62,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
         [data.section_id]: [
-          ...(state.exercisesBySectionId[data.section_id] || []),
+          ...((state.exercisesBySectionId[data.section_id] || []).filter(e => e.id !== data.id)),
           data as LocalExercise,
         ],
       },

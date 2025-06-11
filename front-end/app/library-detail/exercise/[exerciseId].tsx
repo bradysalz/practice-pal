@@ -33,13 +33,11 @@ export default function ExerciseDetailPage() {
     fetchSessionItemByExerciseId(exerciseId);
   }, [fetchExerciseById, fetchSessionItemByExerciseId, exerciseId]);
 
-  console.log('exercisesById', exercisesById);
-  console.log('exerciseId', exerciseId);
   const exercise = exercisesById[exerciseId];
   const section = sections.find((s) => s.id === exercise?.section_id);
   const book = books.find((b) => b.id === section?.book_id);
 
-  const sessionItems = sessionItemsByExercise[exerciseId || ''] || [];
+  const sessionItems = sessionItemsByExercise[exerciseId] || [];
 
   if (!exercise) return <Text>Exercise not found</Text>;
   if (!section) return <Text>Section not found</Text>;
