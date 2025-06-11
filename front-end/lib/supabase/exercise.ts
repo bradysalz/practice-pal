@@ -36,6 +36,14 @@ export async function deleteExercises(ids: string[]) {
     .in("id", ids);
 }
 
+export async function fetchExerciseById(id: string) {
+  return supabase
+    .from('exercises')
+    .select('*')
+    .eq('id', id)
+    .single();
+}
+
 export async function fetchExercisesBySection(section_id: string) {
   return supabase
     .from('exercises')

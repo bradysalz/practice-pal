@@ -19,13 +19,6 @@ export default function SessionsStack() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="add-item-to-session"
-        options={{
-          title: 'Add Item',
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 }
