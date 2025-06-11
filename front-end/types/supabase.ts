@@ -108,7 +108,7 @@ export type Database = {
           filepath: string | null
           goal_tempo: number | null
           id: string
-          name: string | null
+          name: string
           order: number
           section_id: string
           updated_at: string
@@ -119,7 +119,7 @@ export type Database = {
           filepath?: string | null
           goal_tempo?: number | null
           id: string
-          name?: string | null
+          name: string
           order: number
           section_id: string
           updated_at?: string
@@ -130,7 +130,7 @@ export type Database = {
           filepath?: string | null
           goal_tempo?: number | null
           id?: string
-          name?: string | null
+          name?: string
           order?: number
           section_id?: string
           updated_at?: string

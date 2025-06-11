@@ -9,9 +9,9 @@ import { SectionWithCountsRow } from '@/types/section';
 import {
   createSessionExerciseItem,
   createSetlistExerciseItem,
+  filterByName,
   findSessionExerciseItemId,
   findSetlistExerciseItemId,
-  filterByName,
   isExerciseInDraft,
 } from '@/utils/books-tab';
 import { useEffect, useState } from 'react';

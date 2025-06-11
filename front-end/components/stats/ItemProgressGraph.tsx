@@ -1,8 +1,8 @@
 import { ActiveValueIndicator } from "@/components/stats/ActiveValueIndicator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ItemProgressPoint, TimeRange } from "@/types/stats";
-import { formatDateByRange } from "@/utils/stats";
 import { filterProgressData } from "@/utils/item-progress";
+import { formatDateByRange } from "@/utils/stats";
 import { useFont } from "@shopify/react-native-skia";
 import React, { useMemo, useState } from "react";
 import { Text, View } from "react-native";
@@ -32,7 +32,7 @@ export default function ItemProgressGraph({
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
 
   const now = Date.now();
-  const { filtered: filteredData, cutoffDate } = useMemo(
+  const { filteredData, cutoffDate } = useMemo(
     () => filterProgressData(data, timeRange, now),
     [data, timeRange, now]
   );
@@ -88,7 +88,8 @@ export default function ItemProgressGraph({
 
       <View style={{ height: 300 }} className="gap-y-4">
         <CartesianChart
-          data={filteredData}
+          // this is realistically just ItemProgressPoint[] but I can't figure out how to type it
+          data={filteredData as any[]}
           xKey="timestamp"
           yKeys={[playedKey, atGoalKey]}
           domain={{
@@ -104,11 +105,11 @@ export default function ItemProgressGraph({
           yAxis={[{
             tickCount: 5,
             font,
-            formatYLabel: (value: number) => {
+            formatYLabel: (label: number) => {
               if (use_percent) {
-                return `${Math.round(value)}%`;
+                return `${Math.round(label)}%`;
               }
-              return Math.round(value).toString();
+              return Math.round(label).toString();
             },
           }]}
           chartPressState={state as any}
