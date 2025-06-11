@@ -1,6 +1,5 @@
 import { supabase } from '@/lib/supabase';
 
-
 export async function fetchBookStatsByBookId(bookId: string) {
   return supabase.from('book_stats_view').select('*').eq('book_id', bookId).single();
 }

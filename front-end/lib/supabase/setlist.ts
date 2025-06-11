@@ -55,7 +55,9 @@ export async function deleteSetlistItems(setlistId: string) {
 export async function insertSetlistItems(items: Partial<SetlistItemInsert>[]) {
   const userId = await getCurrentUserId();
 
-  return supabase.from('setlist_items').insert(items.map((item) => ({ ...item, created_by: userId })));
+  return supabase
+    .from('setlist_items')
+    .insert(items.map((item) => ({ ...item, created_by: userId })));
 }
 
 export async function fetchSetlistItems(setlistId: string) {

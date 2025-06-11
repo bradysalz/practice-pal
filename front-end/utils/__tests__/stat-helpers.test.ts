@@ -11,7 +11,6 @@ describe('toBookStat', () => {
     });
   });
 
-
   it('should handle complete valid data', () => {
     const completeData = {
       book_id: 'book123',
@@ -45,5 +44,4 @@ describe('toSectionStat', () => {
     const result = toSectionStat(completeData);
     expect(result).toEqual(completeData);
   });
-
 });

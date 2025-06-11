@@ -20,19 +20,18 @@ export type SessionWithCountsRow = NonNullableFields<SessionWithCountsPrivate>;
 
 export type SessionItemWithNested = SessionItemRow & {
   song:
-  | (SongRow & {
-    artist: ArtistRow | null;
-  })
-  | null;
+    | (SongRow & {
+        artist: ArtistRow | null;
+      })
+    | null;
   exercise:
-  | (ExerciseRow & {
-    section: SectionRow & {
-      book: BookRow;
-    };
-  })
-  | null;
+    | (ExerciseRow & {
+        section: SectionRow & {
+          book: BookRow;
+        };
+      })
+    | null;
 };
-
 
 export type SessionWithItems = SessionWithCountsRow & {
   session_items: SessionItemWithNested[];
@@ -62,7 +61,6 @@ export type InputLocalSessionItem = {
   // Include exercise details for local display
   exercise?: LocalExerciseDetails;
 };
-
 
 // Manual create types for local sessions
 export type DraftSessionItem = {

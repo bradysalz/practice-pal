@@ -165,9 +165,9 @@ export default function ActiveSessionPage() {
               exerciseDetails={
                 item.type === 'exercise' && item.exercise?.section
                   ? {
-                    bookId: item.exercise.section.book.id,
-                    sectionId: item.exercise.section.id,
-                  }
+                      bookId: item.exercise.section.book.id,
+                      sectionId: item.exercise.section.id,
+                    }
                   : undefined
               }
             />

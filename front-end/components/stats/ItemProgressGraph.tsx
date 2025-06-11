@@ -14,7 +14,11 @@ interface ItemProgressGraphProps {
   total_items: number;
 }
 
-export default function ItemProgressGraph({ data, use_percent, total_items }: ItemProgressGraphProps) {
+export default function ItemProgressGraph({
+  data,
+  use_percent,
+  total_items,
+}: ItemProgressGraphProps) {
   const font = useFont(require('@/assets/fonts/Inter-VariableFont_opsz,wght.ttf'), 14);
 
   const playedKey = use_percent ? 'percent_played' : 'played';

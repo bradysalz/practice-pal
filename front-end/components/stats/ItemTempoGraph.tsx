@@ -117,17 +117,13 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
             <View>
               <Line points={points.tempo} color="#ef4444" strokeWidth={3} />
               <Scatter points={points.tempo} color="#ef4444" radius={5} />
-              <Line
-                points={points.goal_tempo}
-                color="#3b82f6"
-                strokeWidth={3}
-              >
+              <Line points={points.goal_tempo} color="#3b82f6" strokeWidth={3}>
                 <DashPathEffect intervals={[15, 5]} />
               </Line>
             </View>
           )}
         </CartesianChart>
-      </View >
-    </View >
+      </View>
+    </View>
   );
 }

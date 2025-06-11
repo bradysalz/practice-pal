@@ -1,9 +1,7 @@
 import { Database } from '@/types/supabase';
 import { NonNullableFields } from '@/types/util';
 
-export type BookStatRow = NonNullableFields<
-  Database['public']['Views']['book_stats_view']['Row']
->;
+export type BookStatRow = NonNullableFields<Database['public']['Views']['book_stats_view']['Row']>;
 export type SectionStatRow = NonNullableFields<
   Database['public']['Views']['section_stats_view']['Row']
 >;
