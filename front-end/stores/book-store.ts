@@ -1,5 +1,4 @@
-import { db } from '@/lib/db/db';
-import { bookWithCountsView, refreshBookWithCountsView } from '@/lib/db/views/book_counts';
+import { refreshAndSelectBooks } from '@/lib/db/queries';
 import { BookWithCountsRow } from '@/types/book';
 import { create } from 'zustand';
 
@@ -12,8 +11,7 @@ export const useBooksStore = create<BooksState>((set) => ({
   books: [],
 
   fetchBooks: async () => {
-    await refreshBookWithCountsView();
-    const books = await db.select().from(bookWithCountsView);
+    const books = await refreshAndSelectBooks();
     set({ books });
   },
 }));

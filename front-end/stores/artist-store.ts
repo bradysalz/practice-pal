@@ -1,4 +1,5 @@
-import { fetchArtists, insertArtist } from '@/lib/supabase/artist';
+import { selectArtists } from '@/lib/db/queries';
+import { insertArtist } from '@/lib/supabase/artist';
 import { ArtistRow, LocalArtist, NewArtist } from '@/types/artist';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
@@ -14,12 +15,8 @@ export const useArtistsStore = create<ArtistsState>((set, get) => ({
   artists: [],
 
   fetchArtists: async () => {
-    const { data, error } = await fetchArtists();
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
-    set({ artists: data as ArtistRow[] });
+    const artists = await selectArtists();
+    set({ artists: artists as ArtistRow[] });
   },
 
   addArtistLocal: (artist: NewArtist) => {

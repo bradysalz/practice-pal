@@ -1,4 +1,5 @@
-import { fetchSetlistItems, insertSetlistItem } from '@/lib/supabase/setlist';
+import { selectSetlistItems } from '@/lib/db/queries';
+import { insertSetlistItem } from '@/lib/supabase/setlist';
 import { SetlistItemRow } from '@/types/setlist';
 import { create } from 'zustand';
 
@@ -12,12 +13,7 @@ export const useSetlistItemsStore = create<SetlistItemsState>((set, get) => ({
   setlistItems: [],
 
   fetchSetlistItems: async (setlistId) => {
-    const { data, error } = await fetchSetlistItems(setlistId);
-
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
+    const data = await selectSetlistItems(setlistId);
     set({ setlistItems: data as SetlistItemRow[] });
   },
 

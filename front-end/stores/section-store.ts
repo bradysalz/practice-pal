@@ -1,4 +1,5 @@
-import { fetchSections, insertSection } from '@/lib/supabase/section';
+import { refreshAndSelectSections } from '@/lib/db/queries';
+import { insertSection } from '@/lib/supabase/section';
 import { getCurrentUserId } from '@/lib/supabase/shared';
 import { NewSection, SectionWithCountsRow } from '@/types/section';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,12 +16,8 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
   sections: [],
 
   fetchSections: async () => {
-    const { data, error } = await fetchSections();
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
-    set({ sections: data as SectionWithCountsRow[] });
+    const sections = await refreshAndSelectSections();
+    set({ sections: sections as SectionWithCountsRow[] });
   },
 
   addSectionLocal: async (section: NewSection) => {
