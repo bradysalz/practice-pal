@@ -45,6 +45,7 @@
     "date-fns": "^4.1.0",
     "depcheck": "^1.4.7",
     "dotenv": "^16.5.0",
+    "drizzle-kit": "^0.31.1",
     "drizzle-orm": "^0.44.2",
     "expo": "~53.0.0",
     "expo-blur": "~14.1.4",
