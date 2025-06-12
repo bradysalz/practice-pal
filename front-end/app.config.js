@@ -30,6 +30,7 @@ export default () => ({
   plugins: [
     'expo-router',
     'expo-font',
+    'expo-sqlite',
     [
       'expo-splash-screen',
       {

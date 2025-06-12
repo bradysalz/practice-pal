@@ -4,6 +4,7 @@ module.exports = function (api) {
     presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }], 'nativewind/babel'],
     plugins: [
       '@babel/plugin-proposal-export-namespace-from',
+      ['inline-import', { extensions: ['.sql'] }],
       'react-native-reanimated/plugin', // must be last
     ],
   };

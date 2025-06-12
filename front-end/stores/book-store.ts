@@ -1,4 +1,5 @@
-import { fetchBooks } from '@/lib/supabase/book';
+import { db } from '@/lib/db/db';
+import { bookWithCountsView, refreshBookWithCountsView } from '@/lib/db/views/book_counts';
 import { BookWithCountsRow } from '@/types/book';
 import { create } from 'zustand';
 
@@ -11,11 +12,8 @@ export const useBooksStore = create<BooksState>((set) => ({
   books: [],
 
   fetchBooks: async () => {
-    const { data, error } = await fetchBooks();
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
-    set({ books: data as BookWithCountsRow[] });
+    await refreshBookWithCountsView();
+    const books = await db.select().from(bookWithCountsView);
+    set({ books });
   },
 }));
