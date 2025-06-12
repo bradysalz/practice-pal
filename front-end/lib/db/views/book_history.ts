@@ -13,11 +13,8 @@ export const bookProgressHistoryView = sqliteTable(
     percent_played: integer('percent_played').notNull(),
     percent_at_goal: integer('percent_at_goal').notNull(),
   },
-  (table) => ([
-    primaryKey({ columns: [table.book_id, table.date] }),
-  ])
+  (table) => [primaryKey({ columns: [table.book_id, table.date] })]
 );
-
 
 export async function refreshBookProgressHistory({ bookId }: { bookId?: string }) {
   const whereClause = bookId ? sql`WHERE b.id = ${bookId}` : sql``;

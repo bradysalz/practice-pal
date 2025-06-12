@@ -2,7 +2,6 @@ import { db } from '@/lib/db/db';
 import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-
 export const sectionWithCountsView = sqliteTable('section_with_counts', {
   id: text('id').primaryKey(), // section_id
   book_id: text('book_id').notNull(),

@@ -2,7 +2,6 @@ import { db } from '@/lib/db/db';
 import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-
 export const sessionWithItemsView = sqliteTable('session_with_items', {
   id: text('id').primaryKey(), // session_id
   duration: integer('duration'),

@@ -2,7 +2,6 @@ import { db } from '@/lib/db/db';
 import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-
 export const setlistsWithItemsView = sqliteTable('setlists_with_items', {
   id: text('id').primaryKey(), // setlist_id
   name: text('name').notNull(),

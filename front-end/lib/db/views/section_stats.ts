@@ -2,8 +2,6 @@ import { db } from '@/lib/db/db';
 import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-
-
 export const sectionStatsView = sqliteTable('section_stats', {
   section_id: text('section_id').notNull().primaryKey(),
   total_exercises: integer('total_exercises').notNull(),

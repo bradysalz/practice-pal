@@ -4,8 +4,12 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 // Shared columns for all tables
 const baseColumns = {
   created_by: text('created_by').notNull(),
-  created_at: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-  updated_at: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  created_at: text('created_at')
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  updated_at: text('updated_at')
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
   is_synced: integer('is_synced', { mode: 'boolean' }).default(false),
   remote_id: text('remote_id'), // ID of the record in Supabase, populates when syncing
 };
