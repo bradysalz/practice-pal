@@ -1,8 +1,5 @@
 import { selectExerciseById, selectExercisesBySection } from '@/lib/db/queries';
-import {
-  insertExercise,
-  updateExercise,
-} from '@/lib/supabase/exercise';
+import { insertExercise, updateExercise } from '@/lib/supabase/exercise';
 import { LocalExercise, NewExercise } from '@/types/exercise';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
@@ -54,7 +51,9 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
         [exercise.section_id]: [
-          ...(state.exercisesBySectionId[exercise.section_id] || []).filter((e) => e.id !== exercise.id),
+          ...(state.exercisesBySectionId[exercise.section_id] || []).filter(
+            (e) => e.id !== exercise.id
+          ),
           exercise as unknown as LocalExercise,
         ],
       },

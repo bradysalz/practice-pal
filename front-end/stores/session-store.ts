@@ -1,8 +1,4 @@
-import {
-  deleteSession,
-  insertSession,
-  insertSessionItems,
-} from '@/lib/supabase/session';
+import { deleteSession, insertSession, insertSessionItems } from '@/lib/supabase/session';
 import {
   refreshAndSelectSessions,
   refreshAndSelectRecentSessions,
@@ -47,7 +43,10 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
 
     const itemsBySession: Record<string, any[]> = {};
     for (const row of items) {
-      itemsBySession[row.session_id] = [...(itemsBySession[row.session_id] || []), { ...row, song: null, exercise: null }];
+      itemsBySession[row.session_id] = [
+        ...(itemsBySession[row.session_id] || []),
+        { ...row, song: null, exercise: null },
+      ];
     }
 
     const data: SessionWithItems[] = sessions.map((s) => ({

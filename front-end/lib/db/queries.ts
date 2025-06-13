@@ -9,42 +9,20 @@ import {
   setlistTable,
   songTable,
 } from '@/lib/db/schema';
-import {
-  sectionWithCountsView,
-  refreshSectionWithCountsView,
-} from '@/lib/db/views/section_counts';
-import {
-  bookWithCountsView,
-  refreshBookWithCountsView,
-} from '@/lib/db/views/book_counts';
-import {
-  sessionWithItemsView,
-  refreshSessionWithItemsView,
-} from '@/lib/db/views/session_items';
-import {
-  setlistsWithItemsView,
-  refreshSetlistsWithItemsView,
-} from '@/lib/db/views/setlist_items';
-import {
-  bookStatsView,
-  refreshBookStatsView,
-} from '@/lib/db/views/book_stats';
-import {
-  sectionStatsView,
-  refreshSectionStatsView,
-} from '@/lib/db/views/section_stats';
-import {
-  bookProgressHistoryView,
-  refreshBookProgressHistory,
-} from '@/lib/db/views/book_history';
+import { sectionWithCountsView, refreshSectionWithCountsView } from '@/lib/db/views/section_counts';
+import { bookWithCountsView, refreshBookWithCountsView } from '@/lib/db/views/book_counts';
+import { sessionWithItemsView, refreshSessionWithItemsView } from '@/lib/db/views/session_items';
+import { setlistsWithItemsView, refreshSetlistsWithItemsView } from '@/lib/db/views/setlist_items';
+import { bookStatsView, refreshBookStatsView } from '@/lib/db/views/book_stats';
+import { sectionStatsView, refreshSectionStatsView } from '@/lib/db/views/section_stats';
+import { bookProgressHistoryView, refreshBookProgressHistory } from '@/lib/db/views/book_history';
 import {
   sectionProgressHistoryView,
   refreshSectionProgressHistory,
 } from '@/lib/db/views/section_history';
 
 // Artist queries
-export const selectArtists = () =>
-  db.select().from(artistTable).orderBy(artistTable.name);
+export const selectArtists = () => db.select().from(artistTable).orderBy(artistTable.name);
 
 // Exercise queries
 export const selectExercisesBySection = (sectionId: string) =>
@@ -77,16 +55,10 @@ export const selectSessionItemsBySession = (sessionId: string) =>
     .orderBy(sessionItemTable.position);
 
 export const selectSessionItemsByExercise = (exerciseId: string) =>
-  db
-    .select()
-    .from(sessionItemTable)
-    .where(eq(sessionItemTable.exercise_id, exerciseId));
+  db.select().from(sessionItemTable).where(eq(sessionItemTable.exercise_id, exerciseId));
 
 export const selectSessionItemsBySong = (songId: string) =>
-  db
-    .select()
-    .from(sessionItemTable)
-    .where(eq(sessionItemTable.song_id, songId));
+  db.select().from(sessionItemTable).where(eq(sessionItemTable.song_id, songId));
 
 // Session queries
 export const refreshAndSelectSessions = async () => {
@@ -175,24 +147,17 @@ export const selectSetlistItems = (setlistId: string) =>
     .orderBy(setlistItemTable.position);
 
 // Song queries
-export const selectSongs = () =>
-  db.select().from(songTable).orderBy(songTable.name);
+export const selectSongs = () => db.select().from(songTable).orderBy(songTable.name);
 
 // Stat queries
 export const refreshAndSelectBookStats = async (bookId: string) => {
   await refreshBookStatsView({ bookId });
-  return db
-    .select()
-    .from(bookStatsView)
-    .where(eq(bookStatsView.book_id, bookId));
+  return db.select().from(bookStatsView).where(eq(bookStatsView.book_id, bookId));
 };
 
 export const refreshAndSelectSectionStats = async (sectionId: string) => {
   await refreshSectionStatsView({ sectionId });
-  return db
-    .select()
-    .from(sectionStatsView)
-    .where(eq(sectionStatsView.section_id, sectionId));
+  return db.select().from(sectionStatsView).where(eq(sectionStatsView.section_id, sectionId));
 };
 
 export const refreshAndSelectBookHistory = async (bookId: string) => {

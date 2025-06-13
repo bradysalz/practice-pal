@@ -5,10 +5,7 @@ import {
   insertSetlistItems,
   updateSetlist,
 } from '@/lib/supabase/setlist';
-import {
-  refreshAndSelectSetlists,
-  selectSetlistItemsByIds,
-} from '@/lib/db/queries';
+import { refreshAndSelectSetlists, selectSetlistItemsByIds } from '@/lib/db/queries';
 import {
   DraftSetlist,
   SetlistInsert,
@@ -38,7 +35,10 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
 
     const itemsBySetlist: Record<string, any[]> = {};
     for (const row of itemsRows) {
-      itemsBySetlist[row.setlist_id] = [...(itemsBySetlist[row.setlist_id] || []), { ...row, song: null, exercise: null }];
+      itemsBySetlist[row.setlist_id] = [
+        ...(itemsBySetlist[row.setlist_id] || []),
+        { ...row, song: null, exercise: null },
+      ];
     }
 
     const setlists: SetlistWithItems[] = base.map((b) => ({
