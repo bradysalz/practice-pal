@@ -12,7 +12,7 @@ export const sectionProgressHistoryView = sqliteTable('section_progress_history'
   percent_at_goal: integer('percent_at_goal').notNull(),
 });
 
-export async function refreshSectionProgressHistory({ sectionId }: { sectionId?: string }) {
+export async function refreshSectionProgressHistory({ sectionId }: { sectionId?: string } = {}) {
   const whereClause = sectionId ? sql`WHERE s.id = ${sectionId}` : sql``;
 
   db.run(sql`

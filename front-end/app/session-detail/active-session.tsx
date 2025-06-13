@@ -19,7 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ActiveSessionPage() {
   const { draftSession, updateDraftDetails } = useDraftSessionsStore();
-  const { insertSession } = useSessionsStore();
+  const { addSession } = useSessionsStore();
   const [isPaused, setIsPaused] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [tempos, setTempos] = useState<Record<string, string>>({});
@@ -82,7 +82,7 @@ export default function ActiveSessionPage() {
     const finalDraft = applyTemposToDraft(draftSession, tempos, elapsedTime);
 
     try {
-      await insertSession(finalDraft);
+      await addSession(finalDraft);
       router.push('/sessions');
     } catch (error) {
       console.error('Failed to save session:', error);

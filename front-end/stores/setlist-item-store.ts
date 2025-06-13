@@ -1,12 +1,14 @@
 import { selectSetlistItems } from '@/lib/db/queries';
-import { insertSetlistItem } from '@/lib/supabase/setlist';
+import { deleteSetlistItems, insertSetlistItem, updateSetlist } from '@/lib/supabase/setlist';
 import { SetlistItemRow } from '@/types/setlist';
 import { create } from 'zustand';
 
 type SetlistItemsState = {
   setlistItems: SetlistItemRow[];
-  syncAddSetlistItem: (tempId: string) => Promise<void>;
   fetchSetlistItems: (setlistId: string) => Promise<void>;
+  addSetlistItem: (item: SetlistItemRow) => Promise<void>;
+  updateSetlistItem: (id: string, updates: Partial<SetlistItemRow>) => Promise<void>;
+  deleteSetlistItem: (id: string) => Promise<void>;
 };
 
 export const useSetlistItemsStore = create<SetlistItemsState>((set, get) => ({
@@ -17,19 +19,24 @@ export const useSetlistItemsStore = create<SetlistItemsState>((set, get) => ({
     set({ setlistItems: data as SetlistItemRow[] });
   },
 
-  syncAddSetlistItem: async (id) => {
-    const localItem = get().setlistItems.find((s) => s.id === id);
-    if (!localItem) return;
+  addSetlistItem: async (item: SetlistItemRow) => {
+    await insertSetlistItem(item);
+    await get().fetchSetlistItems(item.setlist_id);
+  },
 
-    const { data, error } = await insertSetlistItem(localItem);
+  updateSetlistItem: async (id: string, updates: Partial<SetlistItemRow>) => {
+    const item = get().setlistItems.find((i) => i.id === id);
+    if (item) {
+      await updateSetlist(item.setlist_id, { ...updates, id });
+      await get().fetchSetlistItems(item.setlist_id);
+    }
+  },
 
-    if (error) {
-      console.error('Sync failed', error);
-      // Optional: mark as failed, etc.
-    } else {
-      set((state) => ({
-        setlistItems: state.setlistItems.map((s) => (s.id === id ? data : s)),
-      }));
+  deleteSetlistItem: async (id: string) => {
+    const item = get().setlistItems.find((i) => i.id === id);
+    if (item) {
+      await deleteSetlistItems(item.setlist_id);
+      await get().fetchSetlistItems(item.setlist_id);
     }
   },
 }));

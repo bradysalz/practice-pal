@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
-import { DraftSession, LocalSessionItem } from '@/types/session';
+import { DraftSession, LocalSessionItem, NewSessionItem } from '@/types/session';
+import { v4 as uuidv4 } from 'uuid';
 import { getCurrentUserId } from './shared';
 
 const SESSION_WITH_ITEMS_QUERY = `
@@ -68,12 +69,13 @@ export async function fetchSessionItemsBySong(songId: string) {
   return supabase.from('session_items').select('*').eq('song_id', songId);
 }
 
-export async function insertSessionItem(item: LocalSessionItem) {
+export async function insertSessionItem(item: NewSessionItem) {
   const userId = await getCurrentUserId();
+  const id = uuidv4();
 
   return supabase
     .from('session_items')
-    .insert({ ...item, created_by: userId })
+    .insert({ ...item, id, created_by: userId })
     .select()
     .single();
 }

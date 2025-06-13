@@ -12,7 +12,7 @@
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --no-coverage",
     "test:coverage": "jest --coverage",
     "gen:types": "npx supabase gen types typescript --linked > $(git rev-parse --show-toplevel)/front-end/types/supabase.ts",
     "gen:data": "node scripts/data-gen.js"

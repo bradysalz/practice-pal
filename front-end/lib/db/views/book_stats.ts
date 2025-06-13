@@ -9,7 +9,7 @@ export const bookStatsView = sqliteTable('book_stats', {
   goal_reached_exercises: integer('goal_reached_exercises').notNull(),
 });
 
-export async function refreshBookStatsView({ bookId }: { bookId?: string }) {
+export async function refreshBookStatsView({ bookId }: { bookId?: string } = {}) {
   const whereClause = bookId ? sql`WHERE b.id = ${bookId}` : sql``;
 
   db.run(sql`

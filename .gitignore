@@ -1,3 +1,7 @@
+# Prebuild stuff
+front-end/android/
+front-end/ios/
+
 # Local dev stuff
 seed.sql
 dump.sql

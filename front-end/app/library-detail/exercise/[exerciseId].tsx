@@ -24,8 +24,7 @@ export default function ExerciseDetailPage() {
   );
 
   // Update
-  const updateExerciseLocal = useExercisesStore((state) => state.updateExerciseLocal);
-  const syncUpdateExercise = useExercisesStore((state) => state.syncUpdateExercise);
+  const updateExercise = useExercisesStore((state) => state.updateExercise);
   const fetchExerciseById = useExercisesStore((state) => state.fetchExerciseById);
 
   useEffect(() => {
@@ -55,8 +54,7 @@ export default function ExerciseDetailPage() {
         sessionItems={sessionItems}
         itemId={exerciseId}
         initialGoalTempo={exercise.goal_tempo || null}
-        onUpdateLocal={updateExerciseLocal}
-        onSyncUpdate={syncUpdateExercise}
+        onUpdate={updateExercise}
       />
     </ScrollView>
   );

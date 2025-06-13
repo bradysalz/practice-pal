@@ -3,8 +3,8 @@ import {
   selectSessionItemsBySession,
   selectSessionItemsBySong,
 } from '@/lib/db/queries';
+import { insertSessionItem } from '@/lib/supabase/session';
 import { LocalSessionItem, NewSessionItem, SessionItemRow } from '@/types/session';
-import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type SessionItemsState = {
@@ -16,7 +16,7 @@ type SessionItemsState = {
   fetchSessionItemByExerciseId: (exerciseId: string, force?: boolean) => Promise<void>;
   fetchSessionItemBySongId: (songId: string) => Promise<void>;
 
-  addSessionItemLocal: (item: NewSessionItem) => string;
+  addSessionItem: (item: NewSessionItem) => Promise<void>;
 };
 
 export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
@@ -26,7 +26,6 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
 
   fetchSessionItemBySessionId: async (sessionId) => {
     const data = await selectSessionItemsBySession(sessionId);
-
     set((state) => ({
       sessionItemsBySession: {
         ...state.sessionItemsBySession,
@@ -36,13 +35,11 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   },
 
   fetchSessionItemByExerciseId: async (exerciseId: string, force: boolean = false) => {
-    // Return early if data exists and not forcing refresh
     if (!force && get().sessionItemsByExercise[exerciseId]?.length > 0) {
       return;
     }
 
     const data = await selectSessionItemsByExercise(exerciseId);
-
     set((state) => ({
       sessionItemsByExercise: {
         ...state.sessionItemsByExercise,
@@ -53,19 +50,15 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
 
   fetchSessionItemBySongId: async (songId) => {
     const data = await selectSessionItemsBySong(songId);
-
     set((state) => ({
       sessionItemsBySong: { ...state.sessionItemsBySong, [songId]: data as SessionItemRow[] },
     }));
   },
 
-  addSessionItemLocal: (item: NewSessionItem) => {
-    const id = uuidv4();
+  addSessionItem: async (item: NewSessionItem) => {
     const now = new Date().toISOString();
-
-    const newItem: LocalSessionItem = {
+    const newItem: NewSessionItem = {
       ...item,
-      id,
       created_at: now,
       updated_at: now,
       exercise_id: item.exercise_id ?? null,
@@ -74,13 +67,9 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
       position: item.position ?? null,
     };
 
-    set((state) => ({
-      sessionItemsBySession: {
-        ...state.sessionItemsBySession,
-        [item.session_id!]: [newItem, ...(state.sessionItemsBySession[item.session_id!] || [])],
-      },
-    }));
-
-    return id;
+    await insertSessionItem(newItem);
+    if (item.session_id) {
+      await get().fetchSessionItemBySessionId(item.session_id);
+    }
   },
 }));

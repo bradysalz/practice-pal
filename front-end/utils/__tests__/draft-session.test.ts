@@ -92,7 +92,7 @@ describe('draft-session utils', () => {
 
       expect(result).toEqual({
         id: MOCK_UUID,
-        duration: null,
+        duration: 0,
         items: [],
       });
     });

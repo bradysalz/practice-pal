@@ -40,4 +40,4 @@ jobs:
 
             - name: Run unit tests
               working-directory: front-end
-              run: npm test
+              run: npm test:coverage

@@ -10,7 +10,9 @@ export const setlistsWithItemsView = sqliteTable('setlists_with_items', {
   exercise_count: integer('exercise_count').notNull(),
 });
 
-export async function refreshSetlistsWithItemsView() {
+export async function refreshSetlistsWithItemsView({ setlistId }: { setlistId?: string } = {}) {
+  const whereClause = setlistId ? sql`where s.id = ${setlistId}` : sql``;
+
   db.run(sql`
     INSERT OR REPLACE INTO setlists_with_items (id, name, description, song_count, exercise_count)
     select
@@ -28,6 +30,7 @@ export async function refreshSetlistsWithItemsView() {
     from
       setlists s
       left join setlist_items si on si.setlist_id = s.id
+      ${whereClause}
     group by
       s.id;
   `);

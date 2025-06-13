@@ -94,6 +94,6 @@ export type DraftSessionItem = {
 
 export type DraftSession = {
   id: string;
-  duration: number | null;
+  duration: number;
   items: DraftSessionItem[];
 };
