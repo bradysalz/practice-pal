@@ -28,7 +28,7 @@ jobs:
 
             - name: Run Prettier
               working-directory: front-end
-              run: npm run prettier:check
+              run: npm run format:check
 
             - name: Run ESLint
               working-directory: front-end
@@ -40,4 +40,4 @@ jobs:
 
             - name: Run unit tests
               working-directory: front-end
-              run: npm test
+              run: npm run test:coverage

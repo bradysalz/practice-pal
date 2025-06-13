@@ -22,7 +22,7 @@ export const useDraftSessionsStore = create<DraftSessionsState>((set, get) => ({
 
     const newSession: DraftSession = {
       id,
-      duration: draft.duration ?? null,
+      duration: draft.duration ?? 0,
       items: draft.items ?? [],
     };
 

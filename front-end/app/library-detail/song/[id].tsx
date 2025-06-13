@@ -20,8 +20,7 @@ export default function SongDetailPage() {
 
   // Stores
   const songs = useSongsStore((state) => state.songs);
-  const updateSongLocal = useSongsStore((state) => state.updateSongLocal);
-  const syncUpdateSong = useSongsStore((state) => state.syncUpdateSong);
+  const updateSong = useSongsStore((state) => state.updateSong);
   const artists = useArtistsStore((state) => state.artists);
   const sessionItemsBySong = useSessionItemsStore((state) => state.sessionItemsBySong);
 
@@ -60,8 +59,7 @@ export default function SongDetailPage() {
         sessionItems={sessionItems}
         itemId={songId}
         initialGoalTempo={song.goal_tempo ?? null}
-        onUpdateLocal={updateSongLocal}
-        onSyncUpdate={syncUpdateSong}
+        onUpdate={updateSong}
       />
     </ScrollView>
   );

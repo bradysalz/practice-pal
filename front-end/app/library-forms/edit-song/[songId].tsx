@@ -4,8 +4,8 @@ import { deleteSong, updateSong } from '@/lib/supabase/song';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { LocalArtist } from '@/types/artist';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import { fuzzySearchArtists } from '@/utils/song-edit';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -26,7 +26,7 @@ export default function EditSongPage() {
   const [showArtistDropdown, setShowArtistDropdown] = useState(false);
 
   const fetchSongs = useSongsStore((state) => state.fetchSongs);
-  const { fetchArtists, addArtistLocal, syncAddArtist } = useArtistsStore();
+  const { fetchArtists, addArtist } = useArtistsStore();
 
   useEffect(() => {
     fetchArtists();
@@ -56,41 +56,19 @@ export default function EditSongPage() {
 
   const handleSaveSong = async () => {
     setIsSaving(true);
-    let needsArtistFetch = false;
 
-    try {
-      let artistId = artists.find((artist) => artist.name === songArtist)?.id;
-
-      // If we have an artist name but no ID, create a new artist
-      if (songArtist && !artistId) {
-        // Add artist locally first
-        artistId = addArtistLocal({
-          name: songArtist,
-        });
-        // Sync with backend
-        await syncAddArtist(artistId);
-        needsArtistFetch = true;
-      }
-
-      // Update song with new name and artist
-      await updateSong(songId, {
-        name: songName,
-        artist_id: artistId,
-      });
-
-      if (needsArtistFetch) {
-        await Promise.all([fetchArtists(), fetchSongs()]);
-      } else {
-        await fetchSongs();
-      }
-
-      router.push(`/library-detail/song/${songId}`);
-    } catch (error) {
-      console.error('Failed to save song:', error);
-      // TODO: Show error feedback to user
-    } finally {
-      setIsSaving(false);
+    const artistId = artists.find((artist) => artist.name === songArtist)?.id;
+    if (songArtist && !artistId) {
+      await addArtist(songArtist);
     }
+
+    await updateSong(songId, {
+      name: songName,
+      artist_id: artistId,
+    });
+
+    router.push(`/library-detail/song/${songId}`);
+    setIsSaving(false);
   };
 
   const handleDeleteSong = async () => {

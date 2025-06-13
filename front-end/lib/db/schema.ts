@@ -34,6 +34,7 @@ export const exerciseTable = sqliteTable('exercises', {
   name: text('name').notNull(),
   section_id: text('section_id').notNull(),
   goal_tempo: integer('goal_tempo'),
+  filepath: text('filepath'),
   order: integer('order').notNull(),
   ...baseColumns,
 });

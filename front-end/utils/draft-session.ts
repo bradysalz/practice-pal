@@ -54,7 +54,7 @@ export function exerciseToDraftSessionItem(
 export function createNewDraft(): DraftSession {
   return {
     id: uuidv4(),
-    duration: null,
+    duration: 0,
     items: [],
   };
 }

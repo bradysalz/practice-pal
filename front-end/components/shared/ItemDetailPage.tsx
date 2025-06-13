@@ -13,16 +13,14 @@ interface ItemDetailPageProps {
   sessionItems: LocalSessionItem[];
   itemId: string;
   initialGoalTempo: number | null;
-  onUpdateLocal: (id: string, updates: { goal_tempo: number }) => void;
-  onSyncUpdate: (id: string) => Promise<{ error: any | null }>;
+  onUpdate: (id: string, updates: { goal_tempo: number }) => void;
 }
 
 export default function ItemDetailPage({
   sessionItems,
   itemId,
   initialGoalTempo,
-  onUpdateLocal,
-  onSyncUpdate,
+  onUpdate,
 }: ItemDetailPageProps) {
   const allSessions = useSessionsStore((state) => state.sessions);
   const sessionMap = new Map(allSessions.map((s) => [s.id, s]));
@@ -42,14 +40,9 @@ export default function ItemDetailPage({
       return;
     }
     setStatus('saving');
-    onUpdateLocal(itemId, { goal_tempo: parsed });
-    const { error } = await onSyncUpdate(itemId);
-    if (error) {
-      setStatus('error');
-    } else {
-      setStatus('saved');
-      setTimeout(() => setStatus('idle'), 1500); // Reset after brief display
-    }
+    onUpdate(itemId, { goal_tempo: parsed });
+    setStatus('saved');
+    setTimeout(() => setStatus('idle'), 1500); // Reset after brief display
   };
 
   return (

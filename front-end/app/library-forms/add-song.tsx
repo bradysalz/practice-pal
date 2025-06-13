@@ -19,8 +19,8 @@ export default function AddSongPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   // Get store hooks
-  const { artists, fetchArtists, addArtistLocal, syncAddArtist } = useArtistsStore();
-  const { addSongLocal, syncAddSong, fetchSongs } = useSongsStore();
+  const { artists, fetchArtists, addArtist } = useArtistsStore();
+  const { addSong } = useSongsStore();
 
   useEffect(() => {
     fetchArtists();
@@ -67,46 +67,20 @@ export default function AddSongPage() {
   const handleSaveSong = async () => {
     if (isSaving) return;
     setIsSaving(true);
-    let needsArtistFetch = false;
 
-    try {
-      let artistId = artists.find((artist) => artist.name === songArtist)?.id;
-
-      // If we have an artist name but no ID, create a new artist
-      if (songArtist && !artistId) {
-        // Add artist locally first
-        artistId = addArtistLocal({
-          name: songArtist,
-        });
-        // Sync with backend
-        await syncAddArtist(artistId);
-        needsArtistFetch = true;
-      }
-
-      // Add song locally
-      const songId = addSongLocal({
-        name: songName,
-        artist_id: artistId!,
-        goal_tempo: songGoalTempo ? parseInt(songGoalTempo) : undefined,
-      });
-
-      // Sync with backend
-      await syncAddSong(songId);
-
-      if (needsArtistFetch) {
-        Promise.all([fetchArtists(), fetchSongs()]);
-      } else {
-        await fetchSongs();
-      }
-
-      // Navigate back to library
-      router.push('/library');
-    } catch (error) {
-      console.error('Failed to save song:', error);
-      // TODO: Show error feedback to user
-    } finally {
-      setIsSaving(false);
+    const artistId = artists.find((artist) => artist.name === songArtist)?.id;
+    if (songArtist && !artistId) {
+      await addArtist(songArtist);
     }
+
+    await addSong({
+      name: songName,
+      artist_id: artistId!,
+      goal_tempo: songGoalTempo ? parseInt(songGoalTempo) : undefined,
+    });
+
+    router.push('/library');
+    setIsSaving(false);
   };
 
   const filteredArtists = getFilteredArtists();

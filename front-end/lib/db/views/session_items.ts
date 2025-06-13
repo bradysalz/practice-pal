@@ -9,7 +9,9 @@ export const sessionWithItemsView = sqliteTable('session_with_items', {
   song_count: integer('song_count').notNull(),
 });
 
-export async function refreshSessionWithItemsView() {
+export async function refreshSessionWithItemsView({ sessionId }: { sessionId?: string } = {}) {
+  const whereClause = sessionId ? sql`where s.id = ${sessionId}` : sql``;
+
   db.run(sql`
     INSERT OR REPLACE INTO session_with_items (
       id,
@@ -31,6 +33,7 @@ export async function refreshSessionWithItemsView() {
     from
       sessions s
       left join session_items si on si.session_id = s.id
+      ${whereClause}
     group by
       s.id;
   `);

@@ -1,11 +1,12 @@
-import { deleteSession, insertSession, insertSessionItems } from '@/lib/supabase/session';
+import { updateSession } from '@/lib/db/mutations';
 import {
-  refreshAndSelectSessions,
   refreshAndSelectRecentSessions,
   refreshAndSelectSessionDetail,
+  refreshAndSelectSessions,
   selectSessionItemsBySession,
   selectSessionItemsBySessionIds,
 } from '@/lib/db/queries';
+import { deleteSession, insertSession, insertSessionItems } from '@/lib/supabase/session';
 import {
   DraftSession,
   LocalSessionItem,
@@ -18,10 +19,12 @@ type SessionsState = {
   sessions: SessionWithCountsRow[];
   sessionsWithItems: SessionWithItems[];
   sessionDetailMap: Record<string, SessionWithItems>;
-  insertSession: (draft: DraftSession) => Promise<void>;
   fetchSessions: () => Promise<void>;
   fetchSessionDetail: (sessionId: string) => Promise<void>;
   fetchRecentSessionsWithItems: (limit: number) => Promise<void>;
+  addSession: (draft: DraftSession) => Promise<void>;
+  updateSession: (id: string, updates: DraftSession) => Promise<void>;
+  deleteSession: (id: string) => Promise<void>;
 };
 
 export const useSessionsStore = create<SessionsState>((set, get) => ({
@@ -36,8 +39,6 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
 
   fetchRecentSessionsWithItems: async (limit) => {
     const sessions = await refreshAndSelectRecentSessions(limit);
-
-    // Fetch items
     const ids = sessions.map((s) => s.id);
     const items = await selectSessionItemsBySessionIds(ids);
 
@@ -53,10 +54,10 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
       ...(s as unknown as SessionWithItems),
       session_items: itemsBySession[s.id] || [],
     }));
-    const map = Object.fromEntries(data.map((s) => [s.id, s]));
+
     set({
       sessionsWithItems: data,
-      sessionDetailMap: map,
+      sessionDetailMap: Object.fromEntries(data.map((s) => [s.id, s])),
     });
   },
 
@@ -69,7 +70,6 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     if (!base) return;
 
     const items = await selectSessionItemsBySession(sessionId);
-
     const detail: SessionWithItems = {
       ...(base as unknown as SessionWithItems),
       session_items: items.map((i) => ({ ...i, song: null, exercise: null })),
@@ -83,16 +83,11 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     }));
   },
 
-  insertSession: async (draft: DraftSession) => {
+  addSession: async (draft: DraftSession) => {
     const now = new Date().toISOString();
 
     // Insert the session
-    const { error: sessionError } = await insertSession(draft);
-
-    if (sessionError) {
-      console.error('Failed to insert session', sessionError);
-      throw new Error('Failed to insert session');
-    }
+    await insertSession(draft);
 
     // Insert session items
     const validSessionItems = draft.items.filter((item) => item.tempo !== null);
@@ -106,16 +101,17 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
       exercise_id: item.exercise?.id ?? null,
     }));
 
-    const { error: itemsError } = await insertSessionItems(sessionItemInserts);
+    await insertSessionItems(sessionItemInserts);
+    await get().fetchSessions();
+  },
 
-    if (itemsError) {
-      console.error('Failed to insert session items', itemsError);
-      // Cleanup the session since items failed
-      await deleteSession(draft.id);
-      throw new Error('Failed to insert session items');
-    }
+  updateSession: async (id: string, updates: DraftSession) => {
+    await updateSession(id, updates);
+    await get().fetchSessions();
+  },
 
-    // Refresh the sessions list
+  deleteSession: async (id: string) => {
+    await deleteSession(id);
     await get().fetchSessions();
   },
 }));

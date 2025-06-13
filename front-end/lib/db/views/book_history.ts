@@ -16,7 +16,7 @@ export const bookProgressHistoryView = sqliteTable(
   (table) => [primaryKey({ columns: [table.book_id, table.date] })]
 );
 
-export async function refreshBookProgressHistory({ bookId }: { bookId?: string }) {
+export async function refreshBookProgressHistory({ bookId }: { bookId?: string } = {}) {
   const whereClause = bookId ? sql`WHERE b.id = ${bookId}` : sql``;
 
   db.run(sql`

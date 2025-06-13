@@ -7,6 +7,11 @@ export type BookWithCountsRow = NonNullableFields<BookWithCountsPrivate>;
 
 export type ExerciseNamingType = 'alpha' | 'numeric' | 'custom';
 
+export type NewBook = {
+  name: string;
+  author: string;
+};
+
 export interface SectionFormData {
   name: string;
   exerciseCount: number;

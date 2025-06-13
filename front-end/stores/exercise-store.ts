@@ -1,19 +1,19 @@
+import { deleteExercise, insertExercise, updateExercise } from '@/lib/db/mutations';
 import { selectExerciseById, selectExercisesBySection } from '@/lib/db/queries';
-import { insertExercise, updateExercise } from '@/lib/supabase/exercise';
 import { LocalExercise, NewExercise } from '@/types/exercise';
-import { PostgrestError } from '@supabase/supabase-js';
-import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type ExercisesState = {
   exercisesById: Record<string, LocalExercise>;
   exercisesBySectionId: Record<string, LocalExercise[]>;
-  addExerciseLocal: (exercise: NewExercise) => Promise<string>;
-  syncAddExercise: (tempId: string) => Promise<{ error: PostgrestError | null }>;
-  updateExerciseLocal: (id: string, updates: Partial<LocalExercise>) => void;
-  syncUpdateExercise: (id: string) => Promise<{ error: PostgrestError | null }>;
   fetchExercisesBySection: (section_id: string, force?: boolean) => Promise<void>;
   fetchExerciseById: (id: string) => Promise<void>;
+  addExercise: (exercise: NewExercise) => Promise<void>;
+  updateExercise: (
+    id: string,
+    updates: { name?: string; section_id?: string; order?: number; goal_tempo?: number }
+  ) => Promise<void>;
+  deleteExercise: (id: string) => Promise<void>;
 };
 
 export const useExercisesStore = create<ExercisesState>((set, get) => ({
@@ -31,7 +31,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     set((state) => ({
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
-        [section_id]: data as unknown as LocalExercise[],
+        [section_id]: data,
       },
     }));
   },
@@ -60,104 +60,45 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     }));
   },
 
-  updateExerciseLocal: (id, updates) => {
-    set((state) => {
-      const newExercises = { ...state.exercisesBySectionId };
+  addExercise: async (exercise: NewExercise) => {
+    await insertExercise(
+      exercise.name ?? '',
+      exercise.section_id,
+      exercise.order ?? 0,
+      exercise.goal_tempo ?? undefined
+    );
+    await get().fetchExercisesBySection(exercise.section_id, true);
+  },
 
-      // Find the section containing this exercise
-      for (const [sectionId, exercises] of Object.entries(state.exercisesBySectionId)) {
-        const exerciseIndex = exercises.findIndex((e) => e.id === id);
-        if (exerciseIndex !== -1) {
-          newExercises[sectionId] = exercises.map((e) =>
-            e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
-          );
-          break;
-        }
+  updateExercise: async (
+    id: string,
+    updates: { name?: string; section_id?: string; order?: number; goal_tempo?: number }
+  ) => {
+    await updateExercise(id, updates);
+
+    // If section_id changed, we need to refetch both sections
+    if (updates.section_id) {
+      const oldExercise = get().exercisesById[id];
+      if (oldExercise) {
+        await get().fetchExercisesBySection(oldExercise.section_id, true);
       }
-
-      return { exercisesBySectionId: newExercises };
-    });
-  },
-
-  syncUpdateExercise: async (id) => {
-    let exercise: LocalExercise | undefined;
-
-    // Find the exercise in any section
-    for (const exercises of Object.values(get().exercisesBySectionId)) {
-      exercise = exercises.find((e) => e.id === id);
-      if (exercise) break;
-    }
-
-    if (!exercise) return { error: null };
-
-    const { id: _, created_at, ...updatePayload } = exercise;
-
-    const { error } = await updateExercise(id, updatePayload);
-
-    if (error) {
-      console.error('Failed to sync exercise update:', error);
-      return { error };
-    }
-
-    return { error: null };
-  },
-
-  addExerciseLocal: async (exercise: NewExercise) => {
-    const id = uuidv4();
-    const now = new Date().toISOString();
-
-    const newExercise: LocalExercise = {
-      id,
-      name: exercise.name ?? null,
-      section_id: exercise.section_id,
-      goal_tempo: exercise.goal_tempo ?? null,
-      filepath: exercise.filepath ?? null,
-      order: exercise.order ?? null,
-      created_at: now,
-      updated_at: now,
-    };
-
-    set((state) => ({
-      exercisesBySectionId: {
-        ...state.exercisesBySectionId,
-        [exercise.section_id]: [
-          ...(state.exercisesBySectionId[exercise.section_id] || []),
-          newExercise,
-        ],
-      },
-    }));
-    return id;
-  },
-
-  syncAddExercise: async (id) => {
-    let localExercise: LocalExercise | undefined;
-    let sectionId: string | undefined;
-
-    // Find the exercise and its section
-    for (const [section, exercises] of Object.entries(get().exercisesBySectionId)) {
-      localExercise = exercises.find((e) => e.id === id);
-      if (localExercise) {
-        sectionId = section;
-        break;
+      await get().fetchExercisesBySection(updates.section_id, true);
+    } else {
+      // Otherwise just refetch the current section
+      const exercise = get().exercisesById[id];
+      if (exercise) {
+        await get().fetchExercisesBySection(exercise.section_id, true);
       }
     }
 
-    if (!localExercise || !sectionId) return { error: null };
+    await get().fetchExerciseById(id);
+  },
 
-    const { data, error } = await insertExercise(localExercise);
+  deleteExercise: async (id: string) => {
+    const exercise = get().exercisesById[id];
+    if (!exercise) return;
 
-    if (error) {
-      console.error('Sync failed', error);
-      return { error: error as PostgrestError };
-    }
-
-    set((state) => ({
-      exercisesBySectionId: {
-        ...state.exercisesBySectionId,
-        [sectionId!]: state.exercisesBySectionId[sectionId!].map((e) => (e.id === id ? data : e)),
-      },
-    }));
-
-    return { error: null } as { error: null };
+    await deleteExercise(id);
+    await get().fetchExercisesBySection(exercise.section_id, true);
   },
 }));

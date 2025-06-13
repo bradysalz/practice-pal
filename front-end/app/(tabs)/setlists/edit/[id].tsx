@@ -22,7 +22,7 @@ export default function EditSetlistPage() {
 
   // Get stores
   const setlistDetailMap = useSetlistsStore((state) => state.setlistDetailMap);
-  const { updateSetlist, insertSetlist } = useSetlistsStore();
+  const { updateSetlist, addSetlist } = useSetlistsStore();
 
   const draftSetlist = useDraftSetlistsStore((state) => state.draftSetlist);
   const { setDraftSetlist, clearDraftSetlist, removeItemFromDraft, reorderDraftItems } =
@@ -61,7 +61,7 @@ export default function EditSetlistPage() {
 
     try {
       if (setlistId === 'new') {
-        await insertSetlist(draftSetlist);
+        await addSetlist(draftSetlist);
       } else {
         const existingSetlist = setlistDetailMap[setlistId];
         if (!existingSetlist) {

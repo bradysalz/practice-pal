@@ -1,17 +1,14 @@
+import { deleteSong, insertSong, updateSong } from '@/lib/db/mutations';
 import { selectSongs } from '@/lib/db/queries';
-import { insertSong, updateSong } from '@/lib/supabase/song';
 import { LocalSong, NewSong } from '@/types/song';
-import { PostgrestError } from '@supabase/supabase-js';
-import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 
 type SongsState = {
   songs: LocalSong[];
-  addSongLocal: (song: NewSong) => string;
-  syncAddSong: (tempId: string) => Promise<void>;
+  addSong: (song: NewSong) => Promise<void>;
+  updateSong: (id: string, updates: Partial<LocalSong>) => Promise<void>;
+  deleteSong: (id: string) => Promise<void>;
   fetchSongs: () => Promise<void>;
-  updateSongLocal: (id: string, updates: Partial<LocalSong>) => void;
-  syncUpdateSong: (id: string) => Promise<{ error: PostgrestError | null }>;
 };
 
 export const useSongsStore = create<SongsState>((set, get) => ({
@@ -22,60 +19,22 @@ export const useSongsStore = create<SongsState>((set, get) => ({
     set({ songs: songs as LocalSong[] });
   },
 
-  addSongLocal: (song: NewSong) => {
-    const id = uuidv4();
-    const now = new Date().toISOString();
-
-    const newSong: LocalSong = {
-      ...song,
-      id,
-      artist_id: song.artist_id,
-      goal_tempo: song.goal_tempo ?? null,
-      created_at: now,
-      updated_at: now,
-    };
-
-    set((state) => ({ songs: [...state.songs, newSong] }));
-    return id;
+  addSong: async (song: NewSong) => {
+    await insertSong(song.name, song.artist_id, song.goal_tempo ?? undefined);
+    await get().fetchSongs();
   },
 
-  syncAddSong: async (id) => {
-    const localSong = get().songs.find((s) => s.id === id);
-    if (!localSong) return;
-
-    const { data, error } = await insertSong(localSong);
-
-    if (error) {
-      console.error('Sync failed', error);
-      // Optional: mark sync failure, revert, etc.
-    } else {
-      set((state) => ({
-        songs: state.songs.map((s) => (s.id === id ? data : s)),
-      }));
-    }
+  updateSong: async (id: string, updates: Partial<LocalSong>) => {
+    await updateSong(id, {
+      name: updates.name,
+      artist_id: updates.artist_id,
+      goal_tempo: updates.goal_tempo ?? undefined,
+    });
+    await get().fetchSongs();
   },
 
-  updateSongLocal: (id, updates) => {
-    set((state) => ({
-      songs: state.songs.map((song) =>
-        song.id === id ? { ...song, ...updates, updated_at: new Date().toISOString() } : song
-      ),
-    }));
-  },
-
-  syncUpdateSong: async (id) => {
-    const song = get().songs.find((s) => s.id === id);
-    if (!song) return { error: null };
-
-    const { id: _, created_at, ...updatePayload } = song;
-
-    const { error } = await updateSong(id, updatePayload);
-
-    if (error) {
-      console.error('Failed to sync song update:', error);
-      return { error };
-    }
-
-    return { error: null };
+  deleteSong: async (id: string) => {
+    await deleteSong(id);
+    await get().fetchSongs();
   },
 }));
