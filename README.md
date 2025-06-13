@@ -14,5 +14,5 @@ a tool to help me practice more + better (note: i made this instead of practicin
     -   `npm run --prefix front-end lint`
     -   `npm run --prefix front-end typecheck`
     -   `npm run --prefix front-end test`
-    -   `npm run --prefix front-end prettier:check`
-        -   To fix formatting issues manually, run `npm run --prefix front-end prettier`
+    -   `npm run --prefix front-end format:check`
+        -   To fix formatting issues manually, run `npm run --prefix front-end format`
