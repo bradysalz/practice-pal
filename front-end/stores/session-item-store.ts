@@ -1,8 +1,8 @@
 import {
-  fetchSessionItemsByExercise,
-  fetchSessionItemsBySession,
-  fetchSessionItemsBySong,
-} from '@/lib/supabase/session';
+  selectSessionItemsByExercise,
+  selectSessionItemsBySession,
+  selectSessionItemsBySong,
+} from '@/lib/db/queries';
 import { LocalSessionItem, NewSessionItem, SessionItemRow } from '@/types/session';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
@@ -25,12 +25,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   sessionItemsBySong: {},
 
   fetchSessionItemBySessionId: async (sessionId) => {
-    const { data, error } = await fetchSessionItemsBySession(sessionId);
-
-    if (error) {
-      console.error('Fetch by session failed', error);
-      return;
-    }
+    const data = await selectSessionItemsBySession(sessionId);
 
     set((state) => ({
       sessionItemsBySession: {
@@ -46,12 +41,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
       return;
     }
 
-    const { data, error } = await fetchSessionItemsByExercise(exerciseId);
-
-    if (error) {
-      console.error('Fetch by exercise failed', error);
-      return;
-    }
+    const data = await selectSessionItemsByExercise(exerciseId);
 
     set((state) => ({
       sessionItemsByExercise: {
@@ -62,12 +52,7 @@ export const useSessionItemsStore = create<SessionItemsState>((set, get) => ({
   },
 
   fetchSessionItemBySongId: async (songId) => {
-    const { data, error } = await fetchSessionItemsBySong(songId);
-
-    if (error) {
-      console.error('Fetch by song failed', error);
-      return;
-    }
+    const data = await selectSessionItemsBySong(songId);
 
     set((state) => ({
       sessionItemsBySong: { ...state.sessionItemsBySong, [songId]: data as SessionItemRow[] },

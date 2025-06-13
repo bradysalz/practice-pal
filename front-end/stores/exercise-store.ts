@@ -1,9 +1,5 @@
-import {
-  fetchExerciseById,
-  fetchExercisesBySection,
-  insertExercise,
-  updateExercise,
-} from '@/lib/supabase/exercise';
+import { selectExerciseById, selectExercisesBySection } from '@/lib/db/queries';
+import { insertExercise, updateExercise } from '@/lib/supabase/exercise';
 import { LocalExercise, NewExercise } from '@/types/exercise';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
@@ -30,40 +26,35 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
       return;
     }
 
-    const { data, error } = await fetchExercisesBySection(section_id);
-
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
+    const data = await selectExercisesBySection(section_id);
 
     set((state) => ({
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
-        [section_id]: data as LocalExercise[],
+        [section_id]: data as unknown as LocalExercise[],
       },
     }));
   },
 
   fetchExerciseById: async (id) => {
-    const { data, error } = await fetchExerciseById(id);
+    const data = await selectExerciseById(id);
 
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
+    const exercise = data[0];
+    if (!exercise) return;
 
     set((state) => ({
       exercisesById: {
         ...state.exercisesById,
-        [id]: data as LocalExercise,
+        [id]: exercise as unknown as LocalExercise,
       },
 
       exercisesBySectionId: {
         ...state.exercisesBySectionId,
-        [data.section_id]: [
-          ...(state.exercisesBySectionId[data.section_id] || []).filter((e) => e.id !== data.id),
-          data as LocalExercise,
+        [exercise.section_id]: [
+          ...(state.exercisesBySectionId[exercise.section_id] || []).filter(
+            (e) => e.id !== exercise.id
+          ),
+          exercise as unknown as LocalExercise,
         ],
       },
     }));

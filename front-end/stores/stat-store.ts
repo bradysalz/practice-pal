@@ -1,9 +1,9 @@
 import {
-  fetchBookStatsByBookId,
-  fetchBookStatsOverTime,
-  fetchSectionStatsBySectionId,
-  fetchSectionStatsOverTime,
-} from '@/lib/supabase/stat';
+  refreshAndSelectBookHistory,
+  refreshAndSelectBookStats,
+  refreshAndSelectSectionHistory,
+  refreshAndSelectSectionStats,
+} from '@/lib/db/queries';
 import {
   BookStatOverTimeRow,
   BookStatRow,
@@ -32,42 +32,32 @@ export const useStatStore = create<StatStore>((set) => ({
   sectionStatsOverTime: {},
 
   fetchBookStatsByBookId: async (bookId: string) => {
-    const { data, error } = await fetchBookStatsByBookId(bookId);
-
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
+    const data = await refreshAndSelectBookStats(bookId);
+    const row = data[0];
+    if (!row) return;
     set((state) => ({
       bookStats: {
         ...state.bookStats,
-        [bookId]: toBookStat(data),
+        [bookId]: toBookStat(row),
       },
     }));
   },
 
   fetchSectionStatsBySectionId: async (sectionId: string) => {
-    const { data, error } = await fetchSectionStatsBySectionId(sectionId);
-
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
+    const data = await refreshAndSelectSectionStats(sectionId);
+    const row = data[0];
+    if (!row) return;
     set((state) => ({
       sectionStats: {
         ...state.sectionStats,
-        [sectionId]: toSectionStat(data),
+        [sectionId]: toSectionStat(row),
       },
     }));
   },
 
   fetchBookStatsOverTime: async (bookId: string) => {
-    const { data, error } = await fetchBookStatsOverTime(bookId);
+    const data = await refreshAndSelectBookHistory(bookId);
 
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
     set((state) => ({
       bookStatsOverTime: {
         ...state.bookStatsOverTime,
@@ -77,12 +67,7 @@ export const useStatStore = create<StatStore>((set) => ({
   },
 
   fetchSectionStatsOverTime: async (sectionId: string) => {
-    const { data, error } = await fetchSectionStatsOverTime(sectionId);
-
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
+    const data = await refreshAndSelectSectionHistory(sectionId);
 
     set((state) => ({
       sectionStatsOverTime: {

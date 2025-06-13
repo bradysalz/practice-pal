@@ -1,4 +1,5 @@
-import { fetchSongs, insertSong, updateSong } from '@/lib/supabase/song';
+import { selectSongs } from '@/lib/db/queries';
+import { insertSong, updateSong } from '@/lib/supabase/song';
 import { LocalSong, NewSong } from '@/types/song';
 import { PostgrestError } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,12 +18,8 @@ export const useSongsStore = create<SongsState>((set, get) => ({
   songs: [],
 
   fetchSongs: async () => {
-    const { data, error } = await fetchSongs();
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
-    set({ songs: data as LocalSong[] });
+    const songs = await selectSongs();
+    set({ songs: songs as LocalSong[] });
   },
 
   addSongLocal: (song: NewSong) => {

@@ -1,11 +1,11 @@
+import { deleteSession, insertSession, insertSessionItems } from '@/lib/supabase/session';
 import {
-  deleteSession,
-  fetchRecentSessionsWithItems,
-  fetchSessionDetail,
-  fetchSessions,
-  insertSession,
-  insertSessionItems,
-} from '@/lib/supabase/session';
+  refreshAndSelectSessions,
+  refreshAndSelectRecentSessions,
+  refreshAndSelectSessionDetail,
+  selectSessionItemsBySession,
+  selectSessionItemsBySessionIds,
+} from '@/lib/db/queries';
 import {
   DraftSession,
   LocalSessionItem,
@@ -30,22 +30,29 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
   sessionDetailMap: {},
 
   fetchSessions: async () => {
-    const { data, error } = await fetchSessions();
-    if (error) {
-      console.error('Fetch failed', error);
-      return;
-    }
-    set({ sessions: data as SessionWithCountsRow[] });
+    const data = await refreshAndSelectSessions();
+    set({ sessions: data as unknown as SessionWithCountsRow[] });
   },
 
   fetchRecentSessionsWithItems: async (limit) => {
-    const { data, error } = await fetchRecentSessionsWithItems(limit);
+    const sessions = await refreshAndSelectRecentSessions(limit);
 
-    if (error) {
-      console.error('Failed to fetch sessions with items', error);
-      return;
+    // Fetch items
+    const ids = sessions.map((s) => s.id);
+    const items = await selectSessionItemsBySessionIds(ids);
+
+    const itemsBySession: Record<string, any[]> = {};
+    for (const row of items) {
+      itemsBySession[row.session_id] = [
+        ...(itemsBySession[row.session_id] || []),
+        { ...row, song: null, exercise: null },
+      ];
     }
 
+    const data: SessionWithItems[] = sessions.map((s) => ({
+      ...(s as unknown as SessionWithItems),
+      session_items: itemsBySession[s.id] || [],
+    }));
     const map = Object.fromEntries(data.map((s) => [s.id, s]));
     set({
       sessionsWithItems: data,
@@ -57,17 +64,21 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     const existing = get().sessionDetailMap[sessionId];
     if (existing) return;
 
-    const { data, error } = await fetchSessionDetail(sessionId);
+    const session = await refreshAndSelectSessionDetail(sessionId);
+    const base = session[0];
+    if (!base) return;
 
-    if (error) {
-      console.error('Failed to fetch session detail', error);
-      return;
-    }
+    const items = await selectSessionItemsBySession(sessionId);
+
+    const detail: SessionWithItems = {
+      ...(base as unknown as SessionWithItems),
+      session_items: items.map((i) => ({ ...i, song: null, exercise: null })),
+    };
 
     set((state) => ({
       sessionDetailMap: {
         ...state.sessionDetailMap,
-        [sessionId]: data,
+        [sessionId]: detail,
       },
     }));
   },

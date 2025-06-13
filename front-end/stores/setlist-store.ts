@@ -1,12 +1,11 @@
 import {
   deleteSetlist,
   deleteSetlistItems,
-  fetchSetlistById,
-  fetchSetlists,
   insertSetlist,
   insertSetlistItems,
   updateSetlist,
 } from '@/lib/supabase/setlist';
+import { refreshAndSelectSetlists, selectSetlistItemsByIds } from '@/lib/db/queries';
 import {
   DraftSetlist,
   SetlistInsert,
@@ -28,14 +27,26 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
   setlistDetailMap: {},
 
   fetchSetlists: async () => {
-    const { data, error } = await fetchSetlists();
+    const base = await refreshAndSelectSetlists();
 
-    if (error) {
-      console.error('Failed to fetch setlists with items', error);
-      return;
+    // Fetch items for these setlists
+    const ids = base.map((b) => b.id);
+    const itemsRows = await selectSetlistItemsByIds(ids);
+
+    const itemsBySetlist: Record<string, any[]> = {};
+    for (const row of itemsRows) {
+      itemsBySetlist[row.setlist_id] = [
+        ...(itemsBySetlist[row.setlist_id] || []),
+        { ...row, song: null, exercise: null },
+      ];
     }
 
-    const map = Object.fromEntries(data.map((s) => [s.id, s]));
+    const setlists: SetlistWithItems[] = base.map((b) => ({
+      ...b,
+      setlist_items: itemsBySetlist[b.id] || [],
+    }));
+
+    const map = Object.fromEntries(setlists.map((s) => [s.id, s]));
     set({
       setlistDetailMap: map,
     });
@@ -86,20 +97,7 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 4: Fetch updated data to ensure consistency
-    const { data, error: viewError } = await fetchSetlistById(setlist.id);
-
-    if (viewError) {
-      console.error('Failed to fetch updated setlist', viewError);
-      throw new Error('Failed to fetch updated setlist');
-    }
-
-    // Step 5: Update store
-    set((state) => ({
-      setlistDetailMap: {
-        ...state.setlistDetailMap,
-        [setlist.id]: data,
-      },
-    }));
+    await get().fetchSetlists();
   },
 
   insertSetlist: async (draft: DraftSetlist) => {
@@ -143,19 +141,6 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
     }
 
     // Step 3: Fetch updated data to ensure consistency
-    const { data, error: viewError } = await fetchSetlistById(draft.id);
-
-    if (viewError) {
-      console.error('Failed to fetch inserted setlist', viewError);
-      throw new Error('Failed to fetch inserted setlist');
-    }
-
-    // Step 4: Update store
-    set((state) => ({
-      setlistDetailMap: {
-        ...state.setlistDetailMap,
-        [draft.id]: data,
-      },
-    }));
+    await get().fetchSetlists();
   },
 }));
