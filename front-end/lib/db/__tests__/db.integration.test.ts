@@ -21,45 +21,43 @@ jest.mock('uuid', () => ({ v4: () => uuidValues.shift() }));
 jest.mock('expo-sqlite', () => {
   const Database = require('better-sqlite3');
   return {
-    openDatabaseSync: (path) => {
+    openDatabaseSync: (path: string) => {
       const db = new Database(path);
       return {
-        prepareSync: (sql) => {
+        prepareSync: (sql: string) => {
           const stmt = db.prepare(sql);
           return {
-            executeSync: (...params) => {
+            executeSync: (...params: any[]) => {
               const res = stmt.run(...params);
               return {
                 changes: res.changes,
                 lastInsertRowId: res.lastInsertRowid,
-                getAllSync: (...p) => stmt.all(...p),
-                getFirstSync: (...p) => stmt.get(...p),
+                getAllSync: (...p: any[]) => stmt.all(...p),
+                getFirstSync: (...p: any[]) => stmt.get(...p),
                 resetSync: () => {},
               };
             },
-            executeForRawResultSync: (...params) => {
+            executeForRawResultSync: (...params: any[]) => {
               const res = stmt.run(...params);
               return {
                 changes: res.changes,
                 lastInsertRowId: res.lastInsertRowid,
-                getAllSync: (...p) => stmt.all(...p),
-                getFirstSync: (...p) => stmt.get(...p),
+                getAllSync: (...p: any[]) => stmt.all(...p),
+                getFirstSync: (...p: any[]) => stmt.get(...p),
                 resetSync: () => {},
               };
             },
             finalizeSync: () => {},
           };
         },
-        execSync: (sql) => db.exec(sql),
-        runSync: (sql, ...params) => db.prepare(sql).run(...params),
+        execSync: (sql: string) => db.exec(sql),
+        runSync: (sql: string, ...params: any[]) => db.prepare(sql).run(...params),
       };
     },
   };
 });
 
 jest.mock('@/lib/db/db', () => {
-  const { drizzle } = require('drizzle-orm/expo-sqlite');
-  const SQLite = require('expo-sqlite');
   const dbInstance = SQLite.openDatabaseSync(':memory:');
   const db = drizzle(dbInstance);
   return { dbInstance, db };
@@ -74,38 +72,38 @@ import { runMigrationsIfNeeded } from '@/lib/db/migrations';
 import {
   insertArtist,
   insertBook,
-  insertSection,
   insertExercise,
-  insertSong,
-  insertSetlist,
-  insertSetlistItem,
+  insertSection,
   insertSession,
   insertSessionItem,
+  insertSetlist,
+  insertSetlistItem,
+  insertSong,
   refreshAllFastViews,
 } from '@/lib/db/mutations';
 import {
-  selectArtists,
-  selectExercisesBySection,
-  selectExerciseById,
+  refreshAndSelectBookHistory,
   refreshAndSelectBooks,
-  refreshAndSelectSections,
-  refreshAndSelectSessions,
+  refreshAndSelectBookStats,
   refreshAndSelectRecentSessions,
+  refreshAndSelectSectionHistory,
+  refreshAndSelectSections,
+  refreshAndSelectSectionStats,
   refreshAndSelectSessionDetail,
-  selectSessionItemsBySession,
-  selectSessionItemsByExercise,
-  selectSessionItemsBySong,
-  selectSessionItemsBySessionIds,
-  selectSessionItemsWithNestedBySessionIds,
+  refreshAndSelectSessions,
   refreshAndSelectSetlists,
+  selectArtists,
+  selectExerciseById,
+  selectExercisesBySection,
+  selectSessionItemsByExercise,
+  selectSessionItemsBySession,
+  selectSessionItemsBySessionIds,
+  selectSessionItemsBySong,
+  selectSessionItemsWithNestedBySessionIds,
   selectSetlistItems,
   selectSetlistItemsByIds,
   selectSetlistItemsWithNestedByIds,
   selectSongs,
-  refreshAndSelectBookStats,
-  refreshAndSelectSectionStats,
-  refreshAndSelectBookHistory,
-  refreshAndSelectSectionHistory,
 } from '@/lib/db/queries';
 
 describe('SQLite integration', () => {
