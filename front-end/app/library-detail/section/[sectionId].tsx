@@ -41,7 +41,7 @@ export default function SectionDetailPage() {
 
   const section = sections.find((s) => s.id === sectionId);
   const book = books.find((b) => b.id === section?.book_id);
-  const usefulExercises = exercises[sectionId]?.sort((a, b) => a.order - b.order) || [];
+  const usefulExercises = exercises[sectionId]?.sort((a, b) => a.sort_order - b.sort_order) || [];
 
   const sectionStat: SectionStatRow = sectionStats[sectionId] || {
     section_id: sectionId,
@@ -120,7 +120,7 @@ export default function SectionDetailPage() {
         <ScrollView className="rounded-lg">
           {usefulExercises.map((exercise) => (
             <ListItemCard
-              key={exercise.order}
+              key={exercise.sort_order}
               title={`${exercise.name}`}
               isAdded={false}
               onPress={() => handleExercisePress(exercise.id)}

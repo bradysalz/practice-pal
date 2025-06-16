@@ -63,7 +63,7 @@ describe('books-tab utils', () => {
       created_by: '',
       updated_at: '',
       exercise_count: 0,
-      order: 1,
+      sort_order: 1,
     };
     const exercise: LocalExercise = {
       id: 'ex1',
@@ -73,7 +73,7 @@ describe('books-tab utils', () => {
       updated_at: '',
       filepath: null,
       goal_tempo: null,
-      order: 1,
+      sort_order: 1,
     };
     const draft: DraftSession = { id: '1', duration: 0, items: [] };
     const item = createSessionExerciseItem(exercise, section, book);
@@ -99,7 +99,7 @@ describe('books-tab utils', () => {
       created_by: '',
       updated_at: '',
       exercise_count: 0,
-      order: 1,
+      sort_order: 1,
     };
     const exercise: LocalExercise = {
       id: 'ex1',
@@ -109,7 +109,7 @@ describe('books-tab utils', () => {
       updated_at: '',
       filepath: null,
       goal_tempo: null,
-      order: 1,
+      sort_order: 1,
     };
     const draft: DraftSetlist = { id: '1', name: null, description: null, items: [] };
     const item = createSetlistExerciseItem(exercise, section, book);

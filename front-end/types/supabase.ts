@@ -103,8 +103,8 @@ export type Database = {
           goal_tempo: number | null;
           id: string;
           name: string;
-          order: number;
           section_id: string;
+          sort_order: number;
           updated_at: string;
         };
         Insert: {
@@ -114,8 +114,8 @@ export type Database = {
           goal_tempo?: number | null;
           id: string;
           name: string;
-          order: number;
           section_id: string;
+          sort_order: number;
           updated_at?: string;
         };
         Update: {
@@ -125,8 +125,8 @@ export type Database = {
           goal_tempo?: number | null;
           id?: string;
           name?: string;
-          order?: number;
           section_id?: string;
+          sort_order?: number;
           updated_at?: string;
         };
         Relationships: [
@@ -198,7 +198,7 @@ export type Database = {
           created_by: string;
           id: string;
           name: string;
-          order: number;
+          sort_order: number;
           updated_at: string;
         };
         Insert: {
@@ -207,7 +207,7 @@ export type Database = {
           created_by: string;
           id: string;
           name: string;
-          order: number;
+          sort_order: number;
           updated_at?: string;
         };
         Update: {
@@ -216,7 +216,7 @@ export type Database = {
           created_by?: string;
           id?: string;
           name?: string;
-          order?: number;
+          sort_order?: number;
           updated_at?: string;
         };
         Relationships: [
@@ -264,9 +264,9 @@ export type Database = {
           exercise_id: string | null;
           id: string;
           notes: string | null;
-          position: number | null;
           session_id: string;
           song_id: string | null;
+          sort_order: number | null;
           tempo: number | null;
           type: string;
           updated_at: string;
@@ -277,9 +277,9 @@ export type Database = {
           exercise_id?: string | null;
           id: string;
           notes?: string | null;
-          position?: number | null;
           session_id: string;
           song_id?: string | null;
+          sort_order?: number | null;
           tempo?: number | null;
           type: string;
           updated_at?: string;
@@ -290,9 +290,9 @@ export type Database = {
           exercise_id?: string | null;
           id?: string;
           notes?: string | null;
-          position?: number | null;
           session_id?: string;
           song_id?: string | null;
+          sort_order?: number | null;
           tempo?: number | null;
           type?: string;
           updated_at?: string;
@@ -373,9 +373,9 @@ export type Database = {
           created_by: string;
           exercise_id: string | null;
           id: string;
-          position: number;
           setlist_id: string;
           song_id: string | null;
+          sort_order: number;
           type: string;
           updated_at: string;
         };
@@ -384,9 +384,9 @@ export type Database = {
           created_by: string;
           exercise_id?: string | null;
           id: string;
-          position: number;
           setlist_id?: string;
           song_id?: string | null;
+          sort_order: number;
           type: string;
           updated_at?: string;
         };
@@ -395,9 +395,9 @@ export type Database = {
           created_by?: string;
           exercise_id?: string | null;
           id?: string;
-          position?: number;
           setlist_id?: string;
           song_id?: string | null;
+          sort_order?: number;
           type?: string;
           updated_at?: string;
         };
@@ -591,7 +591,7 @@ export type Database = {
           exercise_count: number | null;
           id: string | null;
           name: string | null;
-          order: number | null;
+          sort_order: number | null;
           updated_at: string | null;
         };
         Relationships: [

@@ -3,8 +3,7 @@ import {
   refreshAndSelectRecentSessions,
   refreshAndSelectSessionDetail,
   refreshAndSelectSessions,
-  selectSessionItemsBySession,
-  selectSessionItemsBySessionIds,
+  selectSessionItemsWithNestedBySessionIds,
 } from '@/lib/db/queries';
 import { deleteSession, insertSession, insertSessionItems } from '@/lib/supabase/session';
 import {
@@ -13,6 +12,7 @@ import {
   SessionWithCountsRow,
   SessionWithItems,
 } from '@/types/session';
+import { transformSessionItemWithNested } from '@/utils/nested-transformers';
 import { create } from 'zustand';
 
 type SessionsState = {
@@ -40,14 +40,12 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
   fetchRecentSessionsWithItems: async (limit) => {
     const sessions = await refreshAndSelectRecentSessions(limit);
     const ids = sessions.map((s) => s.id);
-    const items = await selectSessionItemsBySessionIds(ids);
+    const items = await selectSessionItemsWithNestedBySessionIds(ids);
 
     const itemsBySession: Record<string, any[]> = {};
     for (const row of items) {
-      itemsBySession[row.session_id] = [
-        ...(itemsBySession[row.session_id] || []),
-        { ...row, song: null, exercise: null },
-      ];
+      const sessionItem = transformSessionItemWithNested(row as any);
+      itemsBySession[row.session_id] = [...(itemsBySession[row.session_id] || []), sessionItem];
     }
 
     const data: SessionWithItems[] = sessions.map((s) => ({
@@ -69,10 +67,12 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
     const base = session[0];
     if (!base) return;
 
-    const items = await selectSessionItemsBySession(sessionId);
+    const items = await selectSessionItemsWithNestedBySessionIds([sessionId]);
+    const sessionItems = items.map((row) => transformSessionItemWithNested(row as any));
+
     const detail: SessionWithItems = {
       ...(base as unknown as SessionWithItems),
-      session_items: items.map((i) => ({ ...i, song: null, exercise: null })),
+      session_items: sessionItems as any,
     };
 
     set((state) => ({
@@ -96,7 +96,7 @@ export const useSessionsStore = create<SessionsState>((set, get) => ({
       session_id: draft.id,
       created_at: now,
       updated_at: now,
-      position: index,
+      sort_order: index,
       song_id: item.song?.id ?? null,
       exercise_id: item.exercise?.id ?? null,
     }));

@@ -2,6 +2,7 @@ import '@/global.css';
 import 'react-native-get-random-values'; // For UUIDs
 
 import { DataProvider } from '@/components/providers/DataProvider';
+import { LocalDatabaseProvider } from '@/components/providers/LocalDatabaseProvider';
 import { SessionProvider } from '@/components/providers/SessionProvider';
 import { NAV_THEME } from '@/lib/constants';
 import { useColorScheme } from '@/lib/useColorScheme';
@@ -65,22 +66,24 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <SessionProvider>
-        <DataProvider>
-          <GestureHandlerRootView onLayout={onLayoutRootView}>
-            {/* <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} /> */}
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="stat-detail" options={{ headerShown: false }} />
-              <Stack.Screen name="session-detail" options={{ headerShown: false }} />
-              <Stack.Screen name="library-detail" options={{ headerShown: false }} />
-              <Stack.Screen name="library-forms" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <PortalHost />
-          </GestureHandlerRootView>
-        </DataProvider>
-      </SessionProvider>
+      <LocalDatabaseProvider>
+        <SessionProvider>
+          <DataProvider>
+            <GestureHandlerRootView onLayout={onLayoutRootView}>
+              {/* <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} /> */}
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="stat-detail" options={{ headerShown: false }} />
+                <Stack.Screen name="session-detail" options={{ headerShown: false }} />
+                <Stack.Screen name="library-detail" options={{ headerShown: false }} />
+                <Stack.Screen name="library-forms" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+              <PortalHost />
+            </GestureHandlerRootView>
+          </DataProvider>
+        </SessionProvider>
+      </LocalDatabaseProvider>
     </ThemeProvider>
   );
 }

@@ -25,7 +25,7 @@ export const sectionTable = sqliteTable('sections', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   book_id: text('book_id').notNull(),
-  order: integer('order').notNull(),
+  sort_order: integer('sort_order').notNull(),
   ...baseColumns,
 });
 
@@ -35,7 +35,7 @@ export const exerciseTable = sqliteTable('exercises', {
   section_id: text('section_id').notNull(),
   goal_tempo: integer('goal_tempo'),
   filepath: text('filepath'),
-  order: integer('order').notNull(),
+  sort_order: integer('sort_order').notNull(),
   ...baseColumns,
 });
 
@@ -66,7 +66,7 @@ export const setlistItemTable = sqliteTable('setlist_items', {
   type: text('type').notNull(),
   exercise_id: text('exercise_id'),
   song_id: text('song_id'),
-  position: integer('order').notNull(),
+  sort_order: integer('sort_order').notNull(),
   ...baseColumns,
 });
 
@@ -84,6 +84,6 @@ export const sessionItemTable = sqliteTable('session_items', {
   song_id: text('song_id'),
   exercise_id: text('exercise_id'),
   notes: text('notes'),
-  position: integer('order').notNull(),
+  sort_order: integer('sort_order'),
   ...baseColumns,
 });

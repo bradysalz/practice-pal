@@ -1,3 +1,4 @@
+import { useLocalDatabase } from '@/components/providers/LocalDatabaseProvider';
 import { useSession } from '@/components/providers/SessionProvider'; // Import useSession
 import { useArtistsStore } from '@/stores/artist-store';
 import { useBooksStore } from '@/stores/book-store';
@@ -11,6 +12,7 @@ import { ActivityIndicator, Text, View } from 'react-native'; // Import Text for
 
 export function DataProvider({ children }: PropsWithChildren) {
   const { session, isLoading: isSessionLoading } = useSession(); // Destructure session and the new isLoading
+  const { isReady: isDatabaseReady } = useLocalDatabase(); // Get database ready state
   const [isDataLoading, setIsDataLoading] = useState(true); // Renamed for clarity to avoid conflict
 
   // Core data fetching functions
@@ -29,7 +31,13 @@ export function DataProvider({ children }: PropsWithChildren) {
       return;
     }
 
-    // 2. Once session is loaded, proceed based on user presence
+    // 2. Wait for the database to be ready
+    if (!isDatabaseReady) {
+      console.log('DataProvider: Database is not ready yet, waiting...');
+      return;
+    }
+
+    // 3. Once both session and database are loaded, proceed based on user presence
     async function loadInitialData() {
       if (!session?.user) {
         // If there's no user, and session is done loading,
@@ -66,6 +74,7 @@ export function DataProvider({ children }: PropsWithChildren) {
   }, [
     session, // Dependency: Re-run if session object changes (e.g., user logs in/out)
     isSessionLoading, // Dependency: Re-run when session loading state changes from true to false
+    isDatabaseReady, // Dependency: Re-run when database becomes ready
     fetchBooks,
     fetchSections,
     fetchArtists,
@@ -75,8 +84,8 @@ export function DataProvider({ children }: PropsWithChildren) {
     fetchRecentSessions,
   ]);
 
-  // Show a loading indicator if either session is loading or application data is loading
-  if (isSessionLoading || isDataLoading) {
+  // Show a loading indicator if session is loading, database is not ready, or application data is loading
+  if (isSessionLoading || !isDatabaseReady || isDataLoading) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>Loading application data...</Text>

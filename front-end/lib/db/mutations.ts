@@ -103,7 +103,7 @@ export async function insertFullBook(bookData: BookUploadData): Promise<string> 
       id: sectionId,
       name: section.name,
       book_id: bookId,
-      order: i,
+      sort_order: i,
       created_by: userId,
       created_at: timestamp,
       updated_at: timestamp,
@@ -117,7 +117,7 @@ export async function insertFullBook(bookData: BookUploadData): Promise<string> 
         id: exerciseId,
         name: section.exerciseNames[j],
         section_id: sectionId,
-        order: j,
+        sort_order: j,
         created_by: userId,
         created_at: timestamp,
         updated_at: timestamp,
@@ -167,7 +167,7 @@ export async function deleteBook(id: string) {
 }
 
 // Section mutations
-export async function insertSection(name: string, bookId: string, order: number) {
+export async function insertSection(name: string, bookId: string, sort_order: number) {
   const userId = await getCurrentUserId();
   const id = uuidv4();
 
@@ -175,7 +175,7 @@ export async function insertSection(name: string, bookId: string, order: number)
     id,
     name,
     book_id: bookId,
-    order,
+    sort_order: sort_order,
     created_by: userId,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -194,7 +194,7 @@ export async function insertSection(name: string, bookId: string, order: number)
 
 export async function updateSection(
   id: string,
-  updates: { name?: string; book_id?: string; order?: number }
+  updates: { name?: string; book_id?: string; sort_order?: number }
 ) {
   const result = await db
     .update(sectionTable)
@@ -232,7 +232,7 @@ export async function deleteSection(id: string) {
 export async function insertExercise(
   name: string,
   sectionId: string,
-  order: number,
+  sort_order: number,
   goalTempo?: number
 ) {
   const userId = await getCurrentUserId();
@@ -242,7 +242,7 @@ export async function insertExercise(
     id,
     name,
     section_id: sectionId,
-    order,
+    sort_order,
     goal_tempo: goalTempo,
     created_by: userId,
     created_at: new Date().toISOString(),
@@ -375,7 +375,7 @@ export async function deleteSetlist(id: string) {
 export async function insertSetlistItem(
   setlistId: string,
   type: 'song' | 'exercise',
-  position: number,
+  sort_order: number,
   songId?: string,
   exerciseId?: string
 ) {
@@ -388,7 +388,7 @@ export async function insertSetlistItem(
     type,
     song_id: songId,
     exercise_id: exerciseId,
-    position,
+    sort_order,
     created_by: userId,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -406,7 +406,7 @@ export async function updateSetlistItem(
     type?: 'song' | 'exercise';
     song_id?: string;
     exercise_id?: string;
-    position?: number;
+    sort_order?: number;
   }
 ) {
   const result = await db
@@ -472,7 +472,7 @@ export async function deleteSession(id: string) {
 export async function insertSessionItem(
   sessionId: string,
   type: 'song' | 'exercise',
-  position: number,
+  sort_order: number,
   tempo?: number,
   songId?: string,
   exerciseId?: string,
@@ -489,7 +489,7 @@ export async function insertSessionItem(
     song_id: songId,
     exercise_id: exerciseId,
     notes,
-    position,
+    sort_order,
     created_by: userId,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -509,7 +509,7 @@ export async function updateSessionItem(
     song_id?: string;
     exercise_id?: string;
     notes?: string;
-    position?: number;
+    sort_order?: number;
   }
 ) {
   const result = await db
@@ -535,4 +535,15 @@ export async function deleteSessionItem(id: string) {
 
   await refreshSessionWithItemsView({ sessionId });
   return result;
+}
+
+export async function refreshAllFastViews() {
+  await Promise.all([
+    refreshBookWithCountsView(),
+    refreshBookStatsView(),
+    refreshSectionWithCountsView(),
+    refreshSectionStatsView(),
+    refreshSessionWithItemsView(),
+    refreshSetlistsWithItemsView(),
+  ]);
 }

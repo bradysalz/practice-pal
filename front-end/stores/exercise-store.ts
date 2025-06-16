@@ -11,7 +11,7 @@ type ExercisesState = {
   addExercise: (exercise: NewExercise) => Promise<void>;
   updateExercise: (
     id: string,
-    updates: { name?: string; section_id?: string; order?: number; goal_tempo?: number }
+    updates: { name?: string; section_id?: string; sort_order?: number; goal_tempo?: number }
   ) => Promise<void>;
   deleteExercise: (id: string) => Promise<void>;
 };
@@ -64,7 +64,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
     await insertExercise(
       exercise.name ?? '',
       exercise.section_id,
-      exercise.order ?? 0,
+      exercise.sort_order ?? 0,
       exercise.goal_tempo ?? undefined
     );
     await get().fetchExercisesBySection(exercise.section_id, true);
@@ -72,7 +72,7 @@ export const useExercisesStore = create<ExercisesState>((set, get) => ({
 
   updateExercise: async (
     id: string,
-    updates: { name?: string; section_id?: string; order?: number; goal_tempo?: number }
+    updates: { name?: string; section_id?: string; sort_order?: number; goal_tempo?: number }
   ) => {
     await updateExercise(id, updates);
 
