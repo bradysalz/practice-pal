@@ -1,43 +1,47 @@
 name: PR Quality Checks
 
 on:
-    push:
-      branches:
-        - master
-    pull_request:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
-    lint-typecheck-test:
-        name: Lint, Type Check, and Unit Tests
-        runs-on: ubuntu-latest
+  lint-typecheck-test:
+    name: Lint, Type Check, and Unit Tests
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "22.15.0"
-                  cache: "npm"
-                  cache-dependency-path: front-end/package-lock.json
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.15.0"
+          cache: "npm"
+          cache-dependency-path: front-end/package-lock.json
 
-            - name: Install dependencies
-              working-directory: front-end
-              run: npm ci
+      - name: Install dependencies
+        working-directory: front-end
+        run: npm ci
 
-            - name: Run Prettier
-              working-directory: front-end
-              run: npm run format:check
+      - name: Run Prettier
+        working-directory: front-end
+        run: npm run format:check
 
-            - name: Run ESLint
-              working-directory: front-end
-              run: npm run lint
+      - name: Run ESLint
+        working-directory: front-end
+        run: npm run lint
 
-            - name: Run TypeScript type check
-              working-directory: front-end
-              run: npm run typecheck
+      - name: Run TypeScript type check
+        working-directory: front-end
+        run: npm run typecheck
 
-            - name: Run unit tests
-              working-directory: front-end
-              run: npm run test:coverage
+      - name: Run unit tests
+        working-directory: front-end
+        run: npm run test:coverage
+
+      - name: Run DB integration tests
+        working-directory: front-end
+        run: npm run test:db_integration
