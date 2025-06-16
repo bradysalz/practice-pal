@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --no-coverage",
     "test:coverage": "jest --coverage",
+    "test:db_integration": "jest lib/db/__tests__/db.integration.test.ts",
     "gen:types": "npx supabase gen types typescript --linked > $(git rev-parse --show-toplevel)/front-end/types/supabase.ts",
     "gen:data": "node scripts/data-gen.js"
   },
