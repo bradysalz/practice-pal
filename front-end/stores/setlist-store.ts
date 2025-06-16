@@ -1,4 +1,4 @@
-import { refreshAndSelectSetlists, selectSetlistItemsByIds } from '@/lib/db/queries';
+import { refreshAndSelectSetlists, selectSetlistItemsWithNestedByIds } from '@/lib/db/queries';
 import {
   deleteSetlist,
   deleteSetlistItems,
@@ -7,6 +7,7 @@ import {
   updateSetlist,
 } from '@/lib/supabase/setlist';
 import { DraftSetlist, SetlistWithItems } from '@/types/setlist';
+import { transformSetlistItemWithNested } from '@/utils/nested-transformers';
 import { mapSetlistItemToRow } from '@/utils/setlist';
 import { create } from 'zustand';
 
@@ -24,19 +25,17 @@ export const useSetlistsStore = create<SetlistsState>((set, get) => ({
   fetchSetlists: async () => {
     const base = await refreshAndSelectSetlists();
     const ids = base.map((b) => b.id);
-    const itemsRows = await selectSetlistItemsByIds(ids);
+    const itemsRows = await selectSetlistItemsWithNestedByIds(ids);
 
     const itemsBySetlist: Record<string, any[]> = {};
     for (const row of itemsRows) {
-      itemsBySetlist[row.setlist_id] = [
-        ...(itemsBySetlist[row.setlist_id] || []),
-        { ...row, song: null, exercise: null },
-      ];
+      const setlistItem = transformSetlistItemWithNested(row as any);
+      itemsBySetlist[row.setlist_id] = [...(itemsBySetlist[row.setlist_id] || []), setlistItem];
     }
 
     const setlists: SetlistWithItems[] = base.map((b) => ({
       ...b,
-      setlist_items: itemsBySetlist[b.id] || [],
+      setlist_items: (itemsBySetlist[b.id] || []) as any,
     }));
 
     set({ setlistDetailMap: Object.fromEntries(setlists.map((s) => [s.id, s])) });

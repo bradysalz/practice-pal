@@ -12,6 +12,7 @@ export default function BookStatsPage() {
   const { bookId } = useLocalSearchParams<{ bookId: string }>();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isGraphReady, setIsGraphReady] = useState<boolean>(false);
   const [use_percent, setUsePercent] = useState<boolean>(true);
   const book = useBooksStore((state) => state.books.find((book) => book.id === bookId));
   const { fetchBookStatsOverTime, bookStatsOverTime } = useStatStore();
@@ -23,6 +24,17 @@ export default function BookStatsPage() {
     };
     fetchData();
   }, [fetchBookStatsOverTime, bookId, setIsLoading]);
+
+  // Set graph ready state when data is available
+  useEffect(() => {
+    if (!isLoading && bookStatsOverTime[bookId]) {
+      // Small delay to ensure component has time to initialize
+      const timer = setTimeout(() => {
+        setIsGraphReady(true);
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, bookStatsOverTime, bookId]);
 
   const data = bookStatsOverTime[bookId]?.map((item) => ({
     timestamp: item.date ? new Date(item.date).getTime() : 0,
@@ -66,11 +78,17 @@ export default function BookStatsPage() {
             />
           </View>
         </View>
-        <ItemProgressGraph
-          data={data}
-          use_percent={use_percent}
-          total_items={book.exercise_count}
-        />
+        {isGraphReady ? (
+          <ItemProgressGraph
+            data={data}
+            use_percent={use_percent}
+            total_items={book.exercise_count}
+          />
+        ) : (
+          <View className="h-[400px] items-center justify-center">
+            <ActivityIndicator size="large" />
+          </View>
+        )}
       </View>
     );
   };

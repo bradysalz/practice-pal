@@ -13,21 +13,28 @@ export const bookWithCountsView = sqliteTable('book_with_counts', {
 });
 
 export async function refreshBookWithCountsView() {
-  db.run(sql`
-    INSERT OR REPLACE INTO book_with_counts
-      (id, name, author, exercise_count)
-    SELECT
+  await db.run(sql`
+    INSERT OR REPLACE INTO book_with_counts (
       id,
       name,
       author,
-      books.created_by,
-      books.created_at,
-      books.updated_at,
+      created_by,
+      created_at,
+      updated_at,
+      exercise_count
+    )
+    SELECT
+      b.id,
+      b.name,
+      b.author,
+      b.created_by,
+      b.created_at,
+      b.updated_at,
       COUNT(e.id) AS exercise_count
-    FROM books
-    LEFT JOIN sections s on s.book_id = books.id
-    LEFT JOIN exercises e on e.section_id = s.id
-    GROUP BY id
-    ORDER BY name
+    FROM books b
+    LEFT JOIN sections s ON s.book_id = b.id
+    LEFT JOIN exercises e ON e.section_id = s.id
+    GROUP BY
+      b.id
   `);
 }

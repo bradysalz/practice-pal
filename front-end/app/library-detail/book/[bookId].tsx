@@ -28,7 +28,7 @@ export default function BookDetailPage() {
   const sections = useSectionsStore((state) => state.sections);
   const usefulSections = sections
     .filter((section) => section.book_id === bookId)
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => a.sort_order - b.sort_order);
 
   const bookStat: BookStatRow = bookStats[bookId] || {
     book_id: bookId,

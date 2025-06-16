@@ -14,7 +14,13 @@ export async function refreshSetlistsWithItemsView({ setlistId }: { setlistId?: 
   const whereClause = setlistId ? sql`where s.id = ${setlistId}` : sql``;
 
   db.run(sql`
-    INSERT OR REPLACE INTO setlists_with_items (id, name, description, song_count, exercise_count)
+    INSERT OR REPLACE INTO setlists_with_items (
+      id,
+      name,
+      description,
+      song_count,
+      exercise_count
+    )
     select
       s.id,
       s.name,

@@ -4,6 +4,7 @@ front-end/ios/
 
 # Local dev stuff
 seed.sql
+seed_data.ts
 dump.sql
 mock_data.sql
 .vscode/

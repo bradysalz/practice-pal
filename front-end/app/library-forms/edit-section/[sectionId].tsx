@@ -15,7 +15,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 export type EditableExercise = {
   id?: string;
   name?: string;
-  order: number;
+  sort_order: number;
 };
 
 export default function EditSectionPage() {
@@ -41,7 +41,7 @@ export default function EditSectionPage() {
       exercises.map((exercise) => ({
         id: exercise.id,
         name: exercise.name || '',
-        order: exercise.order,
+        sort_order: exercise.sort_order,
       }))
     );
     // only run on page load
@@ -102,7 +102,7 @@ export default function EditSectionPage() {
 
   const handleAddExercise = () => {
     setHasChanges(true);
-    setExerciseForms([...exerciseForms, { name: '', order: exerciseForms.length }]);
+    setExerciseForms([...exerciseForms, { name: '', sort_order: exerciseForms.length }]);
   };
 
   const handleUpdateExercise = (index: number, exercise: EditableExercise) => {

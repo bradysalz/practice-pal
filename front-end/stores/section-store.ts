@@ -9,7 +9,7 @@ interface SectionsState {
   addSection: (section: NewSection) => Promise<void>;
   updateSection: (
     id: string,
-    updates: { name?: string; book_id?: string; order?: number }
+    updates: { name?: string; book_id?: string; sort_order?: number }
   ) => Promise<void>;
   deleteSection: (id: string) => Promise<void>;
 }
@@ -23,13 +23,13 @@ export const useSectionsStore = create<SectionsState>((set, get) => ({
   },
 
   addSection: async (section: NewSection) => {
-    await insertSection(section.name, section.book_id, section.order);
+    await insertSection(section.name, section.book_id, section.sort_order);
     await get().fetchSections();
   },
 
   updateSection: async (
     id: string,
-    updates: { name?: string; book_id?: string; order?: number }
+    updates: { name?: string; book_id?: string; sort_order?: number }
   ) => {
     await updateSection(id, updates);
     await get().fetchSections();

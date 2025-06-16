@@ -12,7 +12,7 @@ export const bookStatsView = sqliteTable('book_stats', {
 export async function refreshBookStatsView({ bookId }: { bookId?: string } = {}) {
   const whereClause = bookId ? sql`WHERE b.id = ${bookId}` : sql``;
 
-  db.run(sql`
+  await db.run(sql`
     INSERT OR REPLACE INTO book_stats (
       book_id,
       total_exercises,

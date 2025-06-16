@@ -16,8 +16,8 @@ export async function refreshSessionWithItemsView({ sessionId }: { sessionId?: s
     INSERT OR REPLACE INTO session_with_items (
       id,
       duration,
-      exercise_count,
-      song_count
+      song_count,
+      exercise_count
     )
     select
       s.id,

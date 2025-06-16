@@ -19,7 +19,7 @@ export const bookProgressHistoryView = sqliteTable(
 export async function refreshBookProgressHistory({ bookId }: { bookId?: string } = {}) {
   const whereClause = bookId ? sql`WHERE b.id = ${bookId}` : sql``;
 
-  db.run(sql`
+  await db.run(sql`
     INSERT OR REPLACE INTO book_progress_history (
       book_id,
       date,
@@ -43,7 +43,7 @@ export async function refreshBookProgressHistory({ bookId }: { bookId?: string }
       session_data AS (
         SELECT
           si.exercise_id,
-          date(s.created_at / 1000, 'unixepoch') AS session_date,
+          s.created_at AS session_date,
           si.tempo
         FROM session_items si
         JOIN sessions s ON s.id = si.session_id

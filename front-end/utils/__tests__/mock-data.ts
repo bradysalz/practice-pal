@@ -61,7 +61,7 @@ export const mockSection: SectionWithCountsRow = {
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
   exercise_count: 1,
-  order: 1,
+  sort_order: 1,
 };
 
 // Stickings section for session tests
@@ -73,7 +73,7 @@ export const mockStickingsSection: SectionWithCountsRow = {
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
   exercise_count: 1,
-  order: 1,
+  sort_order: 1,
 };
 
 // Exercise mock data
@@ -86,7 +86,7 @@ export const mockExercise: ExerciseRow = {
   updated_at: BASE_TIMESTAMP,
   filepath: null,
   goal_tempo: null,
-  order: 1,
+  sort_order: 1,
 };
 
 // Exercise 1 for session tests
@@ -99,7 +99,7 @@ export const mockExercise1: ExerciseRow = {
   updated_at: BASE_TIMESTAMP,
   filepath: null,
   goal_tempo: null,
-  order: 1,
+  sort_order: 1,
 };
 
 // Song mock data
@@ -135,7 +135,7 @@ export const mockSessionItemWithExercise: SessionItemWithNested = {
   song_id: null,
   tempo: 120,
   notes: 'Exercise Notes',
-  position: 0,
+  sort_order: 0,
   exercise: {
     ...mockExercise1,
     section: {
@@ -157,7 +157,7 @@ export const mockSessionItemWithSong: SessionItemWithNested = {
   song_id: 'song1',
   tempo: 100,
   notes: 'Song Notes',
-  position: 1,
+  sort_order: 1,
   song: {
     ...mockSoWhat,
     artist: mockMilesDavis,
@@ -191,7 +191,7 @@ export const mockSetlistItemWithSong: SetlistItemWithNested = {
   created_at: BASE_TIMESTAMP,
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
-  position: 1,
+  sort_order: 1,
   song: {
     ...mockSong,
     artist: mockArtist,
@@ -213,7 +213,7 @@ export const mockSetlistItemWithExercise: SetlistItemWithNested = {
   created_at: BASE_TIMESTAMP,
   created_by: 'user1',
   updated_at: BASE_TIMESTAMP,
-  position: 2,
+  sort_order: 2,
   song: null,
   exercise: {
     ...mockExercise,

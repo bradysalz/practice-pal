@@ -6,8 +6,13 @@ export function formatToMinutes(seconds: number): number {
 }
 
 export function formatTimestampToDate(timestamp: string): string {
-  const date = new Date(timestamp);
-  return format(date, 'EEEE, MMMM d');
+  try {
+    const date = new Date(timestamp);
+    return format(date, 'EEEE, MMMM d');
+  } catch (error) {
+    console.warn('Error formatting timestamp:', timestamp, error);
+    return 'Invalid Date';
+  }
 }
 
 export function calculateCutoffDate(timeRange: TimeRange): Date {
