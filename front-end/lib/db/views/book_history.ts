@@ -19,12 +19,6 @@ export const bookProgressHistoryView = sqliteTable(
 export async function refreshBookProgressHistory({ bookId }: { bookId?: string } = {}) {
   const whereClause = bookId ? sql`WHERE b.id = ${bookId}` : sql``;
 
-  // const result = await db.all(sql`
-  //   SELECT * FROM book_progress_history
-  //   ${whereClause}
-  // `);
-  // console.log('result', result);
-
   await db.run(sql`
     INSERT OR REPLACE INTO book_progress_history (
       book_id,

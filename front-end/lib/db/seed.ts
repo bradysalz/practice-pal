@@ -1,4 +1,5 @@
 import { db } from './db';
+// @ts-ignore TS2307 - seed_data.ts is for dev only
 import { seedSql } from './seed_data';
 
 function stripSqlComments(sql: string): string {
