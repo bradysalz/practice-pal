@@ -36,15 +36,14 @@ export default function BookStatsPage() {
     }
   }, [isLoading, bookStatsOverTime, bookId]);
 
-  const data = bookStatsOverTime[bookId]?.map((item) => (
-    {
-      timestamp: item.date ? new Date(item.date).getTime() : 0,
-      percent_at_goal: item.percent_at_goal || 0,
-      percent_played: item.percent_played || 0,
-      played: item.played || 0,
-      at_goal: item.at_goal || 0,
-      total: item.total || 0,
-    })) as ItemProgressPoint[];
+  const data = bookStatsOverTime[bookId]?.map((item) => ({
+    timestamp: item.date ? new Date(item.date).getTime() : 0,
+    percent_at_goal: item.percent_at_goal || 0,
+    percent_played: item.percent_played || 0,
+    played: item.played || 0,
+    at_goal: item.at_goal || 0,
+    total: item.total || 0,
+  })) as ItemProgressPoint[];
 
   if (!book) {
     return <NotFound />;
