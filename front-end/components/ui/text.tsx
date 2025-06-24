@@ -6,7 +6,7 @@ import { Text as RNText } from 'react-native';
 
 const TextClassContext = React.createContext<string | undefined>(undefined);
 
-interface TextProps extends SlottableTextProps {
+export interface TextProps extends SlottableTextProps {
   variant?:
     | 'body'
     | 'body-semibold'

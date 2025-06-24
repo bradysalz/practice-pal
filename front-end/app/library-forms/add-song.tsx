@@ -1,4 +1,5 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
+import { ActionButton } from '@/components/ui/action-button';
 import { Text } from '@/components/ui/text';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
@@ -129,24 +130,14 @@ export default function AddSongPage() {
             placeholder="e.g., 120"
             keyboardType="numeric"
           />
-          <Pressable
+          <ActionButton
             onPress={handleSaveSong}
             disabled={isSaving}
-            className={`bg-primary rounded-xl py-3 items-center flex-row justify-center ${isSaving ? 'bg-primary/70' : 'bg-primary'}`}
-          >
-            {isSaving ? (
-              <>
-                <ActivityIndicator color="white" className="mr-2" />
-                <Text variant="body-bold" className="text-white">
-                  Saving...
-                </Text>
-              </>
-            ) : (
-              <Text variant="body-bold" className="text-white">
-                Save Song
-              </Text>
-            )}
-          </Pressable>
+            className={isSaving ? 'bg-primary/70' : undefined}
+            textVariant="body-bold"
+            text={isSaving ? 'Saving...' : 'Save Song'}
+            icon={isSaving ? <ActivityIndicator color="white" /> : undefined}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

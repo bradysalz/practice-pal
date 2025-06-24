@@ -13,6 +13,7 @@ import {
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
+import { ActionButton } from '@/components/ui/action-button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ActiveSessionPage() {
@@ -138,15 +139,13 @@ export default function ActiveSessionPage() {
             Add Item
           </Text>
         </Pressable>
-        <Pressable
-          className="mx-4 my-4 flex-1 flex-row items-center justify-center bg-red-500 rounded-xl py-4 active:opacity-80"
+        <ActionButton
+          text="End Session"
+          icon={<ThemedIcon name="Check" size={20} color="white" />}
           onPress={handleEndSession}
-        >
-          <ThemedIcon name="Check" size={20} color="white" className="mr-2" />
-          <Text variant="body-semibold" className="text-white text-lg">
-            End Session
-          </Text>
-        </Pressable>
+          className="mx-4 my-4 flex-1"
+          textVariant="body-semibold"
+        />
       </View>
     </SafeAreaView>
   );

@@ -1,10 +1,10 @@
 import { PracticeSessionSummaryCard } from '@/components/sessions/PracticeSessionSummaryCard';
-import { Text } from '@/components/ui/text';
+import { ActionButton } from '@/components/ui/action-button';
 import { useSessionsStore } from '@/stores/session-store';
 import { router, useNavigation } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RecentSessionsPage() {
@@ -32,15 +32,12 @@ export default function RecentSessionsPage() {
       </ScrollView>
 
       <View className="absolute bottom-4 w-full max-w-md px-4 ">
-        <Pressable
-          className="flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
+        <ActionButton
+          text="Start Session"
+          icon={<Plus size={24} color="white" />}
           onPress={() => router.push('/sessions/make-session')}
-        >
-          <Plus size={24} color="white" className="mr-2" />
-          <Text variant="title-2xl" className="text-white">
-            Start Session
-          </Text>
-        </Pressable>
+          textVariant="title-2xl"
+        />
       </View>
     </SafeAreaView>
   );
