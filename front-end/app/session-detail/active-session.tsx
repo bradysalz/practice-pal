@@ -1,4 +1,5 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { AddItemButton } from '@/components/shared/AddItemButton';
 import { ActiveSessionItemCard } from '@/components/sessions/ActiveSessionItemCard';
 import { Text } from '@/components/ui/text';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
@@ -129,15 +130,13 @@ export default function ActiveSessionPage() {
 
       {/* End Session Button */}
       <View className="bg-white border-t border-slate-200 flex-row justify-between ">
-        <Pressable
+        <AddItemButton
           className="mx-4 my-4 flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80"
+          iconSize={20}
+          iconColor="black"
           onPress={() => router.push('/session-detail/add-item-to-session')}
-        >
-          <ThemedIcon name="Plus" size={20} color="black" />
-          <Text variant="body-semibold" className="text-slate-900 text-lg">
-            Add Item
-          </Text>
-        </Pressable>
+          label="Add Item"
+        />
         <Pressable
           className="mx-4 my-4 flex-1 flex-row items-center justify-center bg-red-500 rounded-xl py-4 active:opacity-80"
           onPress={handleEndSession}

@@ -1,4 +1,5 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
+import { AddItemButton } from '@/components/shared/AddItemButton';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
@@ -142,15 +143,13 @@ export default function EditSetlistPage() {
       <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200">
         <View className="flex-row gap-x-4 m-4">
           {/* Add Items Button */}
-          <Pressable
+          <AddItemButton
             className="flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80 gap-x-1"
+            iconSize={20}
+            iconColor="slate-900"
             onPress={handleOpenAddItemModal}
-          >
-            <ThemedIcon name="Plus" size={20} color="slate-900" />
-            <Text variant="body-semibold" className="text-slate-900">
-              Add Item
-            </Text>
-          </Pressable>
+            label="Add Item"
+          />
 
           {/* Save Setlist Button */}
           <Pressable

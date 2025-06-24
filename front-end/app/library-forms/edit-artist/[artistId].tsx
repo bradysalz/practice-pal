@@ -1,5 +1,5 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { DeleteButton } from '@/components/shared/DeleteButton';
 import { Text } from '@/components/ui/text';
 import { deleteArtist, updateArtist } from '@/lib/supabase/artist';
 import { useArtistsStore } from '@/stores/artist-store';
@@ -72,14 +72,7 @@ export default function EditArtistPage() {
             onChangeText={setArtistName}
             placeholder="Example Artist"
           />
-          <Pressable onPress={handleDeleteArtist} className="self-start">
-            <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4 border border-red-500">
-              <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
-              <Text variant="body-semibold" className="text-red-500">
-                Delete Artist
-              </Text>
-            </View>
-          </Pressable>
+          <DeleteButton onPress={handleDeleteArtist} label="Delete Artist" />
 
           <Pressable
             onPress={handleSaveArtist}
