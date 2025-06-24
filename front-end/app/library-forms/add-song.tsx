@@ -1,4 +1,5 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
+import { ActionButton } from '@/components/ui/action-button';
 import { Text } from '@/components/ui/text';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
@@ -7,7 +8,6 @@ import { useRouter } from 'expo-router';
 import Fuse from 'fuse.js';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
-import { ActionButton } from '@/components/ui/action-button';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

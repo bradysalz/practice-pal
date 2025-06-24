@@ -2,13 +2,12 @@ import { SetlistsTab } from '@/components/sessions/SetlistsTab';
 import { BooksTab } from '@/components/shared/BooksTab';
 import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
 import { SongsTab } from '@/components/shared/SongsTab';
+import { ActionButton } from '@/components/ui/action-button';
 import { TabsContent } from '@/components/ui/tabs';
-import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
-import { ActionButton } from '@/components/ui/action-button';
 import { useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, TextInput, View } from 'react-native';
+import { SafeAreaView, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const SESSION_TABS: readonly TabValue[] = ['setlists', 'books', 'songs'] as const;

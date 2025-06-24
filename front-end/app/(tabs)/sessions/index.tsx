@@ -1,11 +1,10 @@
 import { PracticeSessionSummaryCard } from '@/components/sessions/PracticeSessionSummaryCard';
-import { Text } from '@/components/ui/text';
+import { ActionButton } from '@/components/ui/action-button';
 import { useSessionsStore } from '@/stores/session-store';
 import { router, useNavigation } from 'expo-router';
 import { Plus } from 'lucide-react-native';
-import { ActionButton } from '@/components/ui/action-button';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RecentSessionsPage() {

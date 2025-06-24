@@ -1,11 +1,11 @@
+import { Text, type TextProps } from '@/components/ui/text';
+import { cn } from '@/utils/tailwind-utils';
 import * as React from 'react';
 import { Pressable, type PressableProps } from 'react-native';
-import { Text, type TextProps } from './text';
-import { cn } from '@/utils/tailwind-utils';
 
 interface ActionButtonProps extends PressableProps {
   text: string;
-  icon?: React.ReactElement;
+  icon?: React.ReactElement<{ className?: string }>;
   textVariant?: TextProps['variant'];
 }
 
@@ -27,7 +27,7 @@ export function ActionButton({
     <Pressable
       className={cn(
         'flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80',
-        className,
+        className
       )}
       {...props}
     >

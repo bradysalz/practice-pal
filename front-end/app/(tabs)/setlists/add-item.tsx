@@ -1,13 +1,12 @@
 import { BooksTab } from '@/components/shared/BooksTab';
 import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
 import { SongsTab } from '@/components/shared/SongsTab';
-import { TabsContent } from '@/components/ui/tabs';
-import { Text } from '@/components/ui/text';
 import { ActionButton } from '@/components/ui/action-button';
+import { TabsContent } from '@/components/ui/tabs';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ADD_ITEM_TABS: readonly TabValue[] = ['books', 'songs'] as const;
