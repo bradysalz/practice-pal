@@ -1,12 +1,13 @@
 import { HighlightBar } from '@/components/shared/HighlightBar';
 import ItemDetailPage from '@/components/shared/ItemDetailPage';
+import { Text } from '@/components/ui/text';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ExerciseDetailPage() {

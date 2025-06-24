@@ -1,8 +1,9 @@
 import { CardWithAccent } from '@/components/card-with-accent';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { CardContent, CardHeader } from '@/components/ui/card';
+import { Text } from '@/components/ui/text';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 type Props = {
   iconName: Parameters<typeof ThemedIcon>[0]['name'];
@@ -25,12 +26,12 @@ export function SessionDetailCardWrapper({
         <View className="flex-row items-center">
           <ThemedIcon
             name={iconName}
-            size={28}
+            size={26}
             color={iconColor}
             className="mr-2"
             style={{ marginRight: 6 }}
           />
-          <Text className="text-2xl font-semibold">{title}</Text>
+          <Text variant="title-2xl">{title}</Text>
         </View>
       </CardHeader>
       <CardContent className=" space-y-2">{children}</CardContent>

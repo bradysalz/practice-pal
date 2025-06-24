@@ -6,9 +6,15 @@ import { LocalDatabaseProvider } from '@/components/providers/LocalDatabaseProvi
 import { SessionProvider } from '@/components/providers/SessionProvider';
 import { NAV_THEME } from '@/lib/constants';
 import { useColorScheme } from '@/lib/useColorScheme';
-import { Inter_400Regular, Inter_700Bold, useFonts as useInter } from '@expo-google-fonts/inter';
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_700Bold,
+  useFonts as useInter,
+} from '@expo-google-fonts/inter';
 import {
   SpaceGrotesk_400Regular,
+  SpaceGrotesk_600SemiBold,
   SpaceGrotesk_700Bold,
   useFonts as useSpaceGrotesk,
 } from '@expo-google-fonts/space-grotesk';
@@ -37,8 +43,12 @@ export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-  const [interLoaded] = useInter({ Inter_400Regular, Inter_700Bold });
-  const [groteskLoaded] = useSpaceGrotesk({ SpaceGrotesk_400Regular, SpaceGrotesk_700Bold });
+  const [interLoaded] = useInter({ Inter_400Regular, Inter_500Medium, Inter_700Bold });
+  const [groteskLoaded] = useSpaceGrotesk({
+    SpaceGrotesk_400Regular,
+    SpaceGrotesk_600SemiBold,
+    SpaceGrotesk_700Bold,
+  });
   const fontsLoaded = interLoaded && groteskLoaded;
 
   useIsomorphicLayoutEffect(() => {

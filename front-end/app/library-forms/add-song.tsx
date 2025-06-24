@@ -1,11 +1,12 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
+import { Text } from '@/components/ui/text';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { LocalArtist } from '@/types/artist';
 import { useRouter } from 'expo-router';
 import Fuse from 'fuse.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -87,7 +88,9 @@ export default function AddSongPage() {
 
   return (
     <SafeAreaView className="flex-1 bg-white p-4 mr-2">
-      <Text className="text-2xl font-bold mb-4">Add New Song</Text>
+      <Text variant="title-2xl" className="mb-4">
+        Add New Song
+      </Text>
       <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="mr-1">
         <View className="gap-y-4">
           <TextInputWithLabel
@@ -134,10 +137,14 @@ export default function AddSongPage() {
             {isSaving ? (
               <>
                 <ActivityIndicator color="white" className="mr-2" />
-                <Text className="text-white text-xl font-medium">Saving...</Text>
+                <Text variant="body-bold" className="text-white">
+                  Saving...
+                </Text>
               </>
             ) : (
-              <Text className="text-white text-xl font-medium">Save Song</Text>
+              <Text variant="body-bold" className="text-white">
+                Save Song
+              </Text>
             )}
           </Pressable>
         </View>

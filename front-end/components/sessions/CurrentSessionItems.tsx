@@ -1,9 +1,11 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ListItemCard } from '@/components/shared/ListItemCard';
+import { Text } from '@/components/ui/text';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { DraftSessionItem } from '@/types/session';
-import { Text, View } from 'react-native';
+import { maybeTrimString } from '@/utils/string';
+import { View } from 'react-native';
 
 interface CurrentSessionItemsProps {
   sessionItems: DraftSessionItem[];
@@ -16,8 +18,13 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
   function renderEmptyState() {
     return (
-      <View className="p-4 bg-slate-2000 rounded-xl">
-        <Text className="text-slate-500">No items selected yet. Add items from below.</Text>
+      <View className="p-4 bg-slate-2000 rounded-xl gap-y-4">
+        <Text variant="body" className="text-xl text-slate-500">
+          No items selected yet
+        </Text>
+        <Text variant="body" className="text-xl text-slate-500">
+          Add items below!
+        </Text>
       </View>
     );
   }
@@ -46,14 +53,8 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
     // Handle exercise items
     if (item.type === 'exercise' && item.exercise) {
-      const bookName =
-        item.exercise.section?.book?.name?.length > 28
-          ? item.exercise.section.book.name.slice(0, 28) + '...'
-          : item.exercise.section?.book?.name;
-      const sectionName =
-        item.exercise.section?.name?.length > 28
-          ? item.exercise.section.name.slice(0, 28) + '...'
-          : item.exercise.section?.name;
+      const bookName = maybeTrimString(item.exercise.section?.book?.name);
+      const sectionName = maybeTrimString(item.exercise.section?.name);
 
       return (
         <ListItemCard
@@ -80,7 +81,9 @@ export function CurrentSessionItems({ sessionItems, onRemoveItem }: CurrentSessi
 
   return (
     <View>
-      <Text className="text-2xl font-heading-bold mb-2">Session Items</Text>
+      <Text variant="title-2xl" className="mb-2">
+        Session Items
+      </Text>
       <View className="flex-1 px-4 mb-60 gap-y-4">
         {sessionItems.length === 0 ? renderEmptyState() : sessionItems.map(renderSessionItem)}
       </View>

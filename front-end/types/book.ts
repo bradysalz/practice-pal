@@ -5,7 +5,7 @@ export type BookRow = Database['public']['Tables']['books']['Row'];
 type BookWithCountsPrivate = Database['public']['Views']['book_with_counts']['Row'];
 export type BookWithCountsRow = NonNullableFields<BookWithCountsPrivate>;
 
-export type ExerciseNamingType = 'alpha' | 'numeric' | 'custom';
+export type ExerciseNamingType = 'alpha' | 'numeric' | 'roman' | 'custom';
 
 export type NewBook = {
   name: string;

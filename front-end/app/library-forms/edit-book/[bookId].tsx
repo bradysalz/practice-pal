@@ -2,13 +2,14 @@ import { InputWithDelete } from '@/components/forms/InputWithDelete';
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { Separator } from '@/components/shared/Separator';
+import { Text } from '@/components/ui/text';
 import { deleteBook, updateBook } from '@/lib/supabase/book';
 import { deleteSections, insertSections, updateSection } from '@/lib/supabase/section';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export type EditableSection = {
@@ -141,7 +142,9 @@ export default function EditBookPage() {
           <Pressable onPress={handleDeleteBook} className="self-start">
             <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4">
               <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
-              <Text className="text-red-500 font-semibold text-lg">Delete Book</Text>
+              <Text variant="body-semibold" className="text-red-500">
+                Delete Book
+              </Text>
             </View>
           </Pressable>
         </View>
@@ -150,13 +153,13 @@ export default function EditBookPage() {
         {/* Sections */}
         <View>
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-2xl font-semibold">Sections</Text>
+            <Text variant="title-xl">Sections</Text>
             <Pressable
               onPress={handleAddSection}
               className="bg-slate-100 rounded-xl py-2 px-4 text-lg border border-slate-300 flex-row items-center gap-x-1.5"
             >
               <ThemedIcon name="Plus" size={16} color="slate-500" />
-              <Text className="text-lg">Add Section</Text>
+              <Text variant="body-semibold">Add Section</Text>
             </Pressable>
           </View>
 
@@ -180,10 +183,14 @@ export default function EditBookPage() {
           {isSaving ? (
             <>
               <ActivityIndicator color="white" className="mr-2" />
-              <Text className="text-white text-xl font-medium">Saving...</Text>
+              <Text variant="body-bold" className="text-white">
+                Saving...
+              </Text>
             </>
           ) : (
-            <Text className="text-white text-xl font-medium">Save Book</Text>
+            <Text variant="body-bold" className="text-white">
+              Save Book
+            </Text>
           )}
         </Pressable>
       </ScrollView>

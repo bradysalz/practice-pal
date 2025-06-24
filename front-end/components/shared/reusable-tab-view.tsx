@@ -1,5 +1,6 @@
+import { Text, TextClassContext } from '@/components/ui/text';
 import { ReactNode, useCallback } from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   LinearTransition,
@@ -105,18 +106,21 @@ export function ReusableTabView({ tabs, activeTab, onTabChange, children }: Reus
                 value={tabValue}
                 className={`flex-1 border-b-4 ${activeTab === tabValue ? 'border-orange-500' : 'border-b-2 border-slate-300 bg-slate-50'}`}
               >
-                <View className={`py-1 flex-row items-center justify-center gap-x-2`}>
-                  <ThemedIcon
-                    name={icon}
-                    size={28}
-                    color={activeTab === tabValue ? 'orange-500' : '#6B7280'}
-                  />
-                  <Text
-                    className={`text-2xl ${activeTab === tabValue ? 'text-orange-500' : 'text-gray-500'}`}
-                  >
-                    {label}
-                  </Text>
-                </View>
+                <TextClassContext.Provider value="text-2xl">
+                  <View className={`py-1 flex-row items-center justify-center gap-x-2`}>
+                    <ThemedIcon
+                      name={icon}
+                      size={28}
+                      color={activeTab === tabValue ? 'orange-500' : '#6B7280'}
+                    />
+                    <Text
+                      variant="title-2xl"
+                      className={`${activeTab === tabValue ? 'text-orange-500' : 'text-gray-500'}`}
+                    >
+                      {label}
+                    </Text>
+                  </View>
+                </TextClassContext.Provider>
               </TabsTrigger>
             );
           })}

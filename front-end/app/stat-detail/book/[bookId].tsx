@@ -1,12 +1,13 @@
 import NotFound from '@/app/+not-found';
 import { HighlightBar } from '@/components/shared/HighlightBar';
 import ItemProgressGraph from '@/components/stats/ItemProgressGraph';
+import { Text } from '@/components/ui/text';
 import { useBooksStore } from '@/stores/book-store';
 import { useStatStore } from '@/stores/stat-store';
 import { ItemProgressPoint } from '@/types/stats';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Switch, Text, View } from 'react-native';
+import { ActivityIndicator, Switch, View } from 'react-native';
 
 export default function BookStatsPage() {
   const { bookId } = useLocalSearchParams<{ bookId: string }>();
@@ -57,7 +58,9 @@ export default function BookStatsPage() {
     if (!bookStatsOverTime[bookId]) {
       return (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-lg text-gray-500">No progress yet!</Text>
+          <Text variant="body" className="text-gray-500">
+            No progress yet!
+          </Text>
         </View>
       );
     }
@@ -66,11 +69,15 @@ export default function BookStatsPage() {
       <View className="gap-y-4">
         <HighlightBar type="book" name={book.name} />
         <View className="flex-row items-center justify-between gap-x-2">
-          <Text className="text-xl font-semibold text-red-500">Items Played</Text>
-          <Text className="text-xl font-semibold text-blue-500">Beat Goal</Text>
+          <Text variant="title-xl" className="text-primary">
+            Items Played
+          </Text>
+          <Text variant="title-xl" className="text-accent">
+            Beat Goal
+          </Text>
 
           <View className="flex-row items-center gap-x-2">
-            <Text className="text-xl ">Use Percent</Text>
+            <Text variant="title-xl">Use Percent</Text>
             <Switch
               value={use_percent}
               onValueChange={setUsePercent}

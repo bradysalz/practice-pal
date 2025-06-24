@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { db } from './db';
+import { bookTable, exerciseTable, sectionTable } from './schema';
 
 // In a new file, e.g., `db/devUtils.ts`
 const ALL_TABLE_NAMES = [
@@ -31,4 +32,14 @@ export async function resetAllTables() {
 
   const tables = await db.all(sql`SELECT name FROM sqlite_master WHERE type='table';`);
   console.log('Tables after reset:', tables);
+}
+
+export async function checkTablesEmpty() {
+  const [books, sections, exercises] = await Promise.all([
+    db.select().from(bookTable).limit(1),
+    db.select().from(sectionTable).limit(1),
+    db.select().from(exerciseTable).limit(1),
+  ]);
+
+  return books.length === 0 && sections.length === 0 && exercises.length === 0;
 }

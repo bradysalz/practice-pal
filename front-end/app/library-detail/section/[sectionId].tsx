@@ -2,6 +2,7 @@ import { HighlightBar } from '@/components/shared/HighlightBar';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { Separator } from '@/components/shared/Separator';
 import { Progress } from '@/components/ui/progress';
+import { Text } from '@/components/ui/text';
 import { useBooksStore } from '@/stores/book-store';
 import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
@@ -10,7 +11,7 @@ import { SectionStatRow } from '@/types/stats';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
 export default function SectionDetailPage() {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function SectionDetailPage() {
         <View className="flex-col gap-y-2">
           <View className="flex-row items-end gap-x-2">
             <View className="w-32">
-              <Text className="text-lg">{playedProgress.toString()}% Played</Text>
+              <Text variant="body-semibold">{playedProgress.toString()}% Played</Text>
             </View>
             <View className="flex-1">
               <Progress
@@ -95,7 +96,7 @@ export default function SectionDetailPage() {
           </View>
           <View className="flex-row items-end gap-x-2">
             <View className="w-32">
-              <Text className="text-lg">{goalProgress.toString()}% Goal Beat</Text>
+              <Text variant="body-semibold">{goalProgress.toString()}% Goal Beat</Text>
             </View>
             <View className="flex-1">
               <Progress
@@ -105,12 +106,16 @@ export default function SectionDetailPage() {
               />
             </View>
           </View>
-          <Text className="text-xl text-blue-500">See more stats</Text>
+          <Text variant="body-semibold" className="text-blue-500">
+            See more stats
+          </Text>
         </View>
       </Pressable>
 
       <Separator color="slate" />
-      <Text className="text-2xl font-semibold my-4">Exercises</Text>
+      <Text variant="title-2xl" className="my-4">
+        Exercises
+      </Text>
 
       {isLoading ? (
         <View className="flex-1 justify-center items-center">

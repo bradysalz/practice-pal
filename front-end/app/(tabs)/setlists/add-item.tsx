@@ -2,10 +2,11 @@ import { BooksTab } from '@/components/shared/BooksTab';
 import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
 import { SongsTab } from '@/components/shared/SongsTab';
 import { TabsContent } from '@/components/ui/tabs';
+import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ADD_ITEM_TABS: readonly TabValue[] = ['books', 'songs'] as const;
@@ -44,7 +45,9 @@ export default function AddItemScreen() {
           onPress={() => router.back()}
         >
           <Check size={20} color="white" className="mr-2" />
-          <Text className="text-white font-semibold text-lg">Done</Text>
+          <Text variant="body-semibold" className="text-white">
+            Done
+          </Text>
         </Pressable>
       </View>
     </View>

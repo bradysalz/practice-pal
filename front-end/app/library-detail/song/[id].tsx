@@ -1,11 +1,12 @@
 import { HighlightBar } from '@/components/shared/HighlightBar';
 import ItemDetailPage from '@/components/shared/ItemDetailPage';
+import { Text } from '@/components/ui/text';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
 import { useSongsStore } from '@/stores/song-store';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function SongDetailPage() {

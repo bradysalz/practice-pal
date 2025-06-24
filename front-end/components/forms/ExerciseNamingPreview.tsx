@@ -1,5 +1,7 @@
+import { Text } from '@/components/ui/text';
 import { ExerciseNamingType } from '@/types/book';
-import { Text, View } from 'react-native';
+import { toRomanNumeral } from '@/utils/string';
+import { View } from 'react-native';
 
 interface ExerciseNamingPreviewProps {
   type: ExerciseNamingType;
@@ -20,6 +22,10 @@ export function ExerciseNamingPreview({ type, count, customNames }: ExerciseNami
       for (let i = 0; i < previewCount; i++) {
         names.push(`Exercise ${i + 1}`);
       }
+    } else if (type === 'roman') {
+      for (let i = 0; i < previewCount; i++) {
+        names.push(`Exercise ${toRomanNumeral(i + 1)}`);
+      }
     } else if (type === 'custom' && customNames?.length) {
       return customNames.slice(0, previewCount);
     }
@@ -30,6 +36,8 @@ export function ExerciseNamingPreview({ type, count, customNames }: ExerciseNami
         names.push(`Exercise ${String.fromCharCode(65 + count - 1)}`);
       } else if (type === 'numeric') {
         names.push(`Exercise ${count}`);
+      } else if (type === 'roman') {
+        names.push(`Exercise ${toRomanNumeral(count)}`);
       }
     }
 
@@ -42,7 +50,9 @@ export function ExerciseNamingPreview({ type, count, customNames }: ExerciseNami
 
   return (
     <View className="mt-1">
-      <Text className="text-slate-500 italic">{previewNames.join(', ')}</Text>
+      <Text variant="body" className="text-md text-slate-500 italic">
+        {previewNames.join(', ')}
+      </Text>
     </View>
   );
 }

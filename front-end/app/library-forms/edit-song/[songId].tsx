@@ -1,5 +1,6 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { Text } from '@/components/ui/text';
 import { deleteSong, updateSong } from '@/lib/supabase/song';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
@@ -7,7 +8,7 @@ import { LocalArtist } from '@/types/artist';
 import { fuzzySearchArtists } from '@/utils/song-edit';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function EditSongPage() {
@@ -128,7 +129,9 @@ export default function EditSongPage() {
           <Pressable onPress={handleDeleteSong} className="self-start mb-10">
             <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4">
               <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
-              <Text className="text-red-500 font-semibold text-lg">Delete Song</Text>
+              <Text variant="body-semibold" className="text-red-500">
+                Delete Song
+              </Text>
             </View>
           </Pressable>
 
@@ -140,10 +143,14 @@ export default function EditSongPage() {
             {isSaving ? (
               <>
                 <ActivityIndicator color="white" className="mr-2" />
-                <Text className="text-white text-xl font-medium">Saving...</Text>
+                <Text variant="body-bold" className="text-white">
+                  Saving...
+                </Text>
               </>
             ) : (
-              <Text className="text-white text-xl font-medium">Save Song</Text>
+              <Text variant="body-bold" className="text-white">
+                Save Song
+              </Text>
             )}
           </Pressable>
         </View>
