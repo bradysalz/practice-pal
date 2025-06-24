@@ -1,8 +1,9 @@
 import { InputWithDelete } from '@/components/forms/InputWithDelete';
-
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { AddItemButton } from '@/components/shared/AddItemButton';
+import { DeleteButton } from '@/components/shared/DeleteButton';
 import { Separator } from '@/components/shared/Separator';
+import { ActionButton } from '@/components/ui/action-button';
 import { Text } from '@/components/ui/text';
 import { deleteExercises, insertExercises, updateExercise } from '@/lib/supabase/exercise';
 import { deleteSections, updateSection } from '@/lib/supabase/section';
@@ -10,8 +11,7 @@ import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
-import { ActionButton } from '@/components/ui/action-button';
+import { ActivityIndicator, Alert, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export type EditableExercise = {
@@ -131,27 +131,14 @@ export default function EditSectionPage() {
             onChangeText={setSectionName}
             placeholder="Example Section"
           />
-          <Pressable onPress={handleDeleteSection} className="self-start">
-            <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4">
-              <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
-              <Text variant="body-semibold" className="text-red-500">
-                Delete Section
-              </Text>
-            </View>
-          </Pressable>
+          <DeleteButton onPress={handleDeleteSection} label="Delete Section" />
           <Separator color="slate" className="my-4" />
 
           {/* Exercises */}
           <View>
             <View className="flex-row justify-between items-center mb-4">
               <Text variant="title-2xl">Exercises</Text>
-              <Pressable
-                onPress={handleAddExercise}
-                className="bg-slate-100 rounded-xl py-2 px-4 text-lg border border-slate-300 flex-row items-center gap-x-1.5"
-              >
-                <ThemedIcon name="Plus" size={16} color="slate-500" />
-                <Text variant="body-semibold">Add Exercise</Text>
-              </Pressable>
+              <AddItemButton onPress={handleAddExercise} label="Add Exercise" />
             </View>
 
             <View className="gap-y-2">

@@ -1,7 +1,9 @@
 import { InputWithDelete } from '@/components/forms/InputWithDelete';
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { AddItemButton } from '@/components/shared/AddItemButton';
+import { DeleteButton } from '@/components/shared/DeleteButton';
 import { Separator } from '@/components/shared/Separator';
+import { ActionButton } from '@/components/ui/action-button';
 import { Text } from '@/components/ui/text';
 import { deleteBook, updateBook } from '@/lib/supabase/book';
 import { deleteSections, insertSections, updateSection } from '@/lib/supabase/section';
@@ -9,8 +11,7 @@ import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
-import { ActionButton } from '@/components/ui/action-button';
+import { ActivityIndicator, Alert, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export type EditableSection = {
@@ -140,14 +141,7 @@ export default function EditBookPage() {
             onChangeText={setBookAuthor}
             placeholder=""
           />
-          <Pressable onPress={handleDeleteBook} className="self-start">
-            <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4">
-              <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
-              <Text variant="body-semibold" className="text-red-500">
-                Delete Book
-              </Text>
-            </View>
-          </Pressable>
+          <DeleteButton onPress={handleDeleteBook} label="Delete Book" />
         </View>
         <Separator color="slate" className="my-4" />
 
@@ -155,13 +149,7 @@ export default function EditBookPage() {
         <View>
           <View className="flex-row justify-between items-center mb-4">
             <Text variant="title-xl">Sections</Text>
-            <Pressable
-              onPress={handleAddSection}
-              className="bg-slate-100 rounded-xl py-2 px-4 text-lg border border-slate-300 flex-row items-center gap-x-1.5"
-            >
-              <ThemedIcon name="Plus" size={16} color="slate-500" />
-              <Text variant="body-semibold">Add Section</Text>
-            </Pressable>
+            <AddItemButton onPress={handleAddSection} label="Add Section" />
           </View>
 
           <View className="gap-y-4 mb-4">

@@ -1,5 +1,5 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { ThemedIcon } from '@/components/icons/ThemedIcon';
+import { DeleteButton } from '@/components/shared/DeleteButton';
 import { Text } from '@/components/ui/text';
 import { deleteSong, updateSong } from '@/lib/supabase/song';
 import { useArtistsStore } from '@/stores/artist-store';
@@ -127,14 +127,7 @@ export default function EditSongPage() {
               </View>
             )}
           </View>
-          <Pressable onPress={handleDeleteSong} className="self-start mb-10">
-            <View className="flex-row items-center gap-x-2 bg-red-100 rounded-xl py-2 px-4">
-              <ThemedIcon name="TriangleAlert" size={24} color="red-500" />
-              <Text variant="body-semibold" className="text-red-500">
-                Delete Song
-              </Text>
-            </View>
-          </Pressable>
+          <DeleteButton onPress={handleDeleteSong} label="Delete Song" />
 
           <ActionButton
             onPress={handleSaveSong}

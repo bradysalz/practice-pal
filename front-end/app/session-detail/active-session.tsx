@@ -1,5 +1,7 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ActiveSessionItemCard } from '@/components/sessions/ActiveSessionItemCard';
+import { AddItemButton } from '@/components/shared/AddItemButton';
+import { ActionButton } from '@/components/ui/action-button';
 import { Text } from '@/components/ui/text';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { useSessionItemsStore } from '@/stores/session-item-store';
@@ -13,7 +15,6 @@ import {
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
-import { ActionButton } from '@/components/ui/action-button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ActiveSessionPage() {
@@ -130,15 +131,13 @@ export default function ActiveSessionPage() {
 
       {/* End Session Button */}
       <View className="bg-white border-t border-slate-200 flex-row justify-between ">
-        <Pressable
+        <AddItemButton
           className="mx-4 my-4 flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80"
+          iconSize={20}
+          iconColor="black"
           onPress={() => router.push('/session-detail/add-item-to-session')}
-        >
-          <ThemedIcon name="Plus" size={20} color="black" />
-          <Text variant="body-semibold" className="text-slate-900 text-lg">
-            Add Item
-          </Text>
-        </Pressable>
+          label="Add Item"
+        />
         <ActionButton
           text="End Session"
           icon={<ThemedIcon name="Check" size={20} color="white" />}
