@@ -3,6 +3,7 @@ import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view
 import { SongsTab } from '@/components/shared/SongsTab';
 import { TabsContent } from '@/components/ui/tabs';
 import { Text } from '@/components/ui/text';
+import { ActionButton } from '@/components/ui/action-button';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import { useState } from 'react';
@@ -40,15 +41,12 @@ export default function AddItemScreen() {
         className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200"
         style={{ paddingBottom: insets.bottom }}
       >
-        <Pressable
-          className="mx-4 my-4 flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
+        <ActionButton
+          text="Done"
+          icon={<Check size={20} color="white" />}
           onPress={() => router.back()}
-        >
-          <Check size={20} color="white" className="mr-2" />
-          <Text variant="body-semibold" className="text-white">
-            Done
-          </Text>
-        </Pressable>
+          className="mx-4 my-4"
+        />
       </View>
     </View>
   );

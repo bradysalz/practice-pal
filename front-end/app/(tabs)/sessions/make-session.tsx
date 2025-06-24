@@ -4,6 +4,7 @@ import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { createNewDraft } from '@/utils/draft-session';
 import { router } from 'expo-router';
 import { Play, Plus } from 'lucide-react-native';
+import { ActionButton } from '@/components/ui/action-button';
 import { useEffect } from 'react';
 import { Pressable, SafeAreaView, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -52,15 +53,12 @@ export default function MakeSessionPage() {
           </Pressable>
 
           {/* Start Practice Button */}
-          <Pressable
-            className="flex-1 flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
+          <ActionButton
+            text="Start"
+            icon={<Play size={20} color="white" />}
             onPress={() => router.push('/session-detail/active-session')}
-          >
-            <Play size={20} color="white" className="mr-2" />
-            <Text variant="body-semibold" className="text-white">
-              Start
-            </Text>
-          </Pressable>
+            className="flex-1"
+          />
         </View>
       </View>
     </SafeAreaView>

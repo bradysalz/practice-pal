@@ -3,6 +3,7 @@ import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import { ActionButton } from '@/components/ui/action-button';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { DraftSetlistItem } from '@/types/setlist';
@@ -153,16 +154,13 @@ export default function EditSetlistPage() {
           </Pressable>
 
           {/* Save Setlist Button */}
-          <Pressable
-            className="flex-1 flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80 gap-x-1"
+          <ActionButton
+            text="Save"
+            icon={<ThemedIcon name="Save" size={20} color="white" />}
             onPress={handleSaveSetlist}
             disabled={!draftSetlist.name}
-          >
-            <ThemedIcon name="Save" size={20} color="white" />
-            <Text variant="body-semibold" className="text-white">
-              Save
-            </Text>
-          </Pressable>
+            className="flex-1 gap-x-1"
+          />
         </View>
       </View>
     </View>
