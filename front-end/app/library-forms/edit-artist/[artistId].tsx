@@ -6,6 +6,7 @@ import { useArtistsStore } from '@/stores/artist-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
+import { ActionButton } from '@/components/ui/action-button';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function EditArtistPage() {
@@ -74,24 +75,14 @@ export default function EditArtistPage() {
           />
           <DeleteButton onPress={handleDeleteArtist} label="Delete Artist" />
 
-          <Pressable
+          <ActionButton
             onPress={handleSaveArtist}
             disabled={isSaving}
-            className={`rounded-xl py-3 items-center flex-row justify-center ${isSaving ? 'bg-primary/70' : 'bg-primary'}`}
-          >
-            {isSaving ? (
-              <>
-                <ActivityIndicator color="white" className="mr-2" />
-                <Text variant="body-bold" className="text-white">
-                  Saving...
-                </Text>
-              </>
-            ) : (
-              <Text variant="body-bold" className="text-white">
-                Save Artist
-              </Text>
-            )}
-          </Pressable>
+            className={isSaving ? 'bg-primary/70' : undefined}
+            textVariant="body-bold"
+            text={isSaving ? 'Saving...' : 'Save Artist'}
+            icon={isSaving ? <ActivityIndicator color="white" /> : undefined}
+          />
         </View>
       </ScrollView>
     </View>

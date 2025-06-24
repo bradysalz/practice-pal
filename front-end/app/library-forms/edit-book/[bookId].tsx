@@ -11,6 +11,7 @@ import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
+import { ActionButton } from '@/components/ui/action-button';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export type EditableSection = {
@@ -163,24 +164,14 @@ export default function EditBookPage() {
           </View>
         </View>
 
-        <Pressable
+        <ActionButton
           onPress={handleSaveBook}
           disabled={isSaving}
-          className={`rounded-xl py-3 items-center flex-row justify-center ${isSaving ? 'bg-primary/70' : 'bg-primary'}`}
-        >
-          {isSaving ? (
-            <>
-              <ActivityIndicator color="white" className="mr-2" />
-              <Text variant="body-bold" className="text-white">
-                Saving...
-              </Text>
-            </>
-          ) : (
-            <Text variant="body-bold" className="text-white">
-              Save Book
-            </Text>
-          )}
-        </Pressable>
+          className={isSaving ? 'bg-primary/70' : undefined}
+          textVariant="body-bold"
+          text={isSaving ? 'Saving...' : 'Save Book'}
+          icon={isSaving ? <ActivityIndicator color="white" /> : undefined}
+        />
       </ScrollView>
     </View>
   );

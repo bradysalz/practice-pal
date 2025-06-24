@@ -9,6 +9,7 @@ import { fuzzySearchArtists } from '@/utils/song-edit';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
+import { ActionButton } from '@/components/ui/action-button';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function EditSongPage() {
@@ -128,24 +129,14 @@ export default function EditSongPage() {
           </View>
           <DeleteButton onPress={handleDeleteSong} label="Delete Song" />
 
-          <Pressable
+          <ActionButton
             onPress={handleSaveSong}
             disabled={isSaving}
-            className={`rounded-xl py-3 items-center flex-row justify-center ${isSaving ? 'bg-primary/70' : 'bg-primary'}`}
-          >
-            {isSaving ? (
-              <>
-                <ActivityIndicator color="white" className="mr-2" />
-                <Text variant="body-bold" className="text-white">
-                  Saving...
-                </Text>
-              </>
-            ) : (
-              <Text variant="body-bold" className="text-white">
-                Save Song
-              </Text>
-            )}
-          </Pressable>
+            className={isSaving ? 'bg-primary/70' : undefined}
+            textVariant="body-bold"
+            text={isSaving ? 'Saving...' : 'Save Song'}
+            icon={isSaving ? <ActivityIndicator color="white" /> : undefined}
+          />
         </View>
       </ScrollView>
     </View>
