@@ -1,11 +1,12 @@
 import { HighlightBar } from '@/components/shared/HighlightBar';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { StatBox } from '@/components/shared/StatBox';
+import { Text } from '@/components/ui/text';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useSongsStore } from '@/stores/song-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 export default function ArtistDetailPage() {
   const router = useRouter();
@@ -27,7 +28,12 @@ export default function ArtistDetailPage() {
     router.push(`/library-forms/edit-artist/${id}`);
   };
 
-  if (!artist) return <Text>Artist not found!</Text>;
+  if (!artist)
+    return (
+      <Text variant="body" className="text-center text-slate-500 py-8">
+        Artist not found!
+      </Text>
+    );
   return (
     <View className="flex-1 p-4">
       <View className="gap-y-4 mb-4">

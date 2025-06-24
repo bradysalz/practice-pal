@@ -88,7 +88,7 @@ export function SongsTab({ mode, searchQuery = '' }: SongsTabProps) {
           <ListItemCard
             key={song.id}
             title={song.name || 'Untitled Song'}
-            subtitle={artist?.name}
+            description={artist?.name}
             isAdded={isSongAdded(song)}
             onAdd={() => handleAddSong(song)}
             onRemove={() => handleRemoveSong(song)}

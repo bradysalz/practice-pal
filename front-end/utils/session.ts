@@ -10,6 +10,7 @@ export type ExerciseWithSession = ExerciseRow & {
 };
 
 type SectionWithExercises = SectionRow & {
+  book: BookRow | null;
   exercises: ExerciseWithSession[];
 };
 
@@ -78,7 +79,7 @@ export function groupExercisesByBookAndSectionWithSession(
     // Get or create section
     let sectionEntry = bookEntry.sections.find((s) => s.id === section.id);
     if (!sectionEntry) {
-      sectionEntry = { ...section, exercises: [] };
+      sectionEntry = { ...section, book, exercises: [] };
       bookEntry.sections.push(sectionEntry);
     }
 

@@ -1,5 +1,6 @@
+import { Text } from '@/components/ui/text';
 import React from 'react';
-import { Text, TextInput, TextInputProps, View } from 'react-native';
+import { TextInput, TextInputProps, View } from 'react-native';
 
 type TextSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -24,9 +25,13 @@ export function TextInputWithLabel({
 
   return (
     <View>
-      {label && <Text className={`mb-1 font-medium ${sizes.label}`}>{label}</Text>}
+      {label && (
+        <Text variant="body-semibold" className={`mb-1 ${sizes.label}`}>
+          {label}
+        </Text>
+      )}
       <TextInput
-        className={`border border-slate-300 ${sizes.input} rounded-xl px-3 py-2 bg-slate-50 mr-1`}
+        className={`border border-slate-500 ${sizes.input} rounded-xl px-3 py-2 bg-slate-50 mr-1`}
         {...inputProps}
       />
     </View>

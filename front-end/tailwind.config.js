@@ -37,10 +37,29 @@ module.exports = {
     },
     extend: {
       fontFamily: {
+        // Base fonts
         sans: ['Inter_400Regular', 'System'],
         'sans-bold': ['Inter_700Bold', 'System'],
         heading: ['SpaceGrotesk_400Regular', 'System'],
         'heading-bold': ['SpaceGrotesk_700Bold', 'System'],
+
+        // Text component specific utilities
+        text: ['Inter_400Regular', 'System'],
+        'text-semibold': ['Inter_500Medium', 'System'],
+        'text-bold': ['Inter_700Bold', 'System'],
+        'text-heading': ['SpaceGrotesk_400Regular', 'System'],
+        'text-heading-semibold': ['SpaceGrotesk_600SemiBold', 'System'],
+        'text-heading-bold': ['SpaceGrotesk_700Bold', 'System'],
+
+        // Common text styles
+        label: ['Inter_400Regular', 'System'],
+        'label-bold': ['Inter_700Bold', 'System'],
+        title: ['SpaceGrotesk_400Regular', 'System'],
+        'title-semibold': ['SpaceGrotesk_600SemiBold', 'System'],
+        'title-bold': ['SpaceGrotesk_700Bold', 'System'],
+
+        // Default font
+        DEFAULT: ['Inter_400Regular', 'System'],
       },
       colors: {
         ...colors, // re-include tailwind colors

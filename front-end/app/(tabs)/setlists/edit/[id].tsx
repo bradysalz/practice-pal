@@ -1,15 +1,15 @@
+import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ItemRow } from '@/components/setlists/ItemRow';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Text } from '@/components/ui/text';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { DraftSetlistItem } from '@/types/setlist';
 import { createDraftFromSetlist, createNewDraft } from '@/utils/draft-setlist';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
@@ -110,7 +110,7 @@ export default function EditSetlistPage() {
   };
 
   return (
-    <View className="flex-1 bg-slate-50 px-4">
+    <View className="flex-1 px-4">
       <View className="flex-1 mb-20">
         <DraggableFlatList
           data={draftSetlist.items}
@@ -118,23 +118,21 @@ export default function EditSetlistPage() {
           keyExtractor={(item) => item.id}
           onDragEnd={({ data }) => reorderDraftItems(data)}
           ListHeaderComponent={
-            <View className="pt-4 pb-6">
-              <Label className="text-2xl mb-2">Setlist Name</Label>
-              <TextInput
+            <View className="pt-4 pb-6 gap-y-4">
+              <TextInputWithLabel
+                label="Setlist Name"
                 value={draftSetlist.name || ''}
                 onChangeText={(text) => setDraftSetlist({ ...draftSetlist, name: text })}
                 placeholder="e.g., Warm-up Routine"
-                className="border border-slate-300 p-2 rounded-xl bg-white mb-4"
               />
 
-              <Label className="text-2xl mb-2">Description</Label>
-              <Textarea
+              <TextInputWithLabel
+                label="Description"
                 value={draftSetlist.description || ''}
                 onChangeText={(text) => setDraftSetlist({ ...draftSetlist, description: text })}
-                placeholder="Describe your setlist..."
-                className="mb-4 border border-slate-300 rounded-xl"
+                placeholder="e.g., Good for improving doubles technique..."
+                textSize="lg"
               />
-              <Text className="text-2xl font-semibold">Items</Text>
             </View>
           }
         />
@@ -149,7 +147,9 @@ export default function EditSetlistPage() {
             onPress={handleOpenAddItemModal}
           >
             <ThemedIcon name="Plus" size={20} color="slate-900" />
-            <Text className="text-slate-900 font-semibold text-lg">Add Item</Text>
+            <Text variant="body-semibold" className="text-slate-900">
+              Add Item
+            </Text>
           </Pressable>
 
           {/* Save Setlist Button */}
@@ -159,7 +159,9 @@ export default function EditSetlistPage() {
             disabled={!draftSetlist.name}
           >
             <ThemedIcon name="Save" size={20} color="white" />
-            <Text className="text-white font-semibold text-lg">Save</Text>
+            <Text variant="body-semibold" className="text-white">
+              Save
+            </Text>
           </Pressable>
         </View>
       </View>

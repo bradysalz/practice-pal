@@ -15,7 +15,7 @@ import {
   isExerciseInDraft,
 } from '@/utils/books-tab';
 import { useEffect, useState } from 'react';
-import { BackHandler, Pressable, Text, View } from 'react-native';
+import { BackHandler, View } from 'react-native';
 import { ThemedIcon } from '../icons/ThemedIcon';
 import { HighlightBar } from './HighlightBar';
 import { ListItemCard } from './ListItemCard';
@@ -95,17 +95,6 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     }
   };
 
-  const handleNavigateBack = (newMode: 'list' | 'book') => {
-    setViewMode(newMode);
-    if (newMode === 'list') {
-      setSelectedBook(null);
-    }
-    if (newMode === 'book') {
-      setSelectedSection(null);
-    }
-    onNavigate?.();
-  };
-
   const isExerciseAdded = (exercise: LocalExercise) => {
     return isExerciseInDraft(exercise.id, mode, draftSession, draftSetlist);
   };
@@ -115,18 +104,14 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
     const filteredExercises = filterByName(sectionExercises, searchQuery);
 
     return (
-      <View className="gap-y-4 mt-4">
-        <Pressable className="mb-2" onPress={() => handleNavigateBack('book')}>
-          <Text className="text-primary">{'< Back'}</Text>
-        </Pressable>
-
+      <View className="gap-y-4">
         <HighlightBar type="book" name={selectedBook.name} />
         <HighlightBar type="section" name={selectedSection.name} />
         {filteredExercises.map((exercise) => (
           <ListItemCard
             key={exercise.id}
             title={exercise.name || 'Untitled Exercise'}
-            subtitle={exercise.goal_tempo ? `Goal: ${exercise.goal_tempo} BPM` : undefined}
+            description={exercise.goal_tempo ? `Goal: ${exercise.goal_tempo} BPM` : undefined}
             isAdded={isExerciseAdded(exercise)}
             onAdd={() => handleAddExercise(exercise)}
             onRemove={() => handleRemoveExercise(exercise)}
@@ -142,16 +127,12 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
 
     return (
       <View className="gap-y-4 mt-4">
-        <Pressable className="mb-2" onPress={() => handleNavigateBack('list')}>
-          <Text className="text-primary">{'< Back'}</Text>
-        </Pressable>
-
         <HighlightBar type="book" name={selectedBook.name} />
         {filteredSections.map((section) => (
           <ListItemCard
             key={section.id}
             title={section.name || 'Untitled Section'}
-            subtitle={`${section.exercise_count} exercises`}
+            description={`${section.exercise_count} exercises`}
             onPress={() => {
               setSelectedSection(section);
               setViewMode('section');
@@ -173,7 +154,7 @@ export function BooksTab({ mode, searchQuery = '', onNavigate }: BooksTabProps) 
         <ListItemCard
           key={book.id}
           title={book.name || 'Untitled Book'}
-          subtitle={`${book.exercise_count} exercises`}
+          description={`${book.exercise_count} exercises`}
           onPress={() => {
             setSelectedBook(book);
             setViewMode('book');

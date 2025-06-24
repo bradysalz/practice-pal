@@ -31,6 +31,7 @@
     "@rn-primitives/label": "^1.1.0",
     "@rn-primitives/portal": "^1.2.0",
     "@rn-primitives/progress": "^1.2.0",
+    "@rn-primitives/select": "^1.2.0",
     "@rn-primitives/separator": "^1.1.0",
     "@rn-primitives/slot": "^1.1.0",
     "@rn-primitives/switch": "^1.2.0",

@@ -1,10 +1,11 @@
 import { CurrentSessionItems } from '@/components/sessions/CurrentSessionItems';
+import { Text } from '@/components/ui/text';
 import { useDraftSessionsStore } from '@/stores/draft-sessions-store';
 import { createNewDraft } from '@/utils/draft-session';
 import { router } from 'expo-router';
 import { Play, Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function MakeSessionPage() {
@@ -45,7 +46,9 @@ export default function MakeSessionPage() {
             onPress={() => router.push('/session-detail/add-item-to-session')}
           >
             <Plus size={20} className="mr-2 text-slate-900" />
-            <Text className="text-slate-900 font-semibold text-lg">Add Items</Text>
+            <Text variant="body-semibold" className="text-slate-900">
+              Add Items
+            </Text>
           </Pressable>
 
           {/* Start Practice Button */}
@@ -54,7 +57,9 @@ export default function MakeSessionPage() {
             onPress={() => router.push('/session-detail/active-session')}
           >
             <Play size={20} color="white" className="mr-2" />
-            <Text className="text-white font-semibold text-lg">Start</Text>
+            <Text variant="body-semibold" className="text-white">
+              Start
+            </Text>
           </Pressable>
         </View>
       </View>

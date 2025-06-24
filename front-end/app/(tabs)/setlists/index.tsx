@@ -37,7 +37,7 @@ export default function SetlistsPage() {
 
   return (
     <SafeAreaView className="flex-1  items-center">
-      <ScrollView className="w-full max-w-md px-4 mt-2 space-y-4 mb-24">
+      <ScrollView className="w-full max-w-md px-4 mt-2 space-y-4 mb-16">
         {Object.keys(setlistDetailMap).length > 0 ? (
           Object.entries(setlistDetailMap).map(([id, setlist]) => (
             <SetlistCard

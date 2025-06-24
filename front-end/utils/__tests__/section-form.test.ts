@@ -1,5 +1,5 @@
-import { updateCustomName, updateExerciseCount, updateNamingType } from '@/utils/section-form';
 import { SectionFormData } from '@/types/book';
+import { updateCustomName, updateExerciseCount, updateNamingType } from '@/utils/section-form';
 
 describe('section-form utils', () => {
   const baseSection: SectionFormData = {
@@ -19,6 +19,12 @@ describe('section-form utils', () => {
     const result = updateNamingType(baseSection, 'custom');
     expect(result.exerciseNaming).toBe('custom');
     expect(result.customExerciseNames?.length).toBe(2);
+  });
+
+  test('updateNamingType works with roman type', () => {
+    const result = updateNamingType(baseSection, 'roman');
+    expect(result.exerciseNaming).toBe('roman');
+    expect(result.customExerciseNames).toBeUndefined();
   });
 
   test('updateCustomName updates name array and section', () => {

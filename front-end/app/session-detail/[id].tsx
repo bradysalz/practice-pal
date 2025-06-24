@@ -1,12 +1,13 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ExerciseDetailCard } from '@/components/sessions/ExerciseDetailCard';
 import { SongDetailCard } from '@/components/sessions/SongDetailCard';
+import { Text } from '@/components/ui/text';
 import { useSessionsStore } from '@/stores/session-store';
 import { formatTimestampToDate, formatToMinutes } from '@/utils/date-time';
 import { groupItems } from '@/utils/filter';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
 
 export default function PracticeSessionDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,7 +23,9 @@ export default function PracticeSessionDetailPage() {
   if (!session) {
     return (
       <View className="flex-1 items-center justify-center px-4">
-        <Text className="text-2xl font-bold mb-4">Session not found</Text>
+        <Text variant="title-2xl" className="mb-4">
+          Session not found
+        </Text>
       </View>
     );
   }
@@ -36,14 +39,11 @@ export default function PracticeSessionDetailPage() {
         options={{
           headerTitle: () => (
             <View className="flex-row items-center justify-between w-full pr-4">
-              <Text className="text-2xl font-bold">
-                {formatTimestampToDate(session.created_at)}
-              </Text>
+              <Text variant="title-2xl">{formatTimestampToDate(session.created_at)}</Text>
               <View className="flex-row items-center">
                 <ThemedIcon name="Clock" style={{ marginRight: 6 }} />
-                <Text className="text-lg text-slate-700">
-                  {formatToMinutes(session.duration!)} min
-                </Text>
+                {/* TODO: use a smaller font size */}
+                <Text variant="title-xl">{formatToMinutes(session.duration!)} min</Text>
               </View>
             </View>
           ),

@@ -1,13 +1,15 @@
 import { SectionForm } from '@/components/forms/SectionForm';
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
-import { insertFullBookRPC } from '@/lib/supabase/book';
+import { Text } from '@/components/ui/text';
+import { insertFullBook } from '@/lib/db/mutations';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { SectionFormData, SectionUploadData } from '@/types/book';
+import { toRomanNumeral } from '@/utils/string';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -34,6 +36,8 @@ export default function AddBookPage() {
           return 'Exercise ' + String.fromCharCode(65 + index); // Exercise A, Exercise B, Exercise C...
         case 'numeric':
           return 'Exercise ' + (index + 1).toString(); // Exercise 1, Exercise 2, Exercise 3...
+        case 'roman':
+          return 'Exercise ' + toRomanNumeral(index + 1); // Exercise I, Exercise II, Exercise III...
         case 'custom':
           return customExerciseNames?.[index] || `Exercise ${index + 1}`;
         default:
@@ -74,7 +78,7 @@ export default function AddBookPage() {
       }));
 
       // Call Supabase RPC
-      await insertFullBookRPC({
+      await insertFullBook({
         bookName: bookName,
         bookAuthor: bookAuthor,
         sections: preparedSections,
@@ -93,7 +97,9 @@ export default function AddBookPage() {
 
   return (
     <SafeAreaView className="flex-1 bg-white p-4 mr-2">
-      <Text className="text-2xl font-bold mb-4">Add New Book</Text>
+      <Text variant="title-2xl" className="mb-4">
+        Add New Book
+      </Text>
       <ScrollView contentContainerStyle={{ paddingBottom: 320 }} className="mr-1">
         <View className="gap-y-4">
           <TextInputWithLabel
@@ -101,23 +107,27 @@ export default function AddBookPage() {
             value={bookName}
             onChangeText={setBookName}
             placeholder="Stick Control"
+            textSize="lg"
           />
           <TextInputWithLabel
             label="Author"
             value={bookAuthor}
             onChangeText={setBookAuthor}
             placeholder="George Lawrence Stone"
+            textSize="lg"
           />
           <View className="mb-4"></View>
           <View>
             <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-2xl font-semibold">Sections</Text>
+              <Text variant="title-2xl" className="font-semibold">
+                Sections
+              </Text>
               <Pressable
                 onPress={handleAddSection}
-                className="bg-slate-100 rounded-xl py-2 px-4 text-lg border border-slate-300 flex-row items-center gap-x-1.5"
+                className="bg-slate-100 rounded-xl py-2 px-4 text-lg border border-slate-500 flex-row items-center gap-x-1.5"
               >
                 <ThemedIcon name="Plus" size={16} color="slate-500" />
-                <Text className="text-lg">Add Section</Text>
+                <Text variant="body-semibold">Add Section</Text>
               </Pressable>
             </View>
 
@@ -140,10 +150,14 @@ export default function AddBookPage() {
             {isSaving ? (
               <>
                 <ActivityIndicator color="white" className="mr-2" />
-                <Text className="text-white text-xl font-medium">Saving...</Text>
+                <Text variant="body-bold" className="text-xl text-white">
+                  Saving...
+                </Text>
               </>
             ) : (
-              <Text className="text-white text-xl font-medium">Save Book</Text>
+              <Text variant="body-bold" className="text-xl text-white">
+                Save Book
+              </Text>
             )}
           </Pressable>
         </View>

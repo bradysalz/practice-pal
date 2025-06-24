@@ -4,6 +4,7 @@ import { Separator } from '@/components/shared/Separator';
 import { StatBox } from '@/components/shared/StatBox';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Text } from '@/components/ui/text';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useStatStore } from '@/stores/stat-store';
@@ -11,7 +12,7 @@ import { BookStatRow } from '@/types/stats';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import React, { useEffect } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 export default function BookDetailPage() {
   const router = useRouter();
@@ -69,7 +70,7 @@ export default function BookDetailPage() {
         <View className="flex-col gap-y-2">
           <View className="flex-row items-end gap-x-2">
             <View className="w-32">
-              <Text className="text-lg">{playedProgress.toString()}% Played</Text>
+              <Text variant="body-semibold">{playedProgress.toString()}% Played</Text>
             </View>
             <View className="flex-1">
               <Progress
@@ -81,7 +82,7 @@ export default function BookDetailPage() {
           </View>
           <View className="flex-row items-end gap-x-2">
             <View className="w-32">
-              <Text className="text-lg">{goalProgress.toString()}% Goal Beat</Text>
+              <Text variant="body-semibold">{goalProgress.toString()}% Goal Beat</Text>
             </View>
             <View className="flex-1">
               <Progress
@@ -91,19 +92,23 @@ export default function BookDetailPage() {
               />
             </View>
           </View>
-          <Text className="text-xl text-blue-500">See more stats</Text>
+          <Text variant="body-semibold" className="text-blue-500">
+            See more stats
+          </Text>
         </View>
       </Pressable>
 
       <Separator color="slate" />
-      <Text className="text-2xl font-semibold my-4">Sections</Text>
+      <Text variant="title-2xl" className="my-4">
+        Sections
+      </Text>
       <ScrollView className="rounded-lg">
         {usefulSections.map((section) => {
           return (
             <ListItemCard
               key={section.id}
               title={section.name || 'Untitled Section'}
-              subtitle={`${section.exercise_count} exercises`}
+              stats={`${section.exercise_count} exercises`}
               isAdded={false}
               onPress={() => router.push(`/library-detail/section/${section.id}`)}
               className="mb-4"

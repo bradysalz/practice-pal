@@ -1,9 +1,10 @@
 import { PracticeSessionSummaryCard } from '@/components/sessions/PracticeSessionSummaryCard';
+import { Text } from '@/components/ui/text';
 import { useSessionsStore } from '@/stores/session-store';
 import { router, useNavigation } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RecentSessionsPage() {
@@ -35,8 +36,10 @@ export default function RecentSessionsPage() {
           className="flex-row items-center justify-center bg-primary rounded-xl py-4 shadow-md active:opacity-80"
           onPress={() => router.push('/sessions/make-session')}
         >
-          <Plus size={20} color="white" className="mr-2" />
-          <Text className="text-white font-semibold text-lg">Start Session</Text>
+          <Plus size={24} color="white" className="mr-2" />
+          <Text variant="title-2xl" className="text-white">
+            Start Session
+          </Text>
         </Pressable>
       </View>
     </SafeAreaView>

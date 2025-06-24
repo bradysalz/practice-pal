@@ -1,5 +1,6 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
-import { Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Pressable, View } from 'react-native';
 
 type ItemType = 'book' | 'section' | 'exercise' | 'artist' | 'song';
 
@@ -29,14 +30,16 @@ export function HighlightBar({
   onPressEdit,
 }: HighlightBarProps) {
   return (
-    <View className="flex-row items-center justify-between bg-orange-100 p-2">
+    <View className="flex-row items-center justify-between bg-secondary p-2">
       <Pressable onPress={onPressEdit} className="flex-row items-center flex-1">
         <View className="flex-row items-center flex-1">
           <ThemedIcon name={iconMap[type]} size={28} color="black" />
-          <Text className="text-2xl font-bold ml-2">{name}</Text>
+          <Text variant="title-2xl" className="mx-2">
+            {name}
+          </Text>
         </View>
         {showRightArrow && <ThemedIcon name="ChevronRight" size={28} color="black" />}
-        {showEditIcon && <ThemedIcon name="Edit" size={28} color="red-500" />}
+        {showEditIcon && <ThemedIcon name="Edit" size={28} color="primary" />}
       </Pressable>
     </View>
   );

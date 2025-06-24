@@ -1,11 +1,13 @@
 import { ActiveValueIndicator } from '@/components/stats/ActiveValueIndicator';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Text } from '@/components/ui/text';
 import { ItemTempoPoint, TimeRange } from '@/types/stats';
 import { filterProgressData } from '@/utils/item-progress';
 import { formatDateByRange } from '@/utils/stats';
 import { DashPathEffect, useFont } from '@shopify/react-native-skia';
 import React, { useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+
+import { View } from 'react-native';
 import { CartesianChart, Line, Scatter, useChartPressState } from 'victory-native';
 
 interface ItemTempoGraphProps {
@@ -34,16 +36,16 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
         <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)}>
           <TabsList className="flex-row justify-between rounded-xl bg-slate-300">
             <TabsTrigger value="week" className="flex-1 rounded-xl">
-              <Text className={`text-lg ${timeRange === 'week' ? 'font-bold' : ''}`}>Week</Text>
+              <Text variant={timeRange === 'week' ? 'body-bold' : 'body-semibold'}>Week</Text>
             </TabsTrigger>
             <TabsTrigger value="month" className="flex-1 rounded-xl">
-              <Text className={`text-lg ${timeRange === 'month' ? 'font-bold' : ''}`}>Month</Text>
+              <Text variant={timeRange === 'month' ? 'body-bold' : 'body-semibold'}>Month</Text>
             </TabsTrigger>
             <TabsTrigger value="year" className="flex-1 rounded-xl">
-              <Text className={`text-lg ${timeRange === 'year' ? 'font-bold' : ''}`}>Year</Text>
+              <Text variant={timeRange === 'year' ? 'body-bold' : 'body-semibold'}>Year</Text>
             </TabsTrigger>
             <TabsTrigger value="all" className="flex-1 rounded-xl">
-              <Text className={`text-lg ${timeRange === 'all' ? 'font-bold' : ''}`}>All</Text>
+              <Text variant={timeRange === 'all' ? 'body-bold' : 'body-semibold'}>All</Text>
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -57,16 +59,16 @@ export default function ItemTempoGraph({ data }: ItemTempoGraphProps) {
       <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)}>
         <TabsList className="flex-row justify-between rounded-xl bg-slate-300">
           <TabsTrigger value="week" className="flex-1 rounded-xl">
-            <Text className={`text-lg ${timeRange === 'week' ? 'font-bold' : ''}`}>Week</Text>
+            <Text variant={timeRange === 'week' ? 'body-bold' : 'body-semibold'}>Week</Text>
           </TabsTrigger>
           <TabsTrigger value="month" className="flex-1 rounded-xl">
-            <Text className={`text-lg ${timeRange === 'month' ? 'font-bold' : ''}`}>Month</Text>
+            <Text variant={timeRange === 'month' ? 'body-bold' : 'body-semibold'}>Month</Text>
           </TabsTrigger>
           <TabsTrigger value="year" className="flex-1 rounded-xl">
-            <Text className={`text-lg ${timeRange === 'year' ? 'font-bold' : ''}`}>Year</Text>
+            <Text variant={timeRange === 'year' ? 'body-bold' : 'body-semibold'}>Year</Text>
           </TabsTrigger>
           <TabsTrigger value="all" className="flex-1 rounded-xl">
-            <Text className={`text-lg ${timeRange === 'all' ? 'font-bold' : ''}`}>All</Text>
+            <Text variant={timeRange === 'all' ? 'body-bold' : 'body-semibold'}>All</Text>
           </TabsTrigger>
         </TabsList>
       </Tabs>

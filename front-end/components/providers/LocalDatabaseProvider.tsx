@@ -1,4 +1,5 @@
 import { db } from '@/lib/db/db';
+import { checkTablesEmpty } from '@/lib/db/dev_utils';
 import { runMigrationsIfNeeded } from '@/lib/db/migrations';
 import { refreshAllFastViews } from '@/lib/db/mutations';
 import { seedLocalDb } from '@/lib/db/seed';
@@ -17,7 +18,13 @@ export function LocalDatabaseProvider({ children }: { children: React.ReactNode 
       try {
         await runMigrationsIfNeeded(db);
         await refreshAllFastViews();
-        await seedLocalDb();
+
+        // Only seed if tables are empty
+        const isEmpty = await checkTablesEmpty();
+        if (isEmpty) {
+          await seedLocalDb();
+        }
+
         setReady(true);
       } catch (error) {
         console.error('LocalDatabaseProvider: Failed to initialize database:', error);

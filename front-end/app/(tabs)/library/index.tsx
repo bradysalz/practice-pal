@@ -1,16 +1,16 @@
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
-
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ListItemCard } from '@/components/shared/ListItemCard';
 import { ReusableTabView, TabValue } from '@/components/shared/reusable-tab-view';
 import { FloatingActionButton } from '@/components/ui/floating-action-button';
 import { TabsContent } from '@/components/ui/tabs';
+import { Text } from '@/components/ui/text';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useBooksStore } from '@/stores/book-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useSongsStore } from '@/stores/song-store';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const LIBRARY_TABS: readonly TabValue[] = ['books', 'songs'] as const;
@@ -74,14 +74,14 @@ export default function LibraryPage() {
                   <ListItemCard
                     key={book.id}
                     title={book.name}
-                    description={`${bookSections(book.id).length} sections • ${book.exercise_count} exercises`}
+                    stats={`${bookSections(book.id).length} sections • ${book.exercise_count} exercises`}
                     onPress={() => router.push(`/library-detail/book/${book.id}`)}
                     className="mb-4"
                     rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
                   />
                 ))
               ) : (
-                <Text className="text-center text-slate-500 py-8">
+                <Text variant="body" className="text-center text-slate-500 py-8">
                   No books found matching your search.
                 </Text>
               )}
@@ -93,14 +93,14 @@ export default function LibraryPage() {
                   <ListItemCard
                     key={song.id}
                     title={song.name}
-                    subtitle={song.artist}
+                    stats={song.artist}
                     onPress={() => router.push(`/library-detail/song/${song.id}`)}
                     className="mb-4"
                     rightElement={<ThemedIcon name="ChevronRight" size={20} color="slate-500" />}
                   />
                 ))
               ) : (
-                <Text className="text-center text-slate-500 py-8">
+                <Text variant="body" className="text-center text-slate-500 py-8">
                   No songs found matching your search.
                 </Text>
               )}

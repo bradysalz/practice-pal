@@ -1,13 +1,13 @@
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Text } from '@/components/ui/text';
 import { SessionWithItems } from '@/types/session';
 import { formatTimestampToDate, formatToMinutes } from '@/utils/date-time';
 import { getBookAndSongNamesFromSession } from '@/utils/session';
 import { useRouter } from 'expo-router';
 import { ChevronDown } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { Separator } from '../ui/separator';
 
@@ -38,7 +38,7 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
           <CardHeader className="p-4 pb-2 bg-slate-100 dark:bg-slate-800 border-b-4 border-slate-200 dark:border-slate-700">
             {/* Title + Chevron */}
             <View className="flex-row items-center justify-between mb-2">
-              <Text className="font-bold text-2xl pb-2">
+              <Text className="pb-2" variant="title-2xl">
                 {formatTimestampToDate(session.created_at)}
               </Text>
               <Animated.View style={chevronStyle}>
@@ -46,11 +46,13 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
               </Animated.View>
             </View>
 
-            {/* Clock / Dumbbell / Music */}
+            {/* Clock */}
             <View className="flex-row items-center justify-start gap-x-2">
               <View className="flex-row items-center text-muted-foreground mr-2">
                 <ThemedIcon name="Clock" size={20} style={{ marginRight: 1 }} />
-                <Text className="ml-1 text-lg">{formatToMinutes(session.duration || 0)} mins</Text>
+                <Text className="ml-1" variant="title">
+                  {formatToMinutes(session.duration || 0)} mins
+                </Text>
               </View>
             </View>
           </CardHeader>
@@ -58,13 +60,13 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
 
         {isExpanded && (
           <CardContent className="p-0 overflow-hidden transition-all duration-300">
-            <View className="p-4 pt-2">
+            <View className="p-4">
               {/* Books Subheader */}
               {bookMap.size > 0 && (
                 <View className="mb-3">
                   <View className="font-semibold flex-row items-center gap-1 mb-2">
-                    <ThemedIcon name="Dumbbell" size={16} color="red-500" />
-                    <Text className="text-lg font-bold"> Books </Text>
+                    <ThemedIcon name="Dumbbell" size={22} color="orange-500" />
+                    <Text variant="title-xl">Books</Text>
                   </View>
                   {Array.from(bookMap.entries()).map(([id, title]) => (
                     <View key={id} className="flex-row justify-left items-center">
@@ -82,8 +84,8 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
               {songMap.size > 0 && (
                 <View>
                   <View className="font-semibold flex-row items-center gap-1 mb-2">
-                    <ThemedIcon name="Music" size={16} color="indigo-500" />
-                    <Text className="text-lg font-bold"> Songs</Text>
+                    <ThemedIcon name="Music" size={22} color="orange-500" />
+                    <Text variant="title-xl">Songs</Text>
                   </View>
                   {Array.from(songMap.entries()).map(([id, title]) => (
                     <View key={id} className="flex-row justify-left items-center">
@@ -94,15 +96,17 @@ export function PracticeSessionSummaryCard({ session }: PracticeSessionSummaryCa
                 </View>
               )}
 
-              <Button
-                className="mt-4 bg-orange-500 "
+              <Pressable
+                className="mt-4 bg-orange-500 h-12 items-center justify-center rounded-xl"
                 onPress={(e) => {
                   e.stopPropagation?.(); // Only on web
                   router.push(`/session-detail/${session.id}`);
                 }}
               >
-                <Text className="text-white font-medium">View Full Session</Text>
-              </Button>
+                <Text variant="title-bold" className="text-white">
+                  View Full Session
+                </Text>
+              </Pressable>
             </View>
           </CardContent>
         )}
