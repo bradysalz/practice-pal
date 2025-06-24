@@ -1,17 +1,17 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { AddItemButton } from '@/components/shared/AddItemButton';
 import { ThemedIcon } from '@/components/icons/ThemedIcon';
 import { ItemRow } from '@/components/setlists/ItemRow';
+import { AddItemButton } from '@/components/shared/AddItemButton';
+import { ActionButton } from '@/components/ui/action-button';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { ActionButton } from '@/components/ui/action-button';
 import { useDraftSetlistsStore } from '@/stores/draft-setlist-store';
 import { useSetlistsStore } from '@/stores/setlist-store';
 import { DraftSetlistItem } from '@/types/setlist';
 import { createDraftFromSetlist, createNewDraft } from '@/utils/draft-setlist';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
@@ -145,7 +145,7 @@ export default function EditSetlistPage() {
         <View className="flex-row gap-x-4 m-4">
           {/* Add Items Button */}
           <AddItemButton
-            className="flex-1 flex-row items-center justify-center bg-slate-100 rounded-xl py-4 active:opacity-80 gap-x-1"
+            className="flex-1"
             iconSize={20}
             iconColor="slate-900"
             onPress={handleOpenAddItemModal}

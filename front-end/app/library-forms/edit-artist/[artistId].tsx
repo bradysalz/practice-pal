@@ -1,12 +1,12 @@
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
 import { DeleteButton } from '@/components/shared/DeleteButton';
+import { ActionButton } from '@/components/ui/action-button';
 import { Text } from '@/components/ui/text';
 import { deleteArtist, updateArtist } from '@/lib/supabase/artist';
 import { useArtistsStore } from '@/stores/artist-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
-import { ActionButton } from '@/components/ui/action-button';
+import { ActivityIndicator, Alert, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function EditArtistPage() {

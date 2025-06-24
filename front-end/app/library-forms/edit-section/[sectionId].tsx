@@ -1,9 +1,9 @@
 import { InputWithDelete } from '@/components/forms/InputWithDelete';
-
 import { TextInputWithLabel } from '@/components/forms/TextInputWithLabel';
-import { DeleteButton } from '@/components/shared/DeleteButton';
 import { AddItemButton } from '@/components/shared/AddItemButton';
+import { DeleteButton } from '@/components/shared/DeleteButton';
 import { Separator } from '@/components/shared/Separator';
+import { ActionButton } from '@/components/ui/action-button';
 import { Text } from '@/components/ui/text';
 import { deleteExercises, insertExercises, updateExercise } from '@/lib/supabase/exercise';
 import { deleteSections, updateSection } from '@/lib/supabase/section';
@@ -11,8 +11,7 @@ import { useExercisesStore } from '@/stores/exercise-store';
 import { useSectionsStore } from '@/stores/section-store';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
-import { ActionButton } from '@/components/ui/action-button';
+import { ActivityIndicator, Alert, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export type EditableExercise = {
