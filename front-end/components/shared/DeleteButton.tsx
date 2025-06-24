@@ -1,13 +1,13 @@
-import { ThemedIcon } from '@/components/icons/ThemedIcon';
-import { Text } from '@/components/ui/text';
+import { ThemedIcon, type ThemedIconProps } from '@/components/icons/ThemedIcon';
+import { Text, type TextProps } from '@/components/ui/text';
 import { Pressable, View } from 'react-native';
 
 interface DeleteButtonProps {
   label: string;
   onPress?: () => void;
-  iconName?: Parameters<typeof ThemedIcon>[0]['name'];
+  iconName?: ThemedIconProps['name'];
   iconSize?: number;
-  textVariant?: Parameters<typeof Text>[0]['variant'];
+  textVariant?: TextProps['variant'];
 }
 
 export function DeleteButton({

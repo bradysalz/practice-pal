@@ -60,7 +60,7 @@ const FILLED_ICONS: IconName[] = ['Play', 'Pause'];
 
 type IconName = keyof typeof ICONS;
 
-interface ThemedIconProps {
+export interface ThemedIconProps {
   name: IconName;
   size?: number;
   color?: string; // e.g., "red-500", "slate-300", "#ef4444"
